@@ -16,7 +16,7 @@ Go to your application directory and push the app:
 
     cf push --no-start
     
-Go to https://console.<your-domain>, bind the app to a service instance and copy the credentials under the bound services.
+Go to ```https://console.<your-domain>```, bind the app to a service instance and copy the credentials under the bound services.
 
 Set the following environment variables for your app using the copied values from the previous step:
 
