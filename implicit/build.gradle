@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.2.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
     }
 }
 
@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    compile 'org.springframework.cloud:spring-cloud-starter-oauth2:1.0.0.RELEASE'
+    compile 'org.springframework.cloud:spring-cloud-starter-oauth2:1.0.1.RELEASE'
 }
 
 task wrapper(type: Wrapper) {
