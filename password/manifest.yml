@@ -3,7 +3,7 @@ applications:
  - name: password-grant-sample
    memory: 512M
    instances: 1
-   path: build/libs/password-grant-sample-1.0.0-SNAPSHOT.jar
+   path: build/libs/password-1.0.0-SNAPSHOT.jar
    env:
      SKIP_SSL_VALIDATION: "true"
      ID_SERVICE_URL: https://uaa.10.244.0.34.xip.io
