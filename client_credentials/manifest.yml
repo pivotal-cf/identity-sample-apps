@@ -3,7 +3,7 @@ applications:
  - name: clientcredentials-sample
    memory: 512M
    instances: 1
-   path: target/clientcredentials-sample-0.0.1-SNAPSHOT.jar
+   path: build/libs/clientcredentials-sample-1.0.0-SNAPSHOT.jar
    env:
      SKIP_SSL_VALIDATION: "true"
      ID_SERVICE_URL: https://uaa.10.244.0.34.xip.io
