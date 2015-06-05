@@ -15,10 +15,18 @@ Set the correct CF environment in the CF CLI:
 Go to your application directory and push the app:
 
     cf push --no-start
-    
-Go to ```https://console.<your-domain>```, bind the app to a service instance and copy the credentials under the bound services.
 
-Set the following environment variables for your app using the copied values from the previous step:
+## Using AppsManager
+
+Go to ```https://console.<your-domain>```, bind the app to a service instance and copy the credentials under the bound service.
+Edit the `CLIENT_ID`, `CLIENT_SECRET` and `ID_SERVICE_URL` environment variable in your app with the new values and start the app.
+
+## Using CF CLI
+
+Run ```cf env <appName>``` (where appName is, for example, authcode-sample).
+Copy from the output the `client_id`, `client_secret` and `auth_domain` properties under the bound service.
+
+Use those three values to set three environment variables:
 
     cf set-env <app-name> CLIENT_ID <client_id>
     cf set-env <app-name> CLIENT_SECRET <client_secret>
