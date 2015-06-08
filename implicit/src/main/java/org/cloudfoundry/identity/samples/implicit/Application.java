@@ -28,11 +28,15 @@ public class Application {
     @Value("${idServiceUrl}")
     private String idServiceUrl;
 
+    @Value("${spring.oauth2.client.clientId}")
+    private String clientId;
+
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model) {
         request.getSession().invalidate();
         model.addAttribute("idServiceUrl", idServiceUrl);
         model.addAttribute("thisUrl", UrlUtils.buildFullRequestUrl(request));
+        model.addAttribute("clientId", clientId);
         return "index";
     }
 }
