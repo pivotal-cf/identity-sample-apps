@@ -60,8 +60,12 @@ public class Application {
                 uaaLocation);
         model.addAttribute("clients", clientResponse);
         Map<String, ?> token = getToken(clientCredentialsRestTemplate.getOAuth2ClientContext());
-        model.addAttribute("token",toPrettyJsonString(token));
+        model.addAttribute("token", toPrettyJsonString(token));
         return "client_credentials";
+    }
+
+    private String toPrettyJsonString(Object object) throws Exception {
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
     @Configuration
