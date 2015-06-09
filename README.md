@@ -14,6 +14,7 @@ Set the correct CF environment in the CF CLI:
     
 Go to your application directory and push the app:
 
+    ./gradlew build
     cf push --no-start
 
 ## Using AppsManager

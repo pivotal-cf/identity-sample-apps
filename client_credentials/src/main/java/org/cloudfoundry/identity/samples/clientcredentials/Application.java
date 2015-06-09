@@ -59,7 +59,8 @@ public class Application {
         Object clientResponse = clientCredentialsRestTemplate.getForObject("{uaa}/oauth/clients", Object.class,
                 uaaLocation);
         model.addAttribute("clients", clientResponse);
-        model.addAttribute("token", getToken(clientCredentialsRestTemplate.getOAuth2ClientContext()));
+        Map<String, ?> token = getToken(clientCredentialsRestTemplate.getOAuth2ClientContext());
+        model.addAttribute("token",toPrettyJsonString(token));
         return "client_credentials";
     }
 

@@ -89,7 +89,8 @@ public class Application {
         String response = oAuth2RestTemplate.getForObject("{uaa}/userinfo", String.class,
             idServiceUrl);
         model.addAttribute("response", toPrettyJsonString(response));
-        model.addAttribute("token", getToken(oAuth2RestTemplate.getOAuth2ClientContext()));
+        Map<String, ?> token = getToken(oauth2RestTemplate.getOAuth2ClientContext());
+        model.addAttribute("token",toPrettyJsonString(token));
         return "password_result";
     }
 
