@@ -12,5 +12,5 @@ This application is a sample for how you can set up your own application that us
     * Redirect URIs (Give the url of your application i.e. `https://<app-route>`)
     * Scopes (`openid`)
 3. Click on Create App button.
-4. Make note of the environment variables to be set
-4. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-update-oauth-client-information-in-the-application)
+4. Make note of the environment variables to be set.
+5. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-update-oauth-client-information-in-the-application)
