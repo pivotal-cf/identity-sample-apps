@@ -1,28 +1,37 @@
-# Cloud Foundry UAA Sample Applications
+# Cloud Foundry Pivotal Single Sign-On Service Sample Applications
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types.
+This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
 
-For more information on each of the applications please look at the README.md files the respective grant types.
+Application Type  | Grant Type
+------------- | -------------
+Web App  | authcode
+Native Mobile App  | password
+Service-to-Service App | client_credentials
+Single Page JavaScript App | implicit
 
-# Deploying application to Cloud Foundry
+## Step 1: Deploy Sample Application to Pivotal Cloud Foundry
 
-When you don't have a pre-registered client in the UAA the following steps are recommended to have the application running properly.
-
-Set the correct CF environment in the CF CLI:
+Set the correct CF environment in the CF CLI and login as a Space Developer into the required Org and Space
 
     cf api api.<your-domain>
     
-Go to your application directory and push the app:
+Go to your application directory and push the app
 
     ./gradlew build
     cf push --no-start
 
-## Using AppsManager
 
-Go to ```https://console.<your-domain>```, bind the app to a service instance and copy the credentials under the bound service.
+## Step 2: Register an OAuth Client with Pivotal Single Sign-On Service
+This step varies depending on the application type. Please refer the README.md for each application type aka grant type
+
+## Step 3: Update OAuth Client information in the Application
+
+### Using Apps Manager
+
+Go to ```https://console.<your-domain>```
 Edit the `CLIENT_ID`, `CLIENT_SECRET` and `ID_SERVICE_URL` environment variable in your app with the new values and start the app.
 
-## Using CF CLI
+### Using CF CLI
 
 Run ```cf env <appName>``` (where appName is, for example, authcode-sample).
 Copy from the output the `client_id`, `client_secret` and `auth_domain` properties under the bound service.
