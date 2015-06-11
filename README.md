@@ -1,4 +1,4 @@
-# Cloud Foundry Pivotal Single Sign-On Service Sample Applications
+# Pivotal Single Sign-On Service Sample Applications
 
 This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
 
