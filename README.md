@@ -21,22 +21,19 @@ Go to your application directory and push the app
     cf push --no-start
 
 
-## Step 2: Register an OAuth Client with Pivotal Single Sign-On Service
-This step varies depending on the application type. Please refer the README.md for each application type aka grant type
+## Step 2: Configure your application to use Pivotal Single Sign-On Service
+This step may vary depending on your application type. Please refer the README.md for each application type aka grant type
 
-## Step 3: Update OAuth Client information in the Application
+## Step 3: Update Environment variables for the Application
 
 ### Using Apps Manager
 
 Go to ```https://console.<your-domain>```
-Edit the `CLIENT_ID`, `CLIENT_SECRET` and `ID_SERVICE_URL` environment variable in your app with the new values and start the app.
+Edit `CLIENT_ID`, `CLIENT_SECRET` and `ID_SERVICE_URL` environment variables in your app with the new values. Restart the app.
 
 ### Using CF CLI
 
-Run ```cf env <appName>``` (where appName is, for example, authcode-sample).
-Copy from the output the `client_id`, `client_secret` and `auth_domain` properties under the bound service.
-
-Use those three values to set three environment variables:
+Update the environment variables for the app:
 
     cf set-env <app-name> CLIENT_ID <client_id>
     cf set-env <app-name> CLIENT_SECRET <client_secret>
