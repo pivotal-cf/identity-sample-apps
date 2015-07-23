@@ -29,14 +29,14 @@ This step may vary depending on your application type. Please refer the README.m
 ### Using Apps Manager
 
 Go to ```https://console.<your-domain>```
-Edit `CLIENT_ID`, `CLIENT_SECRET` and `ID_SERVICE_URL` environment variables in your app with the new values. Restart the app.
+Edit `APP_ID`, `APP_SECRET` and `ID_SERVICE_URL` environment variables in your app with the new values. Restart the app.
 
 ### Using CF CLI
 
 Update the environment variables for the app:
 
-    cf set-env <app-name> CLIENT_ID <client_id>
-    cf set-env <app-name> CLIENT_SECRET <client_secret>
+    cf set-env <app-name> APP_ID <app_id>
+    cf set-env <app-name> APP_SECRET <app_secret>
     cf set-env <app-name> ID_SERVICE_URL <auth_domain>
     
 Start your app

@@ -12,7 +12,7 @@ spring.oauth2:
     client:
       accessTokenUri: ${ID_SERVICE_URL}/oauth/token
       userAuthorizationUri: ${ID_SERVICE_URL}/oauth/authorize
-      clientId: ${CLIENT_ID}
-      clientSecret: ${CLIENT_SECRET}
+      clientId: ${APP_ID}
+      clientSecret: ${APP_SECRET}
     resource:
       jwt.keyUri: ${ID_SERVICE_URL}/token_key

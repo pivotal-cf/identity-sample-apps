@@ -7,5 +7,5 @@ applications:
    env:
      SKIP_SSL_VALIDATION: "true"
      ID_SERVICE_URL: https://uaa.10.244.0.34.xip.io
-     CLIENT_ID: oauth_showcase_password_grant
-     CLIENT_SECRET: secret
+     APP_ID: oauth_showcase_password_grant
+     APP_SECRET: secret
