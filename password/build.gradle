@@ -13,6 +13,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 repositories {
+    maven { url "https://repo.spring.io/libs-snapshot-local" }
     mavenCentral()
 }
 
