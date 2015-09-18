@@ -11,6 +11,6 @@ This application is a sample for how you can set up your own application that us
     * Scopes (`uaa.resource` and `clients.read`)
 3. Click on Create App button.
 4. Make note of the environment variables to be set.
-5. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-update-oauth-client-information-in-the-application)
+5. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-set-grant-type-for-your-application) using the `client_credentials` grant type.
 
 Note: If scopes are updated in the application definition above after it's been started up the same needs to be restarted.

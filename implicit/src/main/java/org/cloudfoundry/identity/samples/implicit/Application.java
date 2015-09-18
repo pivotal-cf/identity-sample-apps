@@ -25,8 +25,8 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Value("${idServiceUrl}")
-    private String idServiceUrl;
+    @Value("${ssoServiceUrl}")
+    private String ssoServiceUrl;
 
     @Value("${spring.oauth2.client.clientId}")
     private String clientId;
@@ -34,7 +34,7 @@ public class Application {
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model) {
         request.getSession().invalidate();
-        model.addAttribute("idServiceUrl", idServiceUrl);
+        model.addAttribute("ssoServiceUrl", ssoServiceUrl);
         model.addAttribute("thisUrl", UrlUtils.buildFullRequestUrl(request));
         model.addAttribute("clientId", clientId);
         return "index";

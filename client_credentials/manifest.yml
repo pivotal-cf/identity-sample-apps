@@ -6,6 +6,4 @@ applications:
    path: build/libs/client_credentials-1.0.0-SNAPSHOT.jar
    env:
      SKIP_SSL_VALIDATION: "true"
-     ID_SERVICE_URL: https://uaa.10.244.0.34.xip.io
-     APP_ID: oauth_showcase_client_credentials
-     APP_SECRET: secret
+     GRANT_TYPE: client_credentials

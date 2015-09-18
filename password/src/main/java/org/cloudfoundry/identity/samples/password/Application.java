@@ -54,8 +54,8 @@ public class Application {
     }
 
 
-    @Value("${idServiceUrl}")
-    private String idServiceUrl;
+    @Value("${ssoServiceUrl}")
+    private String ssoServiceUrl;
 
     @Autowired
     @Qualifier("passwordGrantRestTemplate")
@@ -87,7 +87,7 @@ public class Application {
         passwordGrantResourceDetails.setUsername(username);
         passwordGrantResourceDetails.setPassword(password);
         String response = oAuth2RestTemplate.getForObject("{uaa}/userinfo", String.class,
-            idServiceUrl);
+            ssoServiceUrl);
         model.addAttribute("response", toPrettyJsonString(response));
         Map<String, ?> token = getToken(oAuth2RestTemplate.getOAuth2ClientContext());
         model.addAttribute("token",toPrettyJsonString(token));

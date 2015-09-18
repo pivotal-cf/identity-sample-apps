@@ -42,8 +42,8 @@ public class Application {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("${idServiceUrl}")
-    private String uaaLocation;
+    @Value("${ssoServiceUrl}")
+    private String ssoServiceUrl;
 
     @Autowired
     @Qualifier("clientCredentialsRestTemplate")
@@ -57,7 +57,7 @@ public class Application {
     @RequestMapping("/client_credentials")
     public String clientCredentials(Model model) throws Exception {
         Object clientResponse = clientCredentialsRestTemplate.getForObject("{uaa}/oauth/clients", Object.class,
-                uaaLocation);
+                ssoServiceUrl);
         model.addAttribute("clients", clientResponse);
         Map<String, ?> token = getToken(clientCredentialsRestTemplate.getOAuth2ClientContext());
         model.addAttribute("token", toPrettyJsonString(token));

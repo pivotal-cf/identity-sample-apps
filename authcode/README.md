@@ -5,5 +5,5 @@ This application is a sample for how you can set up your own application that us
 ## Creating authcode aka Web App client in Pivotal Single Sign-On Service
 
 1. Navigate to your app in Apps Manager and bind it to the Pivotal Single Sign-On Service.
-2. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-set-grant-type-for-your-applicationn) using the `authorization_code` grant type.
+2. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-set-grant-type-for-your-application) using the `authorization_code` grant type.
 

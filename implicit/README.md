@@ -14,4 +14,4 @@ Implicit grants are typically used for Single-page javascript apps.
     * Scopes (`openid`)
 3. Click on Create App button.
 4. Make note of the environment variables to be set.
-5. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-update-oauth-client-information-in-the-application)
+5. Go back to Apps Manager and follow the steps [here] (https://github.com/pivotal-cf/identity-sample-apps#step-3-set-grant-type-for-your-application) using the `implicit` grant type.
