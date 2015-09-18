@@ -6,6 +6,4 @@ applications:
    path: build/libs/authcode-1.0.0-SNAPSHOT.jar
    env:
      SKIP_SSL_VALIDATION: "true"
-     ID_SERVICE_URL: https://uaa.10.244.0.34.xip.io
-     APP_ID: oauth_showcase_authorization_code
-     APP_SECRET: secret
+     GRANT_TYPE: authorization_code

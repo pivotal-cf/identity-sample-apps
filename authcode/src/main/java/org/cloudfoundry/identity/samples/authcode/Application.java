@@ -35,9 +35,9 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-
-    @Value("${idServiceUrl}")
-    private String idServiceUrl;
+    // property set by spring-cloud-sso-connector
+    @Value("${ssoServiceUrl}")
+    private String ssoServiceUrl;
 
     @Autowired
     private OAuth2RestTemplate oauth2RestTemplate;
@@ -52,9 +52,9 @@ public class Application {
 
     @RequestMapping("/authorization_code")
     public String authCode(Model model) throws Exception {
-        Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{idServiceUrl}/userinfo", Map.class,
-                idServiceUrl);
-        model.addAttribute("idServiceUrl",idServiceUrl);
+        Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class,
+                ssoServiceUrl);
+        model.addAttribute("ssoServiceUrl",ssoServiceUrl);
         model.addAttribute("response",toPrettyJsonString(userInfoResponse));
         Map<String, ?> token = getToken(oauth2RestTemplate.getOAuth2ClientContext());
         model.addAttribute("token",toPrettyJsonString(token));

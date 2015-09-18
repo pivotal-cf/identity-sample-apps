@@ -4,18 +4,8 @@ server:
     remote_ip_header: x-forwarded-for
     protocol_header: x-forwarded-proto
     internal_proxies: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
-idServiceUrl: ${ID_SERVICE_URL:http://localhost:8080/uaa}
 spring:
   thymeleaf:
     cache: false
-  oauth2:
-    client:
-      clientId: oauth_showcase_authorization_code
-      clientSecret: secret
-      accessTokenUri: ${idServiceUrl}/oauth/token
-      userAuthorizationUri: ${idServiceUrl}/oauth/authorize
-    resource:
-      jwt.keyUri: ${idServiceUrl}/token_key
-
 logging.level:
   org.springframework.security: DEBUG

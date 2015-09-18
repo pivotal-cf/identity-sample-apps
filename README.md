@@ -4,7 +4,7 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 
 Application Type  | Grant Type
 ------------- | -------------
-Web App  | authcode
+Web App  | authorization_code
 Native Mobile App  | password
 Service-to-Service App | client_credentials
 Single Page JavaScript App | implicit
@@ -22,23 +22,22 @@ Go to your application directory and push the app
 
 
 ## Step 2: Configure your application to use Pivotal Single Sign-On Service
-This step may vary depending on your application type. Please refer the README.md for each application type aka grant type
+This step may vary depending on your application type. Please refer the README.md for each application type aka grant type.
+All four sample apps in this repo uses the spring-cloud-sso-connector to auto-configure the sso service bound to the app.
 
-## Step 3: Update Environment variables for the Application
+## Step 3: Set grant type for your Application
 
 ### Using Apps Manager
 
 Go to ```https://console.<your-domain>```
-Edit `APP_ID`, `APP_SECRET` and `ID_SERVICE_URL` environment variables in your app with the new values. Restart the app.
+Add or edit `GRANT_TYPE` environment variable in the app with the of before mentioned grant type [here] (https://github.com/pivotal-cf/identity-sample-apps#pivotal-single-sign-on-service-sample-applications). Restart the app.
 
 ### Using CF CLI
 
-Update the environment variables for the app:
+Update the GRANT_TYPE environment variable for the app:
 
-    cf set-env <app-name> APP_ID <app_id>
-    cf set-env <app-name> APP_SECRET <app_secret>
-    cf set-env <app-name> ID_SERVICE_URL <auth_domain>
-    
+    cf set-env <app-name> GRANT_TYPE <grant_type>
+
 Start your app
 
     cf restart <app-name>
