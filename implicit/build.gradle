@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.6.RELEASE")
     }
 }
 
@@ -22,8 +22,4 @@ dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-oauth2:1.0.1.RELEASE'
     compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector:1.2.0.RELEASE'
     compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:1.0.0-SNAPSHOT'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
 }
