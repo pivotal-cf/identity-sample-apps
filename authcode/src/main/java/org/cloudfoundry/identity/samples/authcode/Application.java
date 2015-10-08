@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cloud.security.oauth2.sso.EnableOAuth2Sso;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Controller;
@@ -36,10 +39,10 @@ public class Application {
     }
 
     // property set by spring-cloud-sso-connector
-    @Value("${ssoServiceUrl}")
+    @Value("${ssoServiceUrl:http:localhost:8080/uaa}")
     private String ssoServiceUrl;
 
-    @Autowired
+    @Autowired(required = false)
     private OAuth2RestTemplate oauth2RestTemplate;
 
     @Autowired
@@ -52,6 +55,9 @@ public class Application {
 
     @RequestMapping("/authorization_code")
     public String authCode(Model model) throws Exception {
+        if (oauth2RestTemplate == null) {
+            return "configure_warning";
+        }
         Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class,
                 ssoServiceUrl);
         model.addAttribute("ssoServiceUrl",ssoServiceUrl);
