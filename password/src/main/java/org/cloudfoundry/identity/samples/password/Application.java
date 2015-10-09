@@ -54,12 +54,15 @@ public class Application {
     }
 
 
-    @Value("${ssoServiceUrl}")
+    @Value("${ssoServiceUrl:example.com}")
     private String ssoServiceUrl;
 
-    @Autowired
+    @Autowired(required = false)
     @Qualifier("passwordGrantRestTemplate")
     private OAuth2RestTemplate oAuth2RestTemplate;
+
+    @Autowired(required = false)
+    OAuth2ClientContext oauth2Context;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -74,6 +77,9 @@ public class Application {
 
     @RequestMapping("/password")
     public String showPasswordPage() {
+        if (ssoServiceUrl != null && ssoServiceUrl.equals("example.com")) {
+            return "configure_warning";
+        }
         return "password_form";
     }
 
@@ -84,6 +90,9 @@ public class Application {
 //        AccessTokenRequest accessTokenRequest = oAuth2RestTemplate.getOAuth2ClientContext().getAccessTokenRequest();
 //        accessTokenRequest.set("username", username);
 //        accessTokenRequest.set("password", password);
+        if (ssoServiceUrl.equals("example.com")) {
+            return "configure_warning";
+        }
         passwordGrantResourceDetails.setUsername(username);
         passwordGrantResourceDetails.setPassword(password);
         String response = oAuth2RestTemplate.getForObject("{uaa}/userinfo", String.class,
@@ -114,8 +123,10 @@ public class Application {
     }
 
     @Bean
-    public OAuth2RestTemplate passwordGrantRestTemplate(OAuth2ClientContext oauth2Context) {
-        OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(passwordGrantResourceDetails(), oauth2Context);
-        return restTemplate;
+    public OAuth2RestTemplate passwordGrantRestTemplate() {
+        if (this.oauth2Context == null) {
+            return null;
+        }
+        return new OAuth2RestTemplate(passwordGrantResourceDetails(), this.oauth2Context);
     }
 }

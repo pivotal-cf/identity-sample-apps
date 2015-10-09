@@ -42,7 +42,7 @@ public class Application {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("${ssoServiceUrl}")
+    @Value("${ssoServiceUrl:example.com}")
     private String ssoServiceUrl;
 
     @Autowired
@@ -56,6 +56,9 @@ public class Application {
 
     @RequestMapping("/client_credentials")
     public String clientCredentials(Model model) throws Exception {
+        if (ssoServiceUrl.equals("example.com")) {
+            return "configure_warning";
+        }
         Object clientResponse = clientCredentialsRestTemplate.getForObject("{uaa}/oauth/clients", Object.class,
                 ssoServiceUrl);
         model.addAttribute("clients", clientResponse);

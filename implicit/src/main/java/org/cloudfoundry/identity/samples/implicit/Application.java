@@ -25,10 +25,10 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Value("${ssoServiceUrl}")
+    @Value("${ssoServiceUrl:http:localhost:8080/uaa}")
     private String ssoServiceUrl;
 
-    @Value("${spring.oauth2.client.clientId}")
+    @Value("${spring.oauth2.client.clientId:client_id_placeholder}")
     private String clientId;
 
     @RequestMapping("/")
@@ -37,6 +37,9 @@ public class Application {
         model.addAttribute("ssoServiceUrl", ssoServiceUrl);
         model.addAttribute("thisUrl", UrlUtils.buildFullRequestUrl(request));
         model.addAttribute("clientId", clientId);
+        if (clientId.equals("client_id_placeholder")) {
+            return "configure_warning";
+        }
         return "index";
     }
 }
