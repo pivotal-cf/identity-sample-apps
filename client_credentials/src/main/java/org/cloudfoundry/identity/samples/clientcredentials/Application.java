@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,11 +60,7 @@ public class Application {
         if (ssoServiceUrl.equals("example.com")) {
             return "configure_warning";
         }
-        Object clientResponse = clientCredentialsRestTemplate.getForObject("{uaa}/oauth/clients", Object.class,
-                ssoServiceUrl);
-        model.addAttribute("clients", clientResponse);
-        Map<String, ?> token = getToken(clientCredentialsRestTemplate.getOAuth2ClientContext());
-        model.addAttribute("token", toPrettyJsonString(token));
+        model.addAttribute("token", toPrettyJsonString(getToken()));
         return "client_credentials";
     }
 
@@ -88,9 +85,10 @@ public class Application {
         }
     }
     
-    private Map<String, ?> getToken(OAuth2ClientContext clientContext) throws Exception {
-        if (clientContext.getAccessToken() != null) {
-            String tokenBase64 = clientContext.getAccessToken().getValue().split("\\.")[1];
+    private Map<String, ?> getToken() throws Exception {
+        OAuth2AccessToken accessToken = clientCredentialsRestTemplate.getAccessToken();
+        if (accessToken != null) {
+            String tokenBase64 = accessToken.getValue().split("\\.")[1];
             return objectMapper.readValue(Base64.decodeBase64(tokenBase64), new TypeReference<Map<String, ?>>() {
             });
         }
