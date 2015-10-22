@@ -2,14 +2,11 @@ package org.cloudfoundry.identity.samples.password;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.security.oauth2.sso.EnableOAuth2Sso;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -24,21 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.WebApplicationContext;
 
 @Configuration
 @EnableAutoConfiguration
@@ -53,22 +39,18 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-
-    @Value("${ssoServiceUrl:example.com}")
+    @Value("${ssoServiceUrl:placeholder}")
     private String ssoServiceUrl;
 
-    @Autowired(required = false)
+    @Autowired
     @Qualifier("passwordGrantRestTemplate")
     private OAuth2RestTemplate oAuth2RestTemplate;
-
-    @Autowired(required = false)
-    OAuth2ClientContext oauth2Context;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @RequestMapping("/")
-    public String index(HttpServletRequest request, Model model) {
+    public String index() {
         return "index";
     }
 
@@ -77,7 +59,7 @@ public class Application {
 
     @RequestMapping("/password")
     public String showPasswordPage() {
-        if (ssoServiceUrl != null && ssoServiceUrl.equals("example.com")) {
+        if (this.ssoServiceUrl.equals("placeholder")) {
             return "configure_warning";
         }
         return "password_form";
@@ -85,14 +67,6 @@ public class Application {
 
     @RequestMapping(value = "/password",method = RequestMethod.POST)
     public String doPasswordLogin(@RequestParam String username, @RequestParam String password, Model model) throws Exception {
-//        Tried this http://projects.spring.io/spring-security-oauth/docs/oauth2.html#accessing-protected-resources
-//        but there seems to be a bug where the DefaultRequestEnhancer doesn't propagate username and password
-//        AccessTokenRequest accessTokenRequest = oAuth2RestTemplate.getOAuth2ClientContext().getAccessTokenRequest();
-//        accessTokenRequest.set("username", username);
-//        accessTokenRequest.set("password", password);
-        if (ssoServiceUrl.equals("example.com")) {
-            return "configure_warning";
-        }
         passwordGrantResourceDetails.setUsername(username);
         passwordGrantResourceDetails.setPassword(password);
         String response = oAuth2RestTemplate.getForObject("{uaa}/userinfo", String.class,
@@ -124,9 +98,6 @@ public class Application {
 
     @Bean
     public OAuth2RestTemplate passwordGrantRestTemplate() {
-        if (this.oauth2Context == null) {
-            return null;
-        }
-        return new OAuth2RestTemplate(passwordGrantResourceDetails(), this.oauth2Context);
+        return new OAuth2RestTemplate(passwordGrantResourceDetails());
     }
 }
