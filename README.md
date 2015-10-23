@@ -4,10 +4,10 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 
 Application Type  | Grant Type
 ------------- | -------------
-[Web App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/authcode)  | authorization_code
-[Native Mobile App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/password)  | password
-[Service-to-Service App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/client_credentials) | client_credentials
-[Single Page JavaScript App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/implicit) | implicit
+[Web App](/authcode)  | authorization_code
+[Native Mobile App](/password)  | password
+[Service-to-Service App](/client_credentials) | client_credentials
+[Single Page JavaScript App](/implicit) | implicit
 
 ## Step 1: Deploy Sample Application to Pivotal Cloud Foundry
 
