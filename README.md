@@ -1,45 +1,26 @@
 # Pivotal Single Sign-On Service Sample Applications
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
+This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard. 
 
 Application Type  | Grant Type
 ------------- | -------------
-Web App  | authorization_code
-Native Mobile App  | password
-Service-to-Service App | client_credentials
-Single Page JavaScript App | implicit
+[Web App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/authcode)  | authorization_code
+[Native Mobile App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/password)  | password
+[Service-to-Service App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/client_credentials) | client_credentials
+[Single Page JavaScript App](https://github.com/pivotal-cf/identity-sample-apps/tree/master/implicit) | implicit
 
 ## Step 1: Deploy Sample Application to Pivotal Cloud Foundry
 
-Set the correct CF environment in the CF CLI and login as a Space Developer into the required Org and Space
+Set the correct CF API target in the CF CLI and login as a Space Developer into the required Org and Space
 
     cf api api.<your-domain>
     
-Go to your application directory and push the app
+Go to your application directory and push the app.
 
     ./gradlew build
-    cf push --no-start
+    cf push
 
+## Step 2: Bind the Application with the Pivotal Single Sign-On Service Instance
+Follow the steps [here] (http://docs.pivotal.io/p-identity/index.html#create-instance) to bind your application to the service instance.
 
-## Step 2: Configure your application to use Pivotal Single Sign-On Service
-This step may vary depending on your application type. Please refer the README.md for each application type aka grant type.
-All four sample apps in this repo uses the spring-cloud-sso-connector to auto-configure the sso service bound to the app.
-
-## Step 3: Set grant type for your Application
-
-### Using Apps Manager
-
-Go to ```https://console.<your-domain>```
-Add or edit `GRANT_TYPE` environment variable in the app with the of before mentioned grant type [here] (https://github.com/pivotal-cf/identity-sample-apps#pivotal-single-sign-on-service-sample-applications). Restart the app.
-
-### Using CF CLI
-
-Update the GRANT_TYPE environment variable for the app:
-
-    cf set-env <app-name> GRANT_TYPE <grant_type>
-
-Start your app
-
-    cf restart <app-name>
-    
-Now your app is ready to be used.
+Restart your application after binding the service using Apps Manager or CF CLI.
