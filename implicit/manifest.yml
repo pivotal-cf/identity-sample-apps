@@ -3,7 +3,7 @@ applications:
  - name: implicit-sample
    memory: 512M
    instances: 1
-   path: build/libs/implicit-2.0.0-SNAPSHOT.jar
+   path: build/libs/implicit-2.0.0.jar
    env:
      SKIP_SSL_VALIDATION: "true"
      GRANT_TYPE: implicit
