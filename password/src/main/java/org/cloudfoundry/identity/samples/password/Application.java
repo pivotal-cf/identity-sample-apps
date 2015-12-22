@@ -91,7 +91,7 @@ public class Application {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.oauth2.client")
+    @ConfigurationProperties(prefix = "security.oauth2.client")
     ResourceOwnerPasswordResourceDetails passwordGrantResourceDetails() {
         return new ResourceOwnerPasswordResourceDetails();
     }

@@ -73,7 +73,7 @@ public class Application {
     @EnableOAuth2Client
     public static class Config {
         @Bean
-        @ConfigurationProperties(prefix = "spring.oauth2.client")
+        @ConfigurationProperties(prefix = "security.oauth2.client")
         ClientCredentialsResourceDetails clientCredentialsResourceDetails() {
             return new ClientCredentialsResourceDetails();
         }

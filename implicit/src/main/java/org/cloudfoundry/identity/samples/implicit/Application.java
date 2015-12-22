@@ -28,7 +28,7 @@ public class Application {
     @Value("${ssoServiceUrl:http:localhost:8080/uaa}")
     private String ssoServiceUrl;
 
-    @Value("${spring.oauth2.client.clientId:client_id_placeholder}")
+    @Value("${security.oauth2.client.clientId:client_id_placeholder}")
     private String clientId;
 
     @RequestMapping("/")
