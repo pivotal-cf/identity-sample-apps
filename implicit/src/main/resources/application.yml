@@ -13,16 +13,3 @@ security:
     enabled: false
 logging.level:
   org.springframework.security: DEBUG
-
-ssoServiceUrl: https://ajsdh.login.id-service.cf-app.com
-security.oauth2:
-  client:
-    clientId: c309c613-fa1d-416c-8bf7-b77e68e17e4b
-    clientSecret: 35efc542-b82c-401a-aefc-5926c24995b7
-    userAuthorizationUri: ${ssoServiceUrl}/oauth/authorize
-    accessTokenUri: ${ssoServiceUrl}/oauth/token
-  resource:
-    userInfoUri: ${ssoServiceUrl}/userinfo
-    tokenInfoUri: ${ssoServiceUrl}/check_token
-    jwt:
-      keyUri: ${ssoServiceUrl}/token_key
