@@ -10,7 +10,7 @@
   <ul>
     <li>
       <a
-        th:href="@{{uaa}/oauth/authorize(uaa=${ssoServiceUrl},client_id=${clientId},response_type='token',redirect_uri=|${thisUrl}implicit.html#uaaLocation=${ssoServiceUrl}|) }">Use
+        th:href="@{{uaa}/oauth/authorize(uaa=${ssoServiceUrl},client_id=${clientId},response_type='token+id_token',redirect_uri=|${thisUrl}implicit.html#uaaLocation=${ssoServiceUrl}|) }">Use
         the Implicit Grant and see the response from /userinfo</a>
     </li>
   </ul>

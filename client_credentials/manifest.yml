@@ -3,7 +3,6 @@ applications:
  - name: clientcredentials-sample
    memory: 512M
    instances: 1
-   path: build/libs/client_credentials-2.1.1-SNAPSHOT.jar
    env:
      SKIP_SSL_VALIDATION: "true"
      GRANT_TYPE: client_credentials

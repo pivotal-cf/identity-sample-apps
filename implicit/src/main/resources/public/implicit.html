@@ -11,24 +11,25 @@ table, th, td {
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function() {
-		var fullTokenBase64 = /access_token=([^&]+)/.exec(window.location.hash)[1];
-		var tokenBase64 = fullTokenBase64.split('\.')[1];
-		var tokenJsonString = atob(tokenBase64);
-		var prettyToken = JSON.stringify(JSON.parse(tokenJsonString), null,
-				'  ');
-		$('#token').text(prettyToken);
+  function getFragment(pattern) {
+    var matcher = new RegExp(pattern + "=([^&]+)");
+    return matcher.exec(window.location.hash)[1];
+  }
 
-		var uaaLocation = /uaaLocation=([^&]+)/.exec(window.location.hash)[1];
-		$.ajax(uaaLocation + '/userinfo', {
-			headers : {
-				"Authorization" : "Bearer " + fullTokenBase64
-			},
-			success : function(data) {
-				var prettyUserinfo = JSON.stringify(data, null, '  ');
-				$('#userinfo').text(prettyUserinfo);
-			}
-		});
+  function prettyToken(token) {
+    return JSON.stringify(JSON.parse(atob(token.split('\.')[1])), null, '  ');
+  }
+
+	$(function() {
+    $('#expires_in').text(getFragment("expires_in"));
+    $('#scope').text(getFragment("scope"));
+    $('#jti').text(getFragment("jti"));
+    $('#id_token').text(prettyToken(getFragment("id_token")));
+
+		var fullTokenBase64 = getFragment("access_token")
+		$('#token').text(prettyToken(fullTokenBase64));
+    $('#token_type').text(getFragment("token_type"));
+
 		$('#profile').attr('href', uaaLocation + '/profile');
 		$('#logout').attr('href', uaaLocation + '/logout.do');
 
@@ -38,10 +39,20 @@ table, th, td {
 <body>
   <h1>Implicit sample</h1>
   <p>This is a static HTML page! The server only saw a request for /implicit.html. Everything after the # in the address bar is stuff that only your browser can see.</p>
-  <p>Here's the result of calling /userinfo:</p>
-  <pre id="userinfo"></pre>
+  <p>Your ID Token token is:</p>
+  <pre id="id_token"></pre>
+  <p>Expires in:</p>
+  <pre id="expires_in"></pre>
+  <p>Scope:</p>
+  <pre id="scope"></pre>
+  <p>JTI:</p>
+  <pre id="jti"></pre>
+
   <p>Your access token is:</p>
   <pre id="token"></pre>
+  <p>Your access token type:</p>
+  <pre id="token_type"></pre>
+
   <h2>What do you want to do?</h2>
   <ul>
     <li>

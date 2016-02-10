@@ -18,7 +18,7 @@ Set the correct CF API target in the CF CLI and login as a Space Developer into 
 Go to your application directory and push the app.
 
     ./gradlew build
-    cf push
+    cf push -p build/libs/*.jar
 
 ## Step 2: Bind the Application with the Pivotal Single Sign-On Service Instance
 Follow the steps [here] (http://docs.pivotal.io/p-identity/index.html#create-instance) to bind your application to the service instance.
