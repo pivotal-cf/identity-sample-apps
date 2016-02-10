@@ -8,8 +8,21 @@ spring:
   thymeleaf:
     cache: false
 security:
-  ignored: /favicon.ico, /
+  ignored: /favicon.ico, /, /id_token.html, save_id_token
   basic:
     enabled: false
 logging.level:
   org.springframework.security: DEBUG
+
+ssoServiceUrl: https://my-cf-install.login.id-service.cf-app.com
+security.oauth2:
+  client:
+    clientId: 529e5194-a0e1-4a12-b9ed-9659b64b6089
+    clientSecret: b544ed49-a3bb-413b-a844-f33cb53797c9
+    userAuthorizationUri: ${ssoServiceUrl}/oauth/authorize
+    accessTokenUri: ${ssoServiceUrl}/oauth/token
+  resource:
+    userInfoUri: ${ssoServiceUrl}/userinfo
+    tokenInfoUri: ${ssoServiceUrl}/check_token
+    jwt:
+      keyUri: ${ssoServiceUrl}/token_key
