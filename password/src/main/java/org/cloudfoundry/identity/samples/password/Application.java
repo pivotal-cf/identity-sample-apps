@@ -1,8 +1,13 @@
 package org.cloudfoundry.identity.samples.password;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import org.apache.commons.codec.binary.Base64;
+import org.cloudfoundry.identity.samples.oauth2.composite.CompositeAccessTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +16,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.AccessTokenProvider;
+import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
+import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
+import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +37,8 @@ import org.springframework.security.oauth2.client.token.grant.password.ResourceO
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
@@ -37,6 +50,16 @@ public class Application {
             org.cloudfoundry.identity.samples.password.SSLValidationDisabler.disableSSLValidation();
         }
         SpringApplication.run(Application.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
+        oAuth2RestTemplate.setAccessTokenProvider(accessTokenProviderChain());
+    }
+
+    @Bean
+    public AccessTokenProvider accessTokenProviderChain() {
+        return new AccessTokenProviderChain(Collections.singletonList(new CompositeAccessTokenProvider()));
     }
 
     @Value("${ssoServiceUrl:placeholder}")
@@ -73,8 +96,18 @@ public class Application {
             ssoServiceUrl);
         model.addAttribute("response", toPrettyJsonString(response));
         Map<String, ?> token = getToken(oAuth2RestTemplate.getOAuth2ClientContext());
-        model.addAttribute("token",toPrettyJsonString(token));
+        model.addAttribute("token", toPrettyJsonString(token));
+        model.addAttribute("id_token", toPrettyJsonString(getIdToken(oAuth2RestTemplate.getOAuth2ClientContext())));
         return "password_result";
+    }
+
+    private Map<String, ?> getIdToken(OAuth2ClientContext clientContext) throws IOException {
+        if (clientContext.getAccessToken() != null) {
+            String tokenBase64 = clientContext.getAccessToken().getAdditionalInformation().get("id_token").toString().split("\\.")[1];
+            return objectMapper.readValue(Base64.decodeBase64(tokenBase64), new TypeReference<Map<String, ?>>() {
+            });
+        }
+        return null;
     }
 
     private Map<String, ?> getToken(OAuth2ClientContext clientContext) throws Exception {
