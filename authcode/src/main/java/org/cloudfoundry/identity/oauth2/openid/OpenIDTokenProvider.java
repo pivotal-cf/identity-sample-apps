@@ -1,4 +1,4 @@
-package org.cloudfoundry.identity.oauth2.composite;
+package org.cloudfoundry.identity.oauth2.openid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,16 +16,14 @@ import org.springframework.security.oauth2.common.exceptions.InvalidRequestExcep
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
-public class CompositeAccessTokenProvider extends AuthorizationCodeAccessTokenProvider {
+public class OpenIDTokenProvider extends AuthorizationCodeAccessTokenProvider {
 
     private StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
     private boolean stateMandatory = true;
 
-    public CompositeAccessTokenProvider() {
+    public OpenIDTokenProvider() {
         super.setStateKeyGenerator(stateKeyGenerator);
     }
 
@@ -59,6 +57,7 @@ public class CompositeAccessTokenProvider extends AuthorizationCodeAccessTokenPr
         MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>();
         form.set("grant_type", "authorization_code");
         form.set("code", request.getAuthorizationCode());
+        form.set("response_type", "id_token");
 
         Object preservedState = request.getPreservedState();
         if (request.getStateKey() != null || stateMandatory) {
@@ -96,11 +95,11 @@ public class CompositeAccessTokenProvider extends AuthorizationCodeAccessTokenPr
 
         // we don't have an authorization code yet. So first get that.
         TreeMap<String, String> requestParameters = new TreeMap<String, String>();
-        requestParameters.put("response_type", "code+id_token");
+        requestParameters.put("response_type", "code"); // oauth2 spec, section 3
         requestParameters.put("client_id", resource.getClientId());
         // Client secret is not required in the initial authorization request
 
-        String redirectUri = getIdTokenRedirectUri(request);
+        String redirectUri = resource.getRedirectUri(request);
         if (redirectUri != null) {
             requestParameters.put("redirect_uri", redirectUri);
         }
@@ -135,15 +134,4 @@ public class CompositeAccessTokenProvider extends AuthorizationCodeAccessTokenPr
         return redirectException;
 
     }
-
-    public String getIdTokenRedirectUri(AccessTokenRequest request) {
-        try {
-            URL url = new URL(request.getCurrentUri());
-            return url.getProtocol() + "://" + url.getAuthority() + "/id_token.html";
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 }
-
