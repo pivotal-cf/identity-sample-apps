@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-<title>Implicit sample</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Implicit sample</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta th:if="${ssoServiceUrl} != null" id="ssoServiceUrl" th:content="${ssoServiceUrl}"/>
+  <meta th:if="${clientId} != null" id="clientId" th:content="${clientId}"/>
+  <meta th:if="${thisUrl} != null" id="thisUrl" th:content="${thisUrl}"/>
+  <meta th:if="${uaa} != null" id="uaa" th:content="${uaa}"/>
 </head>
 <body>
-  <h1>Implicit sample</h1>
-  <h2>What do you want to do?</h2>
-  <ul>
-    <li>
-      <a
-        th:href="@{{uaa}/oauth/authorize(uaa=${ssoServiceUrl},client_id=${clientId},response_type='token+id_token',redirect_uri=|${thisUrl}implicit.html#uaaLocation=${ssoServiceUrl}|) }">Use
-        the Implicit Grant and see the response from /userinfo</a>
-    </li>
-  </ul>
+  <div id="root"></div>
+  <script src="/react.js"></script>
+  <script src="/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+  <script src="/app.jsx" type="text/babel"></script>
 </body>
 </html>

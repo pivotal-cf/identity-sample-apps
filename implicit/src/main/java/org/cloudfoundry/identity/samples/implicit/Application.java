@@ -34,12 +34,20 @@ public class Application {
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model) {
         request.getSession().invalidate();
+        populateModelAttributes(request, model);
+        return "index";
+    }
+
+    @RequestMapping("/implicit.html")
+    public String implicit(HttpServletRequest request, Model model) {
+        populateModelAttributes(request, model);
+        return "index";
+    }
+
+    private void populateModelAttributes(HttpServletRequest request, Model model) {
         model.addAttribute("ssoServiceUrl", ssoServiceUrl);
         model.addAttribute("thisUrl", UrlUtils.buildFullRequestUrl(request));
         model.addAttribute("clientId", clientId);
-        if (clientId.equals("client_id_placeholder")) {
-            return "configure_warning";
-        }
-        return "index";
     }
+
 }
