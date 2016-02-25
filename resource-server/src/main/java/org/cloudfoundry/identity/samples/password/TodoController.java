@@ -14,13 +14,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping("/todo")
 public class TodoController {
 
-	Map<String, Todo> todoList = new HashMap<>();
+	private Map<String, Todo> todoDB = new HashMap<>();
 
 	@RequestMapping(method = GET)
 	@ResponseBody
 	@PreAuthorize("#oauth2.hasScope('todo.read')")
 	public Collection<Todo> list() {
-		return todoList.values();
+		return todoDB.values();
 	}
 
 	@RequestMapping(method = POST)
@@ -31,27 +31,27 @@ public class TodoController {
 		body.setId(id);
 		body.setCreated(new Date());
 		body.setUpdated(new Date());
-		todoList.put(id, body);
+		todoDB.put(id, body);
 		return new ResponseEntity<>(body, CREATED);
 	}
 
 	@RequestMapping(value = "/{todoId}", method = PUT)
 	@PreAuthorize("#oauth2.hasScope('todo.write')")
 	public ResponseEntity<?> update(@PathVariable String todoId, @RequestBody Todo body) {
-		Todo saved = todoList.get(todoId);
+		Todo saved = todoDB.get(todoId);
 		saved.setTodo(body.getTodo());
 		body.setUpdated(new Date());
-		todoList.put(todoId, saved);
+		todoDB.put(todoId, saved);
 		return new ResponseEntity<>(OK);
 	}
 
 	@RequestMapping(value = "/{todoId}", method = DELETE)
 	@PreAuthorize("#oauth2.hasScope('todo.write')")
 	public ResponseEntity<?> delete(@PathVariable String todoId) {
-		if (todoId == null || todoList.get(todoId) == null) {
+		if (todoId == null || todoDB.get(todoId) == null) {
 			throw new HttpClientErrorException(NOT_FOUND, "Entry with id(" + todoId + ") not found.");
 		}
-		todoList.remove(todoId);
+		todoDB.remove(todoId);
 		return new ResponseEntity<>(OK);
 	}
 

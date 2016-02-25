@@ -1,8 +1,7 @@
 ---
 applications:
- - name: password-grant-sample
+ - name: resource-server-sample
    memory: 512M
    instances: 1
    env:
      SKIP_SSL_VALIDATION: "true"
-     GRANT_TYPE: password
