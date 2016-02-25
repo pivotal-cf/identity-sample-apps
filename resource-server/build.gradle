@@ -18,8 +18,5 @@ repositories {
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    compile 'org.springframework.cloud:spring-cloud-starter-oauth2'
-    compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector:1.2.0.RELEASE'
-    compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:1.1.0.RELEASE'
+    compile 'org.springframework.cloud:spring-cloud-starter-oauth2:1.0.3.RELEASE'
 }
