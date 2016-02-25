@@ -11,5 +11,13 @@ security:
   ignored: /favicon.ico, /
   basic:
     enabled: false
+  require_ssl: false
+  oauth2:
+    resource:
+      preferTokenInfo: false
+      userInfoUri: ${AUTH_SERVER}/userinfo
+      jwt:
+        keyUri: ${AUTH_SERVER}/token_key
+
 logging.level:
   org.springframework.security: DEBUG

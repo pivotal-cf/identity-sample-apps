@@ -1,43 +1,29 @@
 package org.cloudfoundry.identity.samples.password;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import org.apache.commons.codec.binary.Base64;
-import org.cloudfoundry.identity.samples.oauth2.composite.CompositeAccessTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.AccessTokenProvider;
-import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
+import org.springframework.security.oauth2.provider.authentication.TokenExtractor;
+import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.PostConstruct;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableAutoConfiguration
@@ -52,85 +38,44 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @PostConstruct
-    public void init() {
-        oAuth2RestTemplate.setAccessTokenProvider(accessTokenProviderChain());
+    private TokenExtractor tokenExtractor = new BearerTokenExtractor();
+
+    @Bean
+    public GlobalMethodSecurityConfiguration globalMethodSecurityConfiguration() {
+        return new GlobalMethodSecurityConfiguration() {
+            @Override
+            protected MethodSecurityExpressionHandler createExpressionHandler() {
+                return new OAuth2MethodSecurityExpressionHandler();
+            }
+        };
     }
 
     @Bean
-    public AccessTokenProvider accessTokenProviderChain() {
-        return new AccessTokenProviderChain(Collections.singletonList(new CompositeAccessTokenProvider()));
-    }
+    public ResourceServerConfigurer resourceServerConfigurerAdapter() {
+        return new ResourceServerConfigurerAdapter() {
+            @Override
+            public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+                resources.resourceId("todo");
+            }
 
-    @Value("${ssoServiceUrl:placeholder}")
-    private String ssoServiceUrl;
-
-    @Autowired
-    @Qualifier("passwordGrantRestTemplate")
-    private OAuth2RestTemplate oAuth2RestTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @RequestMapping("/")
-    public String index() {
-        return "index";
-    }
-
-    @Autowired
-    private ResourceOwnerPasswordResourceDetails passwordGrantResourceDetails;
-
-    @RequestMapping("/password")
-    public String showPasswordPage() {
-        if (this.ssoServiceUrl.equals("placeholder")) {
-            return "configure_warning";
-        }
-        return "password_form";
-    }
-
-    @RequestMapping(value = "/password",method = RequestMethod.POST)
-    public String doPasswordLogin(@RequestParam String username, @RequestParam String password, Model model) throws Exception {
-        passwordGrantResourceDetails.setUsername(username);
-        passwordGrantResourceDetails.setPassword(password);
-        String response = oAuth2RestTemplate.getForObject("{uaa}/userinfo", String.class,
-            ssoServiceUrl);
-        model.addAttribute("response", toPrettyJsonString(response));
-        Map<String, ?> token = getToken(oAuth2RestTemplate.getOAuth2ClientContext());
-        model.addAttribute("token", toPrettyJsonString(token));
-        model.addAttribute("id_token", toPrettyJsonString(getIdToken(oAuth2RestTemplate.getOAuth2ClientContext())));
-        return "password_result";
-    }
-
-    private Map<String, ?> getIdToken(OAuth2ClientContext clientContext) throws IOException {
-        if (clientContext.getAccessToken() != null) {
-            String tokenBase64 = clientContext.getAccessToken().getAdditionalInformation().get("id_token").toString().split("\\.")[1];
-            return objectMapper.readValue(Base64.decodeBase64(tokenBase64), new TypeReference<Map<String, ?>>() {
-            });
-        }
-        return null;
-    }
-
-    private Map<String, ?> getToken(OAuth2ClientContext clientContext) throws Exception {
-        if (clientContext.getAccessToken() != null) {
-            String tokenBase64 = clientContext.getAccessToken().getValue().split("\\.")[1];
-            return objectMapper.readValue(Base64.decodeBase64(tokenBase64), new TypeReference<Map<String, ?>>() {
-            });
-        }
-        return null;
-    }
-
-    private String toPrettyJsonString(Object object) throws Exception {
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "security.oauth2.client")
-    ResourceOwnerPasswordResourceDetails passwordGrantResourceDetails() {
-        return new ResourceOwnerPasswordResourceDetails();
-    }
-
-    @Bean
-    public OAuth2RestTemplate passwordGrantRestTemplate() {
-        return new OAuth2RestTemplate(passwordGrantResourceDetails());
+            @Override
+            public void configure(HttpSecurity http) throws Exception {
+                http.addFilterAfter(new OncePerRequestFilter() {
+                    @Override
+                    protected void doFilterInternal(HttpServletRequest request,
+                                                    HttpServletResponse response, FilterChain filterChain)
+                        throws ServletException, IOException {
+                        // We don't want to allow access to a resource with no token so clear
+                        // the security context in case it is actually an OAuth2Authentication
+                        if (tokenExtractor.extract(request) == null) {
+                            SecurityContextHolder.clearContext();
+                        }
+                        filterChain.doFilter(request, response);
+                    }
+                }, AbstractPreAuthenticatedProcessingFilter.class);
+                http.csrf().disable();
+                http.authorizeRequests().anyRequest().authenticated();
+            }
+        };
     }
 }
