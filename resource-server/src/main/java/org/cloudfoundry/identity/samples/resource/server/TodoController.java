@@ -1,4 +1,4 @@
-package org.cloudfoundry.identity.samples.password;
+package org.cloudfoundry.identity.samples.resource.server;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,16 +33,6 @@ public class TodoController {
 		body.setUpdated(new Date());
 		todoDB.put(id, body);
 		return new ResponseEntity<>(body, CREATED);
-	}
-
-	@RequestMapping(value = "/{todoId}", method = PUT)
-	@PreAuthorize("#oauth2.hasScope('todo.write')")
-	public ResponseEntity<?> update(@PathVariable String todoId, @RequestBody Todo body) {
-		Todo saved = todoDB.get(todoId);
-		saved.setTodo(body.getTodo());
-		body.setUpdated(new Date());
-		todoDB.put(todoId, saved);
-		return new ResponseEntity<>(OK);
 	}
 
 	@RequestMapping(value = "/{todoId}", method = DELETE)

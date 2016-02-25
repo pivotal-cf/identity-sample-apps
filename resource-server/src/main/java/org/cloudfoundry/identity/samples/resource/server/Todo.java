@@ -1,4 +1,4 @@
-package org.cloudfoundry.identity.samples.password;
+package org.cloudfoundry.identity.samples.resource.server;
 
 import java.util.Date;
 

@@ -3,6 +3,7 @@ package org.cloudfoundry.identity.samples.authcode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -23,6 +24,12 @@ public class Controller {
     @RequestMapping(value = "/new_todo", method = POST)
     public String create(@ModelAttribute Todo body) {
         todoService.create(body);
+        return "redirect:/todo";
+    }
+
+    @RequestMapping(value = "/todo/{id}/delete", method = POST)
+    public String delete(@PathVariable String id) {
+        todoService.delete(id);
         return "redirect:/todo";
     }
 }

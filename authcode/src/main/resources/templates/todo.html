@@ -20,6 +20,7 @@
     <td>Entry</td>
     <td>Created</td>
     <td>Last Updated</td>
+    <td>Delete</td>
   </thead>
   <tbody>
     <tr th:each="todo : ${todoList}">
@@ -27,6 +28,11 @@
       <td th:text="${todo.todo}"></td>
       <td th:text="${todo.created}"></td>
       <td th:text="${todo.updated}"></td>
+      <td>
+        <form th:action="|/todo/${todo.id}/delete|" method="post">
+         <input type="submit" value="Delete"/>
+        </form>
+      </td>
     </tr>
   </tbody>
 </table>

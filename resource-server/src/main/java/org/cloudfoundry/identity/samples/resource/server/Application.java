@@ -1,4 +1,4 @@
-package org.cloudfoundry.identity.samples.password;
+package org.cloudfoundry.identity.samples.resource.server;
 
 import java.io.IOException;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.provider.authentication.BearerTokenEx
 import org.springframework.security.oauth2.provider.authentication.TokenExtractor;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import org.springframework.stereotype.Controller;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,14 +29,13 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-@Controller
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class Application {
 
     public static void main(String[] args) {
         if ("true".equals(System.getenv("SKIP_SSL_VALIDATION"))) {
-            org.cloudfoundry.identity.samples.password.SSLValidationDisabler.disableSSLValidation();
+            SSLValidationDisabler.disableSSLValidation();
         }
         SpringApplication.run(Application.class, args);
     }

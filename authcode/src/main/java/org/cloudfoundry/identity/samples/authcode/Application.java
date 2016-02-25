@@ -30,7 +30,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpSession;
 
 @Configuration
 @EnableAutoConfiguration
@@ -75,7 +74,7 @@ public class Application {
     }
 
     @RequestMapping("/authorization_code")
-    public String authCode(Model model, HttpSession session) throws Exception {
+    public String authCode(Model model) throws Exception {
         if (oauth2RestTemplate == null) {
             return "configure_warning";
         }
