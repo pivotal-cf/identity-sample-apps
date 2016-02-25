@@ -1,8 +1,10 @@
 var ExampleApplication = React.createClass({
   getFragment(pattern) {
-    console.log(pattern);
     var matcher = new RegExp(pattern + "=([^&]+)");
-    return matcher.exec(window.location.hash)[1];
+    var result = matcher.exec(window.location.hash);
+    if (result) {
+      return result[1];
+    }
   },
 
   prettyToken(token) {
