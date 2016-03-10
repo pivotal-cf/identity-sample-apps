@@ -8,9 +8,9 @@ spring:
   thymeleaf:
     cache: false
 security:
-  ignored: /favicon.ico, /, /id_token.html, save_id_token
+  ignored: /favicon.ico, /
   basic:
     enabled: false
 logging.level:
   org.springframework.security: DEBUG
-resourceServerUrl: ${RESOURCE_URL}
+resourceServerUrl: ${RESOURCE_URL:https://resource-server.domain}

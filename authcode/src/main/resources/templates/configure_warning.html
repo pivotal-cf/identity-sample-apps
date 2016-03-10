@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
     <meta charset="UTF-8"/>
     <title></title>
 </head>
 <body>
-    <h1>Warning: You need to bind to the SSO service.</h1>
-    <div>Please bind your app to restore regular functionality</div>
+    <h1 th:text="${header}">Warning: You need to bind to the SSO service.</h1>
+    <div th:text="${warning}">Please bind your app to restore regular functionality</div>
 </body>
 </html>

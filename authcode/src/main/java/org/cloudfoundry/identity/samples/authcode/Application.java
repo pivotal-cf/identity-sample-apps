@@ -46,7 +46,7 @@ public class Application {
     }
 
     // property set by spring-cloud-sso-connector
-    @Value("${ssoServiceUrl:http:localhost:8080/uaa}")
+    @Value("${ssoServiceUrl:placeholder}")
     private String ssoServiceUrl;
 
     @Autowired(required = false)
@@ -75,7 +75,9 @@ public class Application {
 
     @RequestMapping("/authorization_code")
     public String authCode(Model model) throws Exception {
-        if (oauth2RestTemplate == null) {
+        if (ssoServiceUrl.equals("placeholder")) {
+            model.addAttribute("header", "Warning: You need to bind to the SSO service.");
+            model.addAttribute("warning", "Please bind your app to restore regular functionality");
             return "configure_warning";
         }
         Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class,

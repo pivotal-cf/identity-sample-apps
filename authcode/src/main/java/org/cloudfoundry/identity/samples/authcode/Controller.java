@@ -1,6 +1,7 @@
 package org.cloudfoundry.identity.samples.authcode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +14,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class Controller {
     @Autowired
     private TodoService todoService;
+    @Value("${resourceServerUrl}")
+    private String resourceServerUrl;
 
     @RequestMapping(value = "/todo", method = GET)
     public String list(Model model) {
+        if (resourceServerUrl.equals("https://resource-server.domain")) {
+            model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
+            model.addAttribute("warning", "Please push the Resource Server sample application and set the resource server URL " +
+                "for the environment variable {RESOURCE_URL} for this application and restart it");
+            return "configure_warning";
+        }
         model.addAttribute("todoList", todoService.getAll());
         model.addAttribute("todo", new Todo());
         return "todo";
