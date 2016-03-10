@@ -9,6 +9,8 @@ Application Type  | Grant Type
 [Service-to-Service App](/client_credentials) | client_credentials
 [Single Page JavaScript App](/implicit) | implicit
 
+####Note: If you are using a public IP, you will need to update the internal_proxies variable in application.yml to your public IP.
+
 ## <a name="step-1">Step 1</a>: Deploy Sample Application to Pivotal Cloud Foundry
 
 Set the correct CF API target in the CF CLI and login as a Space Developer into the required Org and Space
