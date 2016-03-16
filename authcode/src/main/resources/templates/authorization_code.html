@@ -24,7 +24,7 @@
       <a target="uaa" th:href="|${ssoServiceUrl}/profile|">See your account profile (so you can de-authorize this client)</a>
     </li>
     <li>
-      <a target="uaa" th:href="|${ssoServiceUrl}/logout.do|">Log out</a>
+      <form action="/logout"><input type="submit" value="Log out of this Sample"/></form>
     </li>
   </ul>
 
