@@ -37,7 +37,7 @@ var ExampleApplication = React.createClass({
           <h2>What do you want to do?</h2>
           <ul>
             <li>
-              <a href={href}>Use the Implicit Grant and see the response from /userinfo</a>
+              <a href={href}>Log in via Implicit Grant Type</a>
             </li>
           </ul>
         </div>)
