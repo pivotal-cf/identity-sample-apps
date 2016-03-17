@@ -22,8 +22,6 @@ public class Controller {
     private TodoService todoService;
     @Value("${resourceServerUrl}")
     private String resourceServerUrl;
-    @Value("${ssoServiceUrl}")
-    private String ssoServiceUrl;
 
     @RequestMapping(value = "/todo", method = GET)
     public String list(Model model) {
@@ -48,14 +46,5 @@ public class Controller {
     public String delete(@PathVariable String id) {
         todoService.delete(id);
         return "redirect:/todo";
-    }
-
-    @RequestMapping(value="/logout", method = GET)
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:" + ssoServiceUrl + "/logout.do";
     }
 }

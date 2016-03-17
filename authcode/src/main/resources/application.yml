@@ -8,7 +8,7 @@ spring:
   thymeleaf:
     cache: false
 security:
-  ignored: /favicon.ico, /
+  ignored: /favicon.ico, /, /authorization_code
   basic:
     enabled: false
 logging.level:
