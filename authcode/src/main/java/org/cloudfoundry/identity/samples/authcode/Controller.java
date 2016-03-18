@@ -27,8 +27,7 @@ public class Controller {
     public String list(Model model) {
         if (resourceServerUrl.equals("https://resource-server.domain")) {
             model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
-            model.addAttribute("warning", "Please push the Resource Server sample application and set the resource server URL " +
-                "for the environment variable {RESOURCE_URL} for this application and restart it");
+            model.addAttribute("displayWarning", true);
             return "configure_warning";
         }
         model.addAttribute("todoList", todoService.getAll());
