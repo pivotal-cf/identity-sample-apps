@@ -32,13 +32,17 @@ Restart your application after binding the service using Apps Manager or CF CLI.
 
 ## Deploying Resource Server
 
-The resource server needs to know the UAA location (`cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>`) in order to retrieve the token key to validate the tokens.
-It has three API endpoints:
- `GET /todo` to list TODO items. Requires the user to have `todo.read` scope.
- `POST /todo` to create a TODO item. Requires `todo.write` scope. Example body: `{"todo":"<content>"}`
- `DELETE /todo/{id}` to delete a TODO item. Requires `todo.write` scope.
+### Setup
+The resource server needs to know the UAA location in order to retrieve the token key to validate the tokens.
 
-To push the app follow steps [1](#step-1) and [2](#step-2) of the previous section.
+`cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>`
+
+It has three API endpoints:
+ * `GET /todo` to list TODO items. Requires the user to have `todo.read` scope.
+ * `POST /todo` to create a TODO item. Requires `todo.write` scope. Example body: `{"todo":"<content>"}`
+ * `DELETE /todo/{id}` to delete a TODO item. Requires `todo.write` scope.
+
+To push the app, follow steps [1](#step-1) and [2](#step-2) of the previous section.
 
 ## Setting up Authcode Sample App to use Resource Server
 
