@@ -56,7 +56,7 @@ public class Application {
     // property set by spring-cloud-sso-connector
     @Value("${ssoServiceUrl:placeholder}")
     private String ssoServiceUrl;
-    @Value("${security.oauth2.client.clientId}")
+    @Value("${security.oauth2.client.clientId:placeholder}")
     private String clientId;
 
     @Autowired(required = false)
