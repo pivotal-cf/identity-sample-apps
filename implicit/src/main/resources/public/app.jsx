@@ -21,8 +21,8 @@ var ExampleApplication = React.createClass({
 
   render() {
     var page = null;
+    var clientId = document.getElementById("clientId").content;
     if (window.location.pathname === "/") {
-      var clientId = document.getElementById("clientId").content;
       if (clientId === "client_id_placeholder") {
         page = (
           <div>
@@ -52,7 +52,8 @@ var ExampleApplication = React.createClass({
       var token = this.prettyToken(this.getFragment("access_token"));
       var tokenType = this.getFragment("token_type");
       var profileUrl = ssoServiceUrl + '/profile';
-      var logoutUrl = ssoServiceUrl + '/logout.do';
+      const urlStr = window.location.protocol + '//' + window.location.host;
+      var logoutUrl = ssoServiceUrl + '/logout.do' + '?redirect=' + urlStr + '&client_id=' + clientId;
       page = (<div>
         <h1>Implicit sample</h1>
         <p>The server only saw a request for /implicit.html. Everything after the # in the address bar is stuff that only your browser can see.</p>
@@ -76,7 +77,7 @@ var ExampleApplication = React.createClass({
             <a id="profile" target="uaa" href={profileUrl}>See your account profile on UAA (so you can de-authorize this client)</a>
           </li>
           <li>
-            <a id="logout" target="uaa" href={logoutUrl}>Log out of UAA</a>
+            <a id="logout" href={logoutUrl}>Log out of UAA</a>
           </li>
         </ul>
       </div>);

@@ -1,6 +1,7 @@
 package org.cloudfoundry.identity.samples.authcode;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -55,6 +56,8 @@ public class Application {
     // property set by spring-cloud-sso-connector
     @Value("${ssoServiceUrl:placeholder}")
     private String ssoServiceUrl;
+    @Value("${security.oauth2.client.clientId}")
+    private String clientId;
 
     @Autowired(required = false)
     private OAuth2RestTemplate oauth2RestTemplate;
@@ -81,16 +84,15 @@ public class Application {
     }
 
     @RequestMapping("/authorization_code")
-    public String authCode(Model model) throws Exception {
+    public String authCode(Model model, HttpServletRequest request) throws Exception {
         if (ssoServiceUrl.equals("placeholder")) {
             model.addAttribute("header", "Warning: You need to bind to the SSO service.");
             model.addAttribute("warning", "Please bind your app to restore regular functionality");
             return "configure_warning";
         }
-        Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class,
-                ssoServiceUrl);
+        Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class, ssoServiceUrl);
         model.addAttribute("ssoServiceUrl",ssoServiceUrl);
-        model.addAttribute("response",toPrettyJsonString(userInfoResponse));
+        model.addAttribute("response", toPrettyJsonString(userInfoResponse));
 
         OAuth2AccessToken accessToken = oauth2RestTemplate.getOAuth2ClientContext().getAccessToken();
         if (accessToken != null) {
@@ -101,12 +103,14 @@ public class Application {
     }
 
     @RequestMapping(value="/logout", method = GET)
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:" + ssoServiceUrl + "/logout.do";
+        URL url = new URL(request.getRequestURL().toString());
+        String urlStr = url.getProtocol() + "://" + url.getAuthority();
+        return "redirect:" + ssoServiceUrl + "/logout.do?redirect=" + urlStr + "&clientId=" + clientId;
     }
 
     private Map<String, ?> parseToken(String base64Token) throws IOException {
