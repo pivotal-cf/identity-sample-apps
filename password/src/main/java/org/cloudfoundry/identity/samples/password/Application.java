@@ -1,11 +1,9 @@
 package org.cloudfoundry.identity.samples.password;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import org.apache.commons.codec.binary.Base64;
 import org.cloudfoundry.identity.samples.oauth2.composite.CompositeAccessTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +16,6 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.AccessTokenProvider;
 import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +32,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Configuration
 @EnableAutoConfiguration
@@ -132,5 +130,12 @@ public class Application {
     @Bean
     public OAuth2RestTemplate passwordGrantRestTemplate() {
         return new OAuth2RestTemplate(passwordGrantResourceDetails());
+    }
+
+
+    @RequestMapping(value="/logout", method = GET)
+    public String logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        this.oAuth2RestTemplate.getOAuth2ClientContext().setAccessToken(null);
+        return "redirect:/password";
     }
 }
