@@ -8,3 +8,4 @@ applications:
      SKIP_SSL_VALIDATION: "true"
      GRANT_TYPE: password
      SSO_IDENTITY_PROVIDERS: uaa
+     SSO_OAUTH_SCOPES: test1.scope,test2.scope
