@@ -7,3 +7,4 @@ applications:
    env:
      SKIP_SSL_VALIDATION: "true"
      GRANT_TYPE: implicit
+     SSO_IDENTITY_PROVIDERS: uaa
