@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Authcode sample</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>TODO List</h1>
+
+<form action="/new_todo" method="post" th:object="${todo}">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <label>Add Item:</label>
+  <input th:field="*{todo}" type="text"/>
+  <input type="submit" value="Add"/>
+</form>
+
+<table border="1">
+  <thead>
+    <td>Id</td>
+    <td>Entry</td>
+    <td>Created</td>
+    <td>Last Updated</td>
+    <td>Delete</td>
+  </thead>
+  <tbody>
+    <tr th:each="todo : ${todoList}">
+      <td th:text="${todo.id}"></td>
+      <td th:text="${todo.todo}"></td>
+      <td th:text="${todo.created}"></td>
+      <td th:text="${todo.updated}"></td>
+      <td>
+        <form th:action="|/todo/${todo.id}/delete|" method="post">
+         <input type="submit" value="Delete"/>
+        </form>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

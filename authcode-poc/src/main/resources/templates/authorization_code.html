@@ -1,0 +1,32 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Authcode sample</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+  <h1>Authcode sample</h1>
+
+  <p>You've used the authcode flow! Here's the result of calling /userinfo:</p>
+  <pre th:text="${response}"></pre>
+  <p>This is the Access Token that was used:</p>
+  <pre th:text="${access_token}"></pre>
+  <p>This is the ID Token:</p>
+  <pre th:text="${id_token}"></pre>
+
+  <h2>What do you want to do?</h2>
+  <ul>
+    <li>
+      <a href="/todo">TODO List (You need to configure the Resource Server sample app before using this)</a>
+    </li>
+    <li>
+      <a target="uaa" th:href="|${ssoServiceUrl}/profile|">See your account profile (so you can de-authorize this client)</a>
+    </li>
+    <li>
+      <a href="/logout">Log out</a>
+    </li>
+  </ul>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+group 'Pivotal'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+//apply plugin: 'eclipse-wtp'
+//eclipse {
+//    wtp {
+//        component {
+//            contextPath = 'authcodedemo'
+//        }
+//    }
+//}
+
+sourceCompatibility = 1.5
+
+repositories {
+    maven { url "https://repo.spring.io/libs-release-local" }
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.springframework:spring-context:4.1.9.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.0.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version:'4.0.3.RELEASE'
+    compile 'org.springframework.security.oauth:spring-security-oauth2:2.0.10.RELEASE'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.5'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile 'org.springframework:spring-webmvc:4.1.6.RELEASE'
+    compile group: 'cglib', name: 'cglib', version: '3.2.4'
+}
