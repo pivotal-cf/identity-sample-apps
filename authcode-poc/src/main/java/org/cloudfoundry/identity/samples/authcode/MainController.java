@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -27,18 +24,17 @@ import java.util.Map;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-@Component
 public class MainController {
   public MainController() {
   }
 
-  @Value("${ssoServiceUrl:placeholder}")
+  @Value("${ssoServiceUrl:https://login.identity.cf-app.com}")
   private String ssoServiceUrl;
 
-  @Value("${security.oauth2.client.clientId:placeholder}")
+  @Value("${security.oauth2.client.clientId:account}")
   private String clientId;
 
-  @Autowired(required = false)
+  @Autowired
   private OAuth2RestTemplate oauth2RestTemplate;
 
   @Autowired
@@ -49,7 +45,7 @@ public class MainController {
     return "index";
   }
 
-  @RequestMapping("/authorization_code")
+  @RequestMapping("/authorizationcode")
   public String authCode(Model model, HttpServletRequest request) throws Exception {
     if (ssoServiceUrl.equals("placeholder")) {
       model.addAttribute("header", "Warning: You need to bind to the SSO service.");
