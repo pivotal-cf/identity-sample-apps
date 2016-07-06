@@ -58,7 +58,7 @@
 		</property>
 	</bean>
 
-	<bean id="ssoServiceCreatorInitializer" class="SsoServiceCreatorInitializer">
+	<bean id="ssoServiceCreatorInitializer" class="SsoServiceInfoCreatorInitializer">
 		<constructor-arg name="cloudFactory" ref="cloudFactory" />
 		<constructor-arg name="environment" ref="environment" />
 	</bean>

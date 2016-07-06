@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SsoServiceCreatorInitializer {
+public class SsoServiceInfoCreatorInitializer {
 
     private CloudFactory cloudFactory;
     private Environment environment;
@@ -24,7 +24,7 @@ public class SsoServiceCreatorInitializer {
     private static final String SPRING_OAUTH2_USER_INFO_URI = "userInfoUri";
     private static final String SPRING_OAUTH2_TOKEN_INFO_URI = "tokenInfoUri";
 
-    public SsoServiceCreatorInitializer(CloudFactory cloudFactory, Environment environment) {
+    public SsoServiceInfoCreatorInitializer(CloudFactory cloudFactory, Environment environment) {
         this.cloudFactory = cloudFactory;
         this.environment = environment;
         List<ServiceInfo> serviceInfos = cloudFactory.getCloud().getServiceInfos();
