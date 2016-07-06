@@ -13,9 +13,17 @@
 
 import org.cloudfoundry.identity.app.web.SSLValidationDisabler;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.util.Assert;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +33,6 @@ import org.springframework.util.Assert;
 public class OAuth2AccessTokenSource implements InitializingBean, PreAuthenticatedPrincipalSource<String> {
 
   private OAuth2RestOperations restTemplate;
-
   /**
    * A rest template to be used to contact the remote user info endpoint.
    * Normally an instance of {@link OAuth2RestTemplate}.
@@ -35,7 +42,6 @@ public class OAuth2AccessTokenSource implements InitializingBean, PreAuthenticat
   public void setRestTemplate(OAuth2RestOperations restTemplate) {
     this.restTemplate = restTemplate;
   }
-
   @Override
   public void afterPropertiesSet() {
     Assert.state(restTemplate != null, "RestTemplate URL must be provided");

@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Cloud Foundry 2012.02.03 Beta Copyright (c) [2009-2012] VMware, Inc. All Rights Reserved. This product is licensed to
-	you under the Apache License, Version 2.0 (the "License"). You may not use this product except in compliance with the License.
-	This product includes a number of subcomponents with separate copyright notices and license terms. Your use of these subcomponents
-	is subject to the terms and conditions of the subcomponent's license, as noted in the LICENSE file. -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,19 +10,7 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-	<sec:http name="appFilterLogout" pattern="/logout" security="none" />
 	<sec:http name="appFilterLoginError" pattern="/login_error.jsp" security="none" />
-	<sec:http name="appFilterResources" pattern="/resources/**" security="none" />
-	<sec:http name="appFilterFavIcon" pattern="/square-logo.png" security="none" />
-
-	<!--<http name="appFilterApps" pattern="/apps.*" request-matcher="regex" xmlns="http://www.springframework.org/schema/security"-->
-	<!--entry-point-ref="loginEntryPoint" disable-url-rewriting="true" use-expressions="true" authentication-manager-ref="authenticationManager">-->
-	<!--<intercept-url pattern="/apps.*" access="hasRole('cloud_controller.read')" />-->
-	<!--<anonymous enabled="false" />-->
-	<!--<custom-filter ref="oauth2ClientFilter" before="PRE_AUTH_FILTER" />-->
-	<!--<custom-filter ref="accessTokenFilter" position="PRE_AUTH_FILTER" />-->
-	<!--<csrf disabled="true"/>-->
-	<!--</http>-->
 
 	<http name="appFilterDefault" xmlns="http://www.springframework.org/schema/security" entry-point-ref="loginEntryPoint"
 		  disable-url-rewriting="true" use-expressions="true" authentication-manager-ref="authenticationManager"
@@ -49,11 +33,13 @@
 		<property name="tokenServices" ref="remoteTokenServices" />
 	</bean>
 
-	<bean id="remoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices">
-		<property name="checkTokenEndpointUrl" value="${checkTokenUrl}" />
-		<property name="clientId" value="${clientId:app}" />
-		<property name="clientSecret" value="${clientSecret:account_secret}" />
+	<bean id="remoteTokenServices" class="org.springframework.security.oauth2.provider.token.RemoteTokenServices" depends-on="ssoServiceCreatorInitializer">
+		<property name="checkTokenEndpointUrl" value='#{@environment.getProperty("tokenInfoUri")}' />
+		<property name="clientId" value='#{@environment.getProperty("clientId")}' />
+		<property name="clientSecret" value='#{@environment.getProperty("clientSecret")}' />
 	</bean>
+
+	<bean id="cloudFactory" class="org.springframework.cloud.CloudFactory" />
 
 	<bean id="loginEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<constructor-arg value="/login_error.jsp" />
@@ -65,25 +51,23 @@
 	<bean id="accessTokenFilter" class="ClientAuthenticationFilter">
 		<constructor-arg value="/login" />
 		<property name="authenticationManager" ref="oauth2AuthenticationManager" />
-		<property name="preAuthenticatedPrincipalSource">
+ 		<property name="preAuthenticatedPrincipalSource">
 			<bean class="OAuth2AccessTokenSource">
 				<property name="restTemplate" ref="restTemplate" />
 			</bean>
 		</property>
 	</bean>
 
-	<mvc:resources location="/resources/" mapping="/resources/**" />
+	<bean id="ssoServiceCreatorInitializer" class="SsoServiceCreatorInitializer">
+		<constructor-arg name="cloudFactory" ref="cloudFactory" />
+		<constructor-arg name="environment" ref="environment" />
+	</bean>
 
 	<mvc:annotation-driven />
 
 	<mvc:default-servlet-handler />
 
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<!--<property name="mediaTypes">-->
-		<!--<map>-->
-		<!--<entry key="json" value="application/json" />-->
-		<!--</map>-->
-		<!--</property>-->
 		<property name="defaultViews">
 			<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
 		</property>
@@ -94,35 +78,18 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<!--<bean id="treeController" class="org.cloudfoundry.identity.app.web.TreeController">-->
-	<!--<property name="restTemplate" ref="restTemplate" />-->
-	<!--<property name="treeUrlPattern" value="${treeUrlPattern}" />-->
-	<!--</bean>-->
+	<bean id="homeController" class="org.cloudfoundry.identity.app.web.HomeController" />
 
-	<bean id="homeController" class="org.cloudfoundry.identity.app.web.HomeController">
-		<property name="approvalsUri" value="${approvalsUri}" />
-		<property name="userAuthorizationUri" value="${userAuthorizationUri}" />
-		<property name="dataUri" value="${dataUri}" />
-		<property name="logoutUrl" value="${cloudFoundryLogoutUrl}" />
-		<property name="clientId" value="${clientId:app}" />
-	</bean>
-
-	<oauth:rest-template id="restTemplate" resource="uaa" />
+	<oauth:rest-template id="restTemplate" resource="authorizationCodeDetails" />
 
 	<!--define an oauth 2 resource for api access -->
-	<oauth:resource id="uaa" type="authorization_code" client-id="${clientId:app}" client-secret="${clientSecret:account_secret}"
-					access-token-uri="${accessTokenUri}" user-authorization-uri="${userAuthorizationUri}" />
+	<bean id="authorizationCodeDetails" class="org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails" depends-on="ssoServiceCreatorInitializer">
+		<property name="accessTokenUri" value='#{@environment.getProperty("accessTokenUri")}'/>
+		<property name="userAuthorizationUri" value='#{@environment.getProperty("userAuthorizationUri")}'/>
+		<property name="clientId" value='#{@environment.getProperty("clientId")}'/>
+		<property name="clientSecret" value='#{@environment.getProperty("clientSecret")}'/>
+	</bean>
 
 	<oauth:web-expression-handler id="oauthWebExpressionHandler" />
-
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" xmlns="http://www.springframework.org/schema/beans">
-		<property name="locations">
-			<list>
-				<value>classpath:/application.properties</value>
-				<value>classpath:/application-${UAA_PROFILE}.properties</value>
-			</list>
-		</property>
-		<property name="ignoreResourceNotFound" value="true"></property>
-	</bean>
 
 </beans>

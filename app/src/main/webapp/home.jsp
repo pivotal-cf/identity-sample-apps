@@ -22,14 +22,5 @@
 	<p>Welcome ${principal.name}</p>
 	<h3>Technical Information</h3>
 	<p>Your principal object is....: ${principal}</p>
-	<p>Your OAuth2 tokens: ${tokens}</p>
-
-	<ul>
-		<li><a href="apps">Apps</a></li>
-		<li><a href="browse">Implicit Flow Demo</a></li>
-		<li><a href="${approvalsUri}">Revoke approvals</a></li>
-		<li><a href="j_spring_security_logout">Logout</a></li>
-		<li><a href="<c:url value="/"/>">Home</a></li>
-	</ul>
 </body>
 </html>

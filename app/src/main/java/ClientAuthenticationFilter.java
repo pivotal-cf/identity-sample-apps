@@ -12,10 +12,19 @@
  *******************************************************************************/
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.pivotal.spring.cloud.SsoServiceInfo;
+import org.springframework.cloud.CloudFactory;
+import org.springframework.cloud.service.ServiceInfo;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -79,6 +88,8 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
 
   @Override
   public void afterPropertiesSet() {
+
+
     Assert.state(principalSource != null, "User info source must be provided");
     super.afterPropertiesSet();
     try {
