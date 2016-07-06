@@ -8,9 +8,12 @@ Once this bean is initialized, other beans can access these credentials as envir
 
 ## Deploying this app to CF
 
-./gradlew clean build
-cf push [app-name] non-spring-boot-sample-1.0-SNAPSHOT.war --no-start
+`./gradlew clean build`
+
+`cf push [app-name] non-spring-boot-sample-1.0-SNAPSHOT.war --no-start`
+
 Bind the app to the SSO service
-cf restart [app-name]
+
+`cf restart [app-name]`
 
 Note: In order to make the SSO flow work, please ensure that the OAuth client for this application has the `uaa.resource` authority.
