@@ -10,7 +10,7 @@ Once this bean is initialized, other beans can access these credentials as envir
 
 `./gradlew clean build`
 
-`cf push [app-name] non-spring-boot-sample-1.0-SNAPSHOT.war --no-start`
+`cf push [app-name] -p build/libs/non-spring-boot-sample-1.0-SNAPSHOT.war --no-start`
 
 Bind the app to the SSO service
 
