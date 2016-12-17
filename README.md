@@ -23,7 +23,7 @@ Go to your application directory and push the app.
 NOTE: If you are using a public IP, you will need to update the internal_proxies variable in application.yml to your public IP.
 
 ## <a name="step-2">Step 2</a>: Bind the Application with the Pivotal Single Sign-On Service Instance
-Follow the steps [here] (http://docs.pivotal.io/p-identity/bind-apps.html) to bind your application to the service instance.
+Follow the steps [here](http://docs.pivotal.io/p-identity/configure-apps/index.html#bind) to bind your application to the service instance.
 
 Restart your application after binding the service using Apps Manager or CF CLI.
 
