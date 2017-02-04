@@ -1,10 +1,7 @@
 package org.cloudfoundry.identity.samples.authcode;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Map;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.cloudfoundry.identity.oauth2.openid.OpenIDTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.AccessTokenProvider;
 import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
@@ -29,14 +28,14 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -60,16 +59,14 @@ public class Application {
     @Value("${security.oauth2.client.clientId:placeholder}")
     private String clientId;
 
-    @Autowired(required = false)
-    private OAuth2RestTemplate oauth2RestTemplate;
-
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostConstruct
-    public void init() {
-        oauth2RestTemplate.setAccessTokenProvider(accessTokenProviderChain());
-    }
+    @Autowired
+    private OAuth2RestTemplate oauth2RestTemplate;
+
+    @Autowired
+    private OAuth2ClientContext oAuth2ClientContext;
 
     @Bean
     public AccessTokenProvider accessTokenProviderChain() {
@@ -77,6 +74,20 @@ public class Application {
             new OpenIDTokenProvider(),
             new AuthorizationCodeAccessTokenProvider(), new ImplicitAccessTokenProvider(),
             new ResourceOwnerPasswordAccessTokenProvider(), new ClientCredentialsAccessTokenProvider()));
+    }
+
+    @Bean
+    public UserInfoRestTemplateCustomizer userInfoOAuth2TemplateCustomizer() {
+        return (oauth2RestTemplate) -> {
+            oauth2RestTemplate.setAccessTokenProvider(accessTokenProviderChain());
+        };
+    }
+
+    @Bean
+    public OAuth2RestTemplate oAuth2RestTemplate(OAuth2ProtectedResourceDetails resource,
+                                                 OAuth2ClientContext context) {
+        OAuth2RestTemplate oauth2RestTemplate = new OAuth2RestTemplate(resource, context);
+        return oauth2RestTemplate;
     }
 
     @RequestMapping("/")
@@ -91,11 +102,11 @@ public class Application {
             model.addAttribute("warning", "Please bind your app to restore regular functionality");
             return "configure_warning";
         }
-        Map<?,?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class, ssoServiceUrl);
-        model.addAttribute("ssoServiceUrl",ssoServiceUrl);
+        Map<?, ?> userInfoResponse = oauth2RestTemplate.getForObject("{ssoServiceUrl}/userinfo", Map.class, ssoServiceUrl);
+        model.addAttribute("ssoServiceUrl", ssoServiceUrl);
         model.addAttribute("response", toPrettyJsonString(userInfoResponse));
 
-        OAuth2AccessToken accessToken = oauth2RestTemplate.getOAuth2ClientContext().getAccessToken();
+        OAuth2AccessToken accessToken = this.oAuth2ClientContext.getAccessToken();
         if (accessToken != null) {
             model.addAttribute("access_token", toPrettyJsonString(parseToken(accessToken.getValue())));
             model.addAttribute("id_token", toPrettyJsonString(parseToken((String) accessToken.getAdditionalInformation().get("id_token"))));
@@ -123,4 +134,5 @@ public class Application {
     private String toPrettyJsonString(Object object) throws Exception {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
+
 }
