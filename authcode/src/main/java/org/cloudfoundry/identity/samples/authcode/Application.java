@@ -111,7 +111,7 @@ public class Application {
         }
         URL url = new URL(request.getRequestURL().toString());
         String urlStr = url.getProtocol() + "://" + url.getAuthority();
-        return "redirect:" + ssoServiceUrl + "/logout.do?redirect=" + urlStr + "&clientId=" + clientId;
+        return "redirect:" + ssoServiceUrl + "/logout.do?redirect=" + urlStr + "&client_id=" + clientId;
     }
 
     private Map<String, ?> parseToken(String base64Token) throws IOException {
