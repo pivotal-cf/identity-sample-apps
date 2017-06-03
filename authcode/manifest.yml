@@ -44,4 +44,4 @@ applications:
      # Application icon with the application name and launch URL that will be displayed on the Pivotal Account dashboard if configured to show
      # SSO_ICON: <base64 encoded image - do not exceed 64kb>
      # SSO_LAUNCH_URL: <url>
-     # SSO_SHOW_ON_HOME_PAGE <true/false>
+     # SSO_SHOW_ON_HOME_PAGE: <true/false>
