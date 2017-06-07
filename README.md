@@ -74,8 +74,8 @@ The table below provides a description and the default values. Further details a
 | Property Name | Description | Default |
 | ------------- | ------------- | ------------- |
 | name | Name of the application | (N/A - Required Value) |
-| GRANT_TYPE | Allowed grant type for the application through the SSO service - only one grant type per application is supported by SSO | (N/A - You must specify the value) |
-| SSO_IDENTITY_PROVIDERS | Allowed identity providers for the application through the SSO service plan | Yes |
+| GRANT_TYPE | Allowed grant type for the application through the SSO service - only one grant type per application is supported by SSO | authorization_code |
+| SSO_IDENTITY_PROVIDERS | Allowed identity providers for the application through the SSO service plan | uaa |
 | SSO_REDIRECT_URIS | Comma separated whitelist of redirection URIs allowed for the application - Each value must start with http:// or https:// |  (Will always include the application route) |
 | SSO_SCOPES | Comma separated list of scopes that belong to the application and are registered as client scopes with the SSO service. This value is ignored for client credential grant type applications. |  openid |
 | SSO_AUTO_APPROVED_SCOPES | Comma separated list of scopes that the application is automatically authorized when acting on behalf of users through SSO service | <Defaults to existing scopes/authorities> |
