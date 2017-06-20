@@ -1,0 +1,9 @@
+---
+applications:
+ - name: resource-server-sample
+   memory: 512M
+   instances: 1
+   path: build/libs/resource-server.jar
+   env:
+     SKIP_SSL_VALIDATION: "true"
+     AUTH_SERVER: https://<plan-auth-domain>.login.<your-domain>.com

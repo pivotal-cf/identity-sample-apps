@@ -27,6 +27,17 @@ Follow the steps [here](http://docs.pivotal.io/p-identity/configure-apps/index.h
 
 Restart your application after binding the service using Apps Manager or CF CLI.
 
+## <a name="quick-start">Quick Start</a>: Authcode Sample App and Resource Server on SSO
+
+As an alternative to Steps 1 and 2 above, you can also quickly deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
+
+1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `sample-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
+
+2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_URL` values in the manifest with your plan and domain values.
+
+3. Build (`./gradlew build`) and push (`cf push`) both the *authcode* and *resource-server* projects to your Space where you are logged in as a Space Developer.
+   
+The sample application and resource server be available immediately bound to the SSO Service on start-up. You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int). 
 
 # Resource Server Sample Application
 

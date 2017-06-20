@@ -1,0 +1,50 @@
+---
+applications:
+ - name: authcode-sample
+   memory: 512M
+   instances: 1
+   path: build/libs/authcode.jar
+   services:
+    - sample-instance
+   env:
+     SKIP_SSL_VALIDATION: "true"
+     RESOURCE_URL: https://resource-server-sample.<your-domain>.com 
+
+     # Grant type to be set for the application's client configurations - Only one grant type per application is supported by SSO
+     GRANT_TYPE: authorization_code
+
+     # Identity provider(s) to be set for the application's client configurations
+     SSO_IDENTITY_PROVIDERS: uaa
+
+     # The following are bootstrap configurations you may use to automatically create client configurations in the SSO service for your application if the configurations do not exist. These configurations take effect when binding or rebinding to the SSO, and will overwrite existing client configurations if any. The values provided below are examples.
+
+     # Whitelist of redirect URI(s) allowed for the application. This value must start with http:// or https://
+     # SSO_REDIRECT_URIS: https://my-domain-here.domain.org
+
+     # Client scope(s) for the application, not used for client credentials grant type
+     SSO_SCOPES: openid, todo.read, todo.write
+
+     # Client scope(s) for the application that are automatically authorized when acting on behalf of a user
+     # SSO_AUTO_APPROVED_SCOPES: openid, todo.read
+
+     # Client authorities for the application, only used for client credentials grant type 
+     # SSO_AUTHORITIES: openid, uaa.resource, todo.read, todo.write
+
+     # List of groups a user must have in order to authenticate successfully for the application
+     # SSO_REQUIRED_USER_GROUPS: my_group_here
+
+     # Lifetime in seconds of the application's access token
+     # SSO_ACCESS_TOKEN_LIFETIME: 300
+
+     # Lifetime in seconds of the application's refresh token
+     # SSO_REFRESH_TOKEN_LIFETIME: 1800
+
+     # Resource(s) that the application will use as scopes/authorities to be created if they do not already exist during bootstrapping
+     SSO_RESOURCES: |
+       todo.read:  Read to list
+       todo.write: Write to list
+
+     # Application icon with the application name and launch URL that will be displayed on the Pivotal Account dashboard if configured to show
+     # SSO_ICON: <base64 encoded image - do not exceed 64kb>
+     # SSO_LAUNCH_URL: <url>
+     # SSO_SHOW_ON_HOME_PAGE: <true/false>
