@@ -1,6 +1,8 @@
 # Pivotal Single Sign-On Service Sample Applications
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard. 
+This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
+
+The latest version of this repository supports Spring Boot 1.5. The last version to support Spring Boot 1.3 is tagged at [spring-boot/1.3](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.3).
 
 Application Type  | Grant Type
 ------------- | -------------
