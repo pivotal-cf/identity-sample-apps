@@ -46,10 +46,8 @@ The sample application and resource server be available immediately bound to the
 ## Deploying Resource Server
 
 ### Setup
-The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens. 
-Set the Auth Server location as the value of the auth_domain environment variable for the authcode sample app.
-
-`cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>`
+The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens.
+Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance.
 
 For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
 
