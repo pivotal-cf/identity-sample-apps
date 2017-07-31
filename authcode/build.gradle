@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.4.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.5.RELEASE")
     }
 }
 
@@ -13,14 +13,13 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 repositories {
-    maven { url "https://repo.spring.io/libs-release-local" }
     mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.cloud:spring-cloud-starter-oauth2'
     compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector'
-    compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:2.0.0.RELEASE'
+    compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:2.1.1.RELEASE'
+    compile 'org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE'
 }
