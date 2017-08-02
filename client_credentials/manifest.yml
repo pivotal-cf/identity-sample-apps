@@ -3,6 +3,7 @@ applications:
  - name: clientcredentials-sample
    memory: 512M
    instances: 1
+   buildpack: java_buildpack
    path: build/libs/client_credentials.jar
    env:
      SKIP_SSL_VALIDATION: "true"

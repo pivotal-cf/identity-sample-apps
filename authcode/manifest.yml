@@ -4,6 +4,9 @@ applications:
    memory: 512M
    instances: 1
    path: build/libs/authcode.jar
+   buildpack: java_buildpack
+   services:
+   - p-identity-sample-instance
    env:
      SKIP_SSL_VALIDATION: "true"
 
