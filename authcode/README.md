@@ -1,81 +1,117 @@
-# Pivotal Single Sign-On Service Sample Applications
+# Deploying the Authorization Code (Authcode) Sample Application
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
+The Authorization Code OAuth2 grant type is the most commonly used for web applications deployed into Cloud Foundry.
 
-The latest version of this repository supports Spring Boot 1.5. The last version to support Spring Boot 1.3 is tagged at [spring-boot/1.3](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.3).
+This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
+OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-4/index.html) 
+to automatically register this sample application as an OAuth2 client of the UAA and the 
+[Spring Cloud SSO Connector](https://github.com/pivotal-cf/spring-cloud-sso-connector) to automatically consume those configurations.
 
-Application Type  | Grant Type
-------------- | -------------
-[Web App](/authcode)  | authorization_code
-[Native Mobile App](/password)  | password
-[Service-to-Service App](/client_credentials) | client_credentials
-[Single Page JavaScript App](/implicit) | implicit
+App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
+file.
 
-## <a name="step-1">Step 1</a>: Deploy Sample Application to Pivotal Cloud Foundry
+## Prerequisites:
 
-Set the correct CF API target in the CF CLI and login as a Space Developer into the required Org and Space
+1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-4/index.html)
+1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/1-4/manage-service-plans.html) for the SSO Service that is visible to your Org.
+1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/1-4/manage-users.html).
+
+### Step 0: Deploy a sample resource server
+
+The goal of applications obtaining tokens using the OAuth2 authcode grant type is to be able to use those tokens to perform privileged 
+actions on another service fulfilling the role of a resource server.  This sample authcode application is meant to obtain tokens for use with
+the [sample resource server application](../resource-server) which implements a simple TODO application.
+
+As a result of this relationship between the authcode client application and the resource server, having pushed a sample resource server 
+app is a required prerequesite for working through the rest of this tutorial. [Follow these instructions](../resource-server/README.md) to 
+deploy a sample resource server if you have not already done so.
+
+### Step 1: Update authcode manifest.yml with the location of the sample resource server
+
+The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#env-block) 
+called `env`. This section is used to list environment variables that will be available to the deployed application.
+
+In the `env` section of [`manifest.yml`](./manifest.yml), you must update the value of `RESOURCE_URL` with the location of your deployed 
+resource server application. Replace `RESOURCE_URL: https://resource-server-sample.<your-domain>.com` with a real url.
+
+NOTE: You must leave off the trailing slash (`/`) in the `RESOURCE_URL`.
+
+### Step 2: Create an identity service instance
+
+Using the CF CLI, login as a user with the [Space Developer](https://docs.cloudfoundry.org/concepts/roles.html#roles) role and target the 
+space where you'd like the sample app to reside.
 
     cf api api.<your-domain>
-    
-Go to your application directory and push the app.
+    cf login
+    cf target -o <your-org> -s <your-space>
 
-    ./gradlew build
+All of the sample apps in this repository need to be bound to an identity service instance. If you have previously deployed one of the other
+sample apps, you can reuse the service instance you created at that time.  See existing service instances for your space by running
+
+    cf services 
+
+If you don't see any service instances that have already been created for your space you will need to create a new one. To create a service 
+instance, first list the available identity plans using
+
+    cf marketplace -s p-identity
+    
+Using one of the plan names from the above command, create a service instance in your space
+
+    cf create-service p-identity <plan-name> p-identity-sample-instance
+    
+The name of your service instance can be whatever you like, but we have chosen `p-identity-sample-instance` to match the name we have
+pre-specified in the [authcode sample application manifest](./manifest.yml).
+
+### Step 3: Update authcode manifest.yml with the name of your identity service instance
+
+The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#services-block) 
+called `services`. Your app will be bound to any service instances you list in this section when it is pushed.
+
+If you used the exact commands provided in Step 2, you should have a created an instance of the identity service called 
+`p-identity-sample-instance`. Ensure this value appears in the `services` section of the `manifest.yml`.
+
+### Step 4: Deploy Sample Application to Pivotal Cloud Foundry
+    
+Build the jar for our sample application:
+
+    ./gradlew clean build
+    
+This should result in the creation of an artifact `build/libs/authcode.jar`. Next push the authcode sample app:
+
     cf push
 
-NOTE: If you are using a public IP, you will need to update the internal_proxies variable in application.yml to your public IP.
+Running `cf push` should result in
+ 
+  - The `authcode.jar` artifact being uploaded to cloudfoundry
+  - A public route should be bound to the sample app. `https://authcode-sample.<your-domain>/`
+  - The app being bound to the identity service instance, which results in the creation of a new client registration for the sample app in the UAA.
+  - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. 
+    You can view these values yourself with `cf env authcode-sample`.
+  - When the app starts, the SSO Connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed 
+    by `org.springframework.security.oauth` to make the sample application OAuth-aware.
 
-## <a name="step-2">Step 2</a>: Bind the Application with the Pivotal Single Sign-On Service Instance
-Follow the steps [here](http://docs.pivotal.io/p-identity/configure-apps/index.html#bind) to bind your application to the service instance.
+You can verify the app is successfully running by viewing the output of `cf apps`.
 
-Restart your application after binding the service using Apps Manager or CF CLI.
+## Testing the TODO application
 
-## <a name="quick-start">Quick Start</a>: Authcode Sample App and Resource Server on SSO
+You can test this sample application with users who have the `todo.read` and `todo.write` scopes for your plan. An operator can create these
+users with these permissions using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
 
-As an alternative to Steps 1 and 2 above, you can also quickly deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
+To create the resource and permissions, an operator must follow [these steps](http://docs.pivotal.io/p-identity/manage-resources.html). After 
+the resource and permissions have been created, you need to update the authcode-sample app with the previously created scopes on the App dashboard.
 
-1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `sample-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
+## Changing sample app configuration after an initial deploy
 
-2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_URL` values in the manifest with your plan and domain values.
+To change to the SSO configuration after the deploy of the sample application, you must first manually unbind the bound identity service 
+instance.
 
-3. Build (`./gradlew build`) and push (`cf push`) both the *authcode* and *resource-server* projects to your Space where you are logged in as a Space Developer.
-   
-The sample application and resource server be available immediately bound to the SSO Service on start-up. You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int). 
+    cf unbind-service authcode-sample p-identity-service-instance
 
-# Resource Server Sample Application
+After unbinding, you may change the corresponding environment variables in the `manifest.yml` before re-pushing the application.
 
-## Deploying Resource Server
-
-### Setup
-The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens. 
-Set the Auth Server location as the value of the auth_domain environment variable for the authcode sample app.
-
-`cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>`
-
-For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
-
-It has three API endpoints:
- * `GET /todo` to list TODO items. Requires the user to have `todo.read` scope.
- * `POST /todo` to create a TODO item. Requires `todo.write` scope. Example body: `{"todo":"<content>"}`
- * `DELETE /todo/{id}` to delete a TODO item. Requires `todo.write` scope.
-
-To push the app, follow steps [1](#step-1) and [2](#step-2) of the previous section.
-
-## Setting up Authcode Sample App to use Resource Server
-
-Currently, only the authcode sample app uses the resource server, but the other grant types should be similar.
-The authcode sample app needs to know the resource server location in order to manage TODO resources.
-
-`cf set-env <AUTHCODE_APP_NAME> RESOURCE_URL <RESOURCE_SERVER_URL>`
-
-NOTE: You must remove the trailing slash ('/') from the URL.
-
-For the sample app to work you need to go to the Resource dashboard and create a Resource with name `todo` and `todo.read` and `todo.write` permissions.
-After creating the resource, you need to update the authcode-sample app with the previously created scopes on the App dashboard.
-Follow the steps [here](http://docs.pivotal.io/p-identity/manage-resources.html) to create the resource and permissions.
-
-The authenticated user should also have the scopes `todo.read` and `todo.write`.
-
-NOTE: If a user doesn't have these scopes, contact your local admin to grant these scopes to that user.
+This step is needed because environment variables such as `SSO_SCOPES` are used only by the identity service broker at the time the application 
+is bound to the service instance.  These variables are consumed when the service-binding occurs during the initial app push. For more 
+information about bootstrapping OAuth client configuration settings, please read [these docs](https://docs.pivotal.io/p-identity/1-4/configure-apps/index.html#configure).
 
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
