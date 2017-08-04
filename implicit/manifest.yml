@@ -3,6 +3,7 @@ applications:
  - name: implicit-sample
    memory: 512M
    instances: 1
+   buildpack: java_buildpack
    path: build/libs/implicit.jar
    env:
      SKIP_SSL_VALIDATION: "true"

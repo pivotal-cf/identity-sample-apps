@@ -22,10 +22,12 @@ Go to your application directory and push the app.
     ./gradlew build
     cf push
 
+NOTE: Your application is expected to crash on start-up until it is bound to the Single Sign-on Service using the instructions in the next section.
+
 NOTE: If you are using a public IP, you will need to update the internal_proxies variable in application.yml to your public IP.
 
 ## <a name="step-2">Step 2</a>: Bind the Application with the Pivotal Single Sign-On Service Instance
-Follow the steps [here](http://docs.pivotal.io/p-identity/configure-apps/index.html#bind) to bind your application to the service instance.
+Follow the steps [here](http://docs.pivotal.io/p-identity/configure-apps/index.html#bind) to bind your application to the service instance. 
 
 Restart your application after binding the service using Apps Manager or CF CLI.
 
@@ -48,6 +50,8 @@ The sample application and resource server be available immediately bound to the
 ### Setup
 The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens.
 Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance.
+
+NOTE: Beginning with our Spring Boot 1.5 version of the identity sample applications, bind the Resource Server to the Singl†e Sign-On Service instead of providing the AUTH_SERVER value.
 
 For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
 
