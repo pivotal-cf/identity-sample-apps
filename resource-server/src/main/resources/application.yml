@@ -12,6 +12,13 @@ security:
   basic:
     enabled: false
   require_ssl: false
-
+  oauth2:
+    resource:
+      preferTokenInfo: false
+      userInfoUri: ${AUTH_SERVER}/userinfo
+      tokenInfoUri: ${AUTH_SERVER}/check_token
+      jwk:
+        key-set-uri: ${AUTH_SERVER}/token_keys
+ssoServiceUrl: ${AUTH_SERVER}
 logging.level:
   org.springframework.security: DEBUG

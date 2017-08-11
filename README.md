@@ -37,7 +37,7 @@ As an alternative to Steps 1 and 2 above, you can also quickly deploy the authco
 
 1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `sample-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
 
-2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_URL` values in the manifest with your plan and domain values.
+2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_SERVER` values in the manifest with your plan and domain values.
 
 3. Build (`./gradlew build`) and push (`cf push`) both the *authcode* and *resource-server* projects to your Space where you are logged in as a Space Developer.
    
@@ -51,7 +51,7 @@ The sample application and resource server be available immediately bound to the
 The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens.
 Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance.
 
-NOTE: Beginning with our Spring Boot 1.5 version of the identity sample applications, bind the Resource Server to the Singl†e Sign-On Service instead of providing the AUTH_SERVER value.
+    cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>
 
 For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
 
