@@ -2,7 +2,7 @@
 
 This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
 
-The latest version of this repository supports Spring Boot 1.5. The last version to support Spring Boot 1.3 is tagged at [spring-boot/1.3](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.3).
+The latest version of this repository supports Spring Boot 1.5.5+ and requires the SSO connector 2.1.1+. The last version to support Spring Boot 1.3 is tagged at [spring-boot/1.3](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.3).
 
 Application Type  | Grant Type
 ------------- | -------------
@@ -61,6 +61,8 @@ It has three API endpoints:
  * `DELETE /todo/{id}` to delete a TODO item. Requires `todo.write` scope.
 
 To push the app, follow steps [1](#step-1) and [2](#step-2) of the previous section.
+
+Beginning with our Spring Boot 1.5 version of the identity sample applications, you may also bind the Resource Server to the Single Sign-On Service instead of providing the AUTH_SERVER value.
 
 ## Setting up Authcode Sample App to use Resource Server
 
