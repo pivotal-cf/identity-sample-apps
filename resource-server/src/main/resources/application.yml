@@ -12,6 +12,16 @@ security:
   basic:
     enabled: false
   require_ssl: false
-
+  oauth2:
+    resource:
+      preferTokenInfo: false
+      userInfoUri: ${AUTH_SERVER}/userinfo
+      # Token Info endpoint is used for online token validation. If Token Keys endpoint (jwk.key-set-uri) is configured, this value is not used.
+      tokenInfoUri: ${AUTH_SERVER}/check_token
+      # Token Keys endpoint is used for offline token validation. This value must be deleted if online token validation is desired.
+      jwk:
+        key-set-uri: ${AUTH_SERVER}/token_keys
+# This value is used by the SSO connector and will be overwritten along with other Spring Boot OAuth2 values if bound the the SSO service.
+ssoServiceUrl: ${AUTH_SERVER}
 logging.level:
   org.springframework.security: DEBUG

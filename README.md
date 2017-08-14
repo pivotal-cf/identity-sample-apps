@@ -2,7 +2,7 @@
 
 This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
 
-The latest version of this repository supports Spring Boot 1.5. The last version to support Spring Boot 1.3 is tagged at [spring-boot/1.3](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.3).
+The latest version of this repository supports Spring Boot 1.5.5+ and requires the SSO connector 2.1.1+. The last version to support Spring Boot 1.3 is tagged at [spring-boot/1.3](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.3).
 
 Application Type  | Grant Type
 ------------- | -------------
@@ -37,7 +37,7 @@ As an alternative to Steps 1 and 2 above, you can also quickly deploy the authco
 
 1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `sample-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
 
-2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_URL` values in the manifest with your plan and domain values.
+2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_SERVER` values in the manifest with your plan and domain values.
 
 3. Build (`./gradlew build`) and push (`cf push`) both the *authcode* and *resource-server* projects to your Space where you are logged in as a Space Developer.
    
@@ -51,7 +51,7 @@ The sample application and resource server be available immediately bound to the
 The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens.
 Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance.
 
-NOTE: Beginning with our Spring Boot 1.5 version of the identity sample applications, bind the Resource Server to the Singl†e Sign-On Service instead of providing the AUTH_SERVER value.
+    cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>
 
 For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
 
@@ -61,6 +61,8 @@ It has three API endpoints:
  * `DELETE /todo/{id}` to delete a TODO item. Requires `todo.write` scope.
 
 To push the app, follow steps [1](#step-1) and [2](#step-2) of the previous section.
+
+Beginning with our Spring Boot 1.5 version of the identity sample applications, you may also bind the Resource Server to the Single Sign-On Service instead of providing the AUTH_SERVER value.
 
 ## Setting up Authcode Sample App to use Resource Server
 
