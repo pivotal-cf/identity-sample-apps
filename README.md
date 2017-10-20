@@ -22,9 +22,9 @@ Go to your application directory and push the app.
     ./gradlew build
     cf push
 
-NOTE: Your application is expected to crash on start-up until it is bound to the Single Sign-on Service using the instructions in the next section.
+**NOTE:** Your application is expected to crash on start-up until it is bound to the Single Sign-on Service using the instructions in the next section.
 
-NOTE: If you are using a public IP, you will need to update the internal_proxies variable in application.yml to your public IP.
+**NOTE:** If you are using a public IP, you will need to update the internal_proxies variable in application.yml to your public IP.
 
 ## <a name="step-2">Step 2</a>: Bind the Application with the Pivotal Single Sign-On Service Instance
 Follow the steps [here](http://docs.pivotal.io/p-identity/configure-apps/index.html#bind) to bind your application to the service instance. 
@@ -71,7 +71,7 @@ The authcode sample app needs to know the resource server location in order to m
 
 `cf set-env <AUTHCODE_APP_NAME> RESOURCE_URL <RESOURCE_SERVER_URL>`
 
-NOTE: You must remove the trailing slash ('/') from the URL.
+**NOTE:** You must remove the trailing slash ('/') from the URL.
 
 For the sample app to work you need to go to the Resource dashboard and create a Resource with name `todo` and `todo.read` and `todo.write` permissions.
 After creating the resource, you need to update the authcode-sample app with the previously created scopes on the App dashboard.
@@ -79,10 +79,12 @@ Follow the steps [here](http://docs.pivotal.io/p-identity/manage-resources.html)
 
 The authenticated user should also have the scopes `todo.read` and `todo.write`.
 
-NOTE: If a user doesn't have these scopes, contact your local admin to grant these scopes to that user.
+**NOTE:** If a user doesn't have these scopes, contact your local admin to grant these scopes to that user.
 
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
+
+**NOTE:** These configurations are only applied at the initial service binding time. Subsequent `cf push` of the application will **NOT** update the configurations. You will either need to manually update the configurations via the SSO dashboard or unbind and rebind the service instance.
 
 When you specify your own scopes and authorities, consider including openid for scopes on auth code, implicit, and password grant type applications, and uaa.resource for client credentials grant type applications, as these will not be provided if they are not specified.
 
