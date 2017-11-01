@@ -1,7 +1,7 @@
 ---
 applications:
  - name: clientcredentials-sample
-   memory: 512M
+   memory: 1G
    instances: 1
    buildpack: java_buildpack
    path: build/libs/client_credentials.jar
