@@ -18,6 +18,6 @@ repositories {
 
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-oauth2:1.2.1.RELEASE'
-    compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:2.1.1.RELEASE'
+    compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:2.1.2.RELEASE'
     compile 'org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE'
 }
