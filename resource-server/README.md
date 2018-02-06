@@ -10,7 +10,7 @@ To push the app, ensure a CF space is targeted. Go to `./resource-server` and ru
     ./gradlew build
     cf push
 
-### What is the Resource Server
+## Endpoints on the Resource Server
 
 It has three API endpoints:
  * `GET /todo` to list TODO items. Requires the user to have `todo.read` scope.
