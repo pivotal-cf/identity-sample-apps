@@ -26,7 +26,17 @@ As a result of this relationship between the authcode client application and the
 app is a required prerequesite for working through the rest of this tutorial. [Follow these instructions](../resource-server/README.md) to 
 deploy a sample resource server if you have not already done so.
 
-### Step 1: Update authcode manifest.yml with the location of the sample resource server
+### Step 1: Create an identity service instance
+
+Using the CF CLI, login and target the space where you'd like the sample app to reside.
+
+Using the plan created as part of the Prerequisites, create a service instance in your space
+
+    cf create-service p-identity <plan-name> <service-instance-name>
+    
+The name of your service instance can be whatever you like.
+
+### Step 2: Update authcode manifest.yml with the location of the sample resource server
 
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#env-block) 
 called `env`. This section is used to list environment variables that will be available to the deployed application.
@@ -36,39 +46,12 @@ resource server application. Replace `RESOURCE_URL: https://resource-server-samp
 
 NOTE: You must leave off the trailing slash (`/`) in the `RESOURCE_URL`.
 
-### Step 2: Create an identity service instance
-
-Using the CF CLI, login as a user with the [Space Developer](https://docs.cloudfoundry.org/concepts/roles.html#roles) role and target the 
-space where you'd like the sample app to reside.
-
-    cf api api.<your-domain>
-    cf login
-    cf target -o <your-org> -s <your-space>
-
-All of the sample apps in this repository need to be bound to an identity service instance. If you have previously deployed one of the other
-sample apps, you can reuse the service instance you created at that time.  See existing service instances for your space by running
-
-    cf services 
-
-If you don't see any service instances that have already been created for your space you will need to create a new one. To create a service 
-instance, first list the available identity plans using
-
-    cf marketplace -s p-identity
-    
-Using one of the plan names from the above command, create a service instance in your space
-
-    cf create-service p-identity <plan-name> p-identity-sample-instance
-    
-The name of your service instance can be whatever you like, but we have chosen `p-identity-sample-instance` to match the name we have
-pre-specified in the [authcode sample application manifest](./manifest.yml).
-
 ### Step 3: Update authcode manifest.yml with the name of your identity service instance
 
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#services-block) 
 called `services`. Your app will be bound to any service instances you list in this section when it is pushed.
 
-If you used the exact commands provided in Step 2, you should have a created an instance of the identity service called 
-`p-identity-sample-instance`. Ensure this value appears in the `services` section of the `manifest.yml`.
+Replace `p-identity-sample-instance` in the `services` block with the name of the service instance created in Step 1.
 
 ### Step 4: Deploy Sample Application to Pivotal Cloud Foundry
     
