@@ -47,22 +47,20 @@ The sample application and resource server be available immediately bound to the
 
 ## Deploying Resource Server
 
-### Setup
 The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens.
-Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance **or** use the cf cli command below to set the environment variables.
+Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance. For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
 
-    cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>
+To push the app, ensure a CF space is targeted. Go to `./resource-server` and run:
 
-For example, for a given SSO service plan/UAA identity zone, the location would be `https://subdomain.login.my-domain.org`
+    ./gradlew build
+    cf push
+
+### What is the Resource Server
 
 It has three API endpoints:
  * `GET /todo` to list TODO items. Requires the user to have `todo.read` scope.
  * `POST /todo` to create a TODO item. Requires `todo.write` scope. Example body: `{"todo":"<content>"}`
  * `DELETE /todo/{id}` to delete a TODO item. Requires `todo.write` scope.
-
-To push the app, follow steps [1](#step-1) and [2](#step-2) of the previous section.
-
-Beginning with our Spring Boot 1.5 version of the identity sample applications, you may also bind the Resource Server to the Single Sign-On Service instead of providing the AUTH_SERVER value.
 
 ## Setting up Authcode Sample App to use Resource Server
 
