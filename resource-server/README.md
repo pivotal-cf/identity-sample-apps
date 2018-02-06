@@ -8,7 +8,7 @@ Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance. For exampl
 To push the app, ensure a CF space is targeted. Go to `./resource-server` and run:
 
     ./gradlew build
-    cf push
+    cf push --random-route
 
 ## Endpoints on the Resource Server
 
