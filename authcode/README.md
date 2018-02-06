@@ -61,17 +61,13 @@ Build the jar for our sample application:
     
 This should result in the creation of an artifact `build/libs/authcode.jar`. Next push the authcode sample app:
 
-    cf push
+    cf push --random-route
 
 Running `cf push` should result in
  
-  - The `authcode.jar` artifact being uploaded to cloudfoundry
-  - A public route should be bound to the sample app. `https://authcode-sample.<your-domain>/`
   - The app being bound to the identity service instance, which results in the creation of a new client registration for the sample app in the UAA.
-  - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. 
-    You can view these values yourself with `cf env authcode-sample`.
-  - When the app starts, the SSO Connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed 
-    by `org.springframework.security.oauth` to make the sample application OAuth-aware.
+  - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. You can view these values yourself with `cf env authcode-sample`.
+  - When the app starts, the spring-cloud-sso-connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by `org.springframework.security.oauth` to make the sample application OAuth-aware.
 
 You can verify the app is successfully running by viewing the output of `cf apps`.
 
