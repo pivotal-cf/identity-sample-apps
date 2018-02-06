@@ -79,19 +79,6 @@ users with these permissions using the steps [here](https://docs.pivotal.io/p-id
 To create the resource and permissions, an operator must follow [these steps](http://docs.pivotal.io/p-identity/manage-resources.html). After 
 the resource and permissions have been created, you need to update the authcode-sample app with the previously created scopes on the App dashboard.
 
-## Changing sample app configuration after an initial deploy
-
-To change to the SSO configuration after the deploy of the sample application, you must first manually unbind the bound identity service 
-instance.
-
-    cf unbind-service authcode-sample p-identity-service-instance
-
-After unbinding, you may change the corresponding environment variables in the `manifest.yml` before re-pushing the application.
-
-This step is needed because environment variables such as `SSO_SCOPES` are used only by the identity service broker at the time the application 
-is bound to the service instance.  These variables are consumed when the service-binding occurs during the initial app push. For more 
-information about bootstrapping OAuth client configuration settings, please read [these docs](https://docs.pivotal.io/p-identity/1-4/configure-apps/index.html#configure).
-
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
