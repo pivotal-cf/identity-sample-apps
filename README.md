@@ -41,24 +41,7 @@ As an alternative to Steps 1 and 2 above, you can also quickly deploy the authco
 
 3. Build (`./gradlew build`) and push (`cf push`) both the *authcode* and *resource-server* projects to your Space where you are logged in as a Space Developer.
    
-The sample application and resource server be available immediately bound to the SSO Service on start-up. You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int). 
-
-## Setting up Authcode Sample App to use Resource Server
-
-Currently, only the authcode sample app uses the resource server, but the other grant types should be similar.
-The authcode sample app needs to know the resource server location in order to manage TODO resources.
-
-`cf set-env <AUTHCODE_APP_NAME> RESOURCE_URL <RESOURCE_SERVER_URL>`
-
-**NOTE:** You must remove the trailing slash ('/') from the URL.
-
-For the sample app to work you need to go to the Resource dashboard and create a Resource with name `todo` and `todo.read` and `todo.write` permissions.
-After creating the resource, you need to update the authcode-sample app with the previously created scopes on the App dashboard.
-Follow the steps [here](http://docs.pivotal.io/p-identity/manage-resources.html) to create the resource and permissions.
-
-The authenticated user should also have the scopes `todo.read` and `todo.write`.
-
-**NOTE:** If a user doesn't have these scopes, contact your local admin to grant these scopes to that user.
+The sample application and resource server be available immediately bound to the SSO Service on start-up. You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
 
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
