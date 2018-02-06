@@ -49,7 +49,7 @@ The sample application and resource server be available immediately bound to the
 
 ### Setup
 The resource server needs to know the Auth Server (or UAA) location in order to retrieve the token key to validate the tokens.
-Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance.
+Change `AUTH_SERVER` in `manifest.yml` to point to your UAA instance **or** use the cf cli command below to set the environment variables.
 
     cf set-env <RESOURCE_SERVER_APP_NAME> AUTH_SERVER <AUTH_SERVER_LOCATION>
 
