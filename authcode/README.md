@@ -23,7 +23,7 @@ actions on another service fulfilling the role of a resource server.  This sampl
 the [sample resource server application](../resource-server) which implements a simple TODO application.
 
 As a result of this relationship between the authcode client application and the resource server, having pushed a sample resource server 
-app is a required prerequesite for working through the rest of this tutorial. [Follow these instructions](../README.md#deploying-resource-server) to 
+app is a required prerequesite for working through the rest of this tutorial. [Follow these instructions](../resource-server/README.md) to 
 deploy a sample resource server if you have not already done so.
 
 ### Step 1: Update authcode manifest.yml with the location of the sample resource server
