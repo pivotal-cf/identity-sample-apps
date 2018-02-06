@@ -69,7 +69,7 @@ Running `cf push` should result in
   - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. You can view these values yourself with `cf env authcode-sample`.
   - When the app starts, the spring-cloud-sso-connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by `org.springframework.security.oauth` to make the sample application OAuth-aware.
 
-You can verify the app is successfully running by viewing the output of `cf apps`.
+You can verify the app is successfully running by viewing the output of `cf apps`. You can visit the authcode app by navigating to `https://<authcode-app-url>` where `authcode-app-url` is the route output from `cf push` or `cf apps`.
 
 ## Testing the TODO application
 
