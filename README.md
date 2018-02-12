@@ -56,7 +56,7 @@ The table below provides a description and the default values. Further details a
 | ------------- | ------------- | ------------- |
 | name | Name of the application | (N/A - Required Value) |
 | GRANT_TYPE | Allowed grant type for the application through the SSO service - only one grant type per application is supported by SSO | authorization_code |
-| SSO_IDENTITY_PROVIDERS | Allowed identity providers for the application through the SSO service plan | uaa |
+| SSO_IDENTITY_PROVIDERS | Allowed identity providers for the app through the SSO service plan. This is a comma-separated list of identity provider origin keys. The origin keys are derived from the identity provider name using the following rules: <ul><li> Uppercase letters are converted to lowercase letters.</li><li>Spaces are converted to hyphens.</li><li>Periods are converted to hyphens.</li></ul>For example, if your identity provider name is `example.com Provider`, the corresponding origin key is `example-com-provider`. | uaa |
 | SSO_REDIRECT_URIS | Comma separated whitelist of redirection URIs allowed for the application - Each value must start with http:// or https:// |  (Will always include the application route) |
 | SSO_SCOPES | Comma separated list of scopes that belong to the application and are registered as client scopes with the SSO service. This value is ignored for client credential grant type applications. |  openid |
 | SSO_AUTO_APPROVED_SCOPES | Comma separated list of scopes that the application is automatically authorized when acting on behalf of users through SSO service | <Defaults to existing scopes/authorities> |
