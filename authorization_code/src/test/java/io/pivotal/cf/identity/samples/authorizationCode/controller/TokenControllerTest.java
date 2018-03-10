@@ -1,4 +1,4 @@
-package io.pivotal.cf.identity.samples.authorizationCode;
+package io.pivotal.cf.identity.samples.authorizationCode.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,23 +9,22 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AuthorizationCodeApplicationTests {
+public class TokenControllerTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	@Autowired
-	private WebApplicationContext context;
-
-	@Test
-	public void loadsHelloWorld() {
-		given()
-			.webAppContextSetup(context)
-			.when()
-				.get("/")
-			.then()
-				.statusCode(200)
-				.body(equalTo("Hello world!"));
-	}
-
+    @Test
+    public void show() {
+        given()
+                .webAppContextSetup(context)
+            .when()
+                .get("/")
+            .then()
+                .statusCode(200)
+                .body(equalTo("Hello world!"));
+    }
 }
