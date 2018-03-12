@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.fluentlenium'
+version = '3.6.0-SNAPSHOT'
+
+description = """FluentLenium Examples Quickstart"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+repositories {
+        
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    testCompile group: 'org.fluentlenium', name: 'fluentlenium-junit', version:'3.5.0'
+    testCompile group: 'org.fluentlenium', name: 'fluentlenium-assertj', version:'3.5.0'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:'3.9.1'
+}

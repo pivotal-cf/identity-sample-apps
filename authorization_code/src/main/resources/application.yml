@@ -1,0 +1,16 @@
+---
+ssoServiceUrl: http://localhost:8080/uaa
+server:
+  port: 8888
+
+security:
+  basic:
+    enabled: false
+  oauth2:
+    client:
+      client-id: sample-client
+      client-secret: sample-client-secret
+      access-token-uri: ${ssoServiceUrl}/oauth/token
+      user-authorization-uri: ${ssoServiceUrl}/oauth/authorize
+    resource:
+      token-info-uri: ${ssoServiceUrl}/check_token
