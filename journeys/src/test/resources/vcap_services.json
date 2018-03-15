@@ -1,0 +1,20 @@
+{
+  "p-identity": [
+    {
+      "binding_name": null,
+      "credentials": {
+        "auth_domain": "http://localhost:8080/uaa",
+        "client_id": "sample-client",
+        "client_secret": "sample-client-secret"
+      },
+      "instance_name": "system-sso",
+      "label": "p-identity",
+      "name": "system-sso",
+      "plan": "uaa",
+      "provider": null,
+      "syslog_drain_url": null,
+      "tags": [],
+      "volume_mounts": []
+    }
+  ]
+}
