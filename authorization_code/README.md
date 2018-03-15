@@ -10,12 +10,12 @@ yq merge --inplace uaa/uaa/src/main/resources/uaa.yml \
 Then, startup UAA server:
 ```
 cd uaa
-./gradlew --project-cache-dir="${workspace_dir}/.gradle" run
+./gradlew run
 ```
 and finally the auth server:
 ```$xslt
 cd identity-sample-apps
-./gradlew --project-cache-dir="${workspace_dir}/.gradle" -p authorization_code clean bootRun
+./gradlew -p authorization_code clean bootRun
 ```
 
 Now you can visit the server at `https://localhost:8888/secured/token`
