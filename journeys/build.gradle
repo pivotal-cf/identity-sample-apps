@@ -1,13 +1,3 @@
-apply plugin: 'java'
-
-group = 'io.pivotal.cf.identity.samples'
-version = '3.6.0-SNAPSHOT'
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
     testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
