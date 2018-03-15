@@ -21,3 +21,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:'3.9.1'
 }
+tasks.withType(Test) {
+    systemProperty "fluentlenium.webDriver", "chrome"
+    systemProperty "fluentlenium.capabilities", "{chromeOptions: {binary: \"/usr/bin/chromium-browser\", args:[--no-sandbox, --headless, --disable-gpu]}}"
+}
