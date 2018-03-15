@@ -1,23 +1,18 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 
-group = 'org.fluentlenium'
+group = 'io.pivotal.cf.identity.samples'
 version = '3.6.0-SNAPSHOT'
-
-description = """Identity Sample Apps Journeys"""
-
 sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
-        
-     maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
 }
+
 dependencies {
-    testCompile group: 'org.fluentlenium', name: 'fluentlenium-junit', version:'3.5.0'
-    testCompile group: 'org.fluentlenium', name: 'fluentlenium-assertj', version:'3.5.0'
-    testCompile group: 'junit', name: 'junit', version:'4.12'
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:'3.9.1'
+    testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
+    testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
 }
 
 tasks.withType(Test) {
