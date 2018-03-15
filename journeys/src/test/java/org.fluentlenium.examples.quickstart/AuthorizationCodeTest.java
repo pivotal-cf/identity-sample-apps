@@ -8,7 +8,7 @@ import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;
 
 
 @Wait
-public class AuthorizaionCodeTest extends FluentTest {
+public class AuthorizationCodeTest extends FluentTest {
     @Test
     public void securesHelloWorldWithAccessToken() {
         goTo("http://localhost:8888/secured/token");
