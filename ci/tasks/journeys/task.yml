@@ -1,0 +1,17 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: pcfidentity/ci
+
+inputs:
+  - name: identity-sample-apps
+  - name: uaa
+
+run:
+  path: identity-sample-apps/ci/tasks/journeys/task.sh
+
+caches:
+  - path: .gradle/

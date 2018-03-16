@@ -1,0 +1,22 @@
+---
+jobs:
+- name: journeys
+  plan:
+    - aggregate:
+      - get: uaa
+      - get: identity-sample-apps
+        trigger: true
+    - task: journeys
+      file: identity-sample-apps/ci/tasks/journeys/task.yml
+
+resources:
+- name: identity-sample-apps
+  type: git
+  source:
+    uri: https://github.com/pivotal-cf/identity-sample-apps.git
+    branch: master
+- name: uaa
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/uaa.git
+    branch: master
