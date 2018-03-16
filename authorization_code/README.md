@@ -1,10 +1,9 @@
-UAA configuration can be done by running the following commands (requires the `yq` command):
+UAA configuration can be done by running the following commands (requires the [`yq`](https://yq.readthedocs.io/en/latest/) command for manipulating yaml):
 
 ```$xslt
 git clone https://github.com/cloudfoundry/uaa.git
 git clone https://github.com/pivotal-cf/identity-sample-apps.git
-yq merge --inplace uaa/uaa/src/main/resources/uaa.yml \
-                   identity-sample-apps/journeys/src/test/resources/uaa-customizations.yml
+yq merge --inplace uaa/uaa/src/main/resources/uaa.yml identity-sample-apps/journeys/src/test/resources/uaa-customizations.yml
 ```
 
 Then, startup UAA server:
@@ -14,7 +13,7 @@ cd uaa
 ```
 and finally the auth server:
 ```$xslt
-cd identity-sample-apps
+cd ../identity-sample-apps
 ./gradlew -p authorization_code clean bootRun
 ```
 
