@@ -1,4 +1,4 @@
-package org.fluentlenium.examples.quickstart;
+package io.pivotal.cf.identity.samples.journeys;
 
 import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
