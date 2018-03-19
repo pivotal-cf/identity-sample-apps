@@ -24,7 +24,18 @@ public class TokenController {
         OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)auth.getDetails();
         String tokenValue = details.getTokenValue();
-        return "<html><head></head><body><pre>" + formatJwtToken(tokenValue) + "</pre></body></html>";
+        
+        return "<html>\n" +
+                "<body>\n" +
+                "\n" +
+                "<form action=\"/logout\" method=\"POST\">\n" +
+                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
+                "</form>\n" +
+                "\n" +
+                "<pre>" + formatJwtToken(tokenValue) + "</pre>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     private String formatJwtToken(String token) {
