@@ -167,8 +167,10 @@ and finally the auth server:
 
 ```
 pushd /path/to/identity-sample-apps
+    export VCAP_SERVICES="$(cat journeys/src/test/resources/vcap_services.json)"
+    export VCAP_APPLICATION="$(cat journeys/src/test/resources/vcap_application.json)"
     ./gradlew -p authorization_code clean bootRun
 popd
 ```
 
-Now you can visit the server at `https://localhost:8888/secured/token`
+Now you can visit the server at `http://localhost:8888/secured/token`
