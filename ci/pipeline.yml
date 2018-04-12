@@ -9,6 +9,9 @@ jobs:
         trigger: true
     - task: journeys
       file: identity-sample-apps/ci/tasks/journeys/task.yml
+    - put: sample-app-jars-s3
+      params:
+        file: sample-app-jars/authorization_code.jar
 
 resources:
 - name: identity-sample-apps
@@ -21,3 +24,11 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/uaa.git
     branch: master
+- name: sample-app-jars-s3
+  type: s3
+  source:
+    bucket: ((sample-app-jars-bucket))
+    region_name: ((sample-app-jars-region))
+    versioned_file: 'sample-apps/jars/authorization_code.jar'
+    access_key_id: ((sample-app-jars-access-key-id))
+    secret_access_key: ((sample-app-jars-secret-access-key))

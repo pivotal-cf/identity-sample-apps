@@ -10,6 +10,9 @@ inputs:
   - name: identity-sample-apps
   - name: uaa
 
+outputs:
+  - name: sample-app-jars
+
 run:
   path: identity-sample-apps/ci/tasks/journeys/task.sh
 
