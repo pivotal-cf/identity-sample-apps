@@ -174,3 +174,11 @@ popd
 ```
 
 Now you can visit the server at `http://localhost:8888/secured/token`
+
+---
+
+#### Running in Unsafe Environment with Self-signed Certificates
+
+⚠️⚠️⚠️ **WARNING** ⚠️⚠️⚠️ Do not use the following steps in your production environments; instead, use trusted certificates within your environment.
+
+If necessary to push the sample apps to an unsafe environment with self-signed certificates, you can add the [cloudfoundry-certificate-truster](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) dependency to the gradle file. Follow the instructions from the cloudfoundry-certificate-truster readme.
