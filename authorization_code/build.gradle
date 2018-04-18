@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.10.RELEASE'
+		springBootVersion = '1.5.12.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -12,19 +12,9 @@ buildscript {
 
 apply plugin: 'org.springframework.boot'
 
-ext {
-	springCloudVersion = 'Edgware.SR2'
-}
-
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.cloud:spring-cloud-starter-oauth2')
+	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE')
 	compile('io.pivotal.spring.cloud:spring-cloud-sso-connector:2.1.2.RELEASE')
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
