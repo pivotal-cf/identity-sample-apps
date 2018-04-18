@@ -3,7 +3,7 @@ oauth:
       sample-client:
          name: sample-client
          secret: sample-client-secret
-         scope: sample.scope
+         scope: sample.scope,openid
          authorized-grant-types: authorization_code
          authorities: uaa.resource
          redirect-uri: http://localhost:8888/**
@@ -12,7 +12,7 @@ scim:
   groups:
     sample.scope: Sample Scope for Journeys
   users:
-    - sample-user|sample-password|user@example.com|FirstName|LastName|sample.scope
+    - sample-user|sample-password|user@example.com|FirstName|LastName|sample.scope,openid
 jwt:
   token:
     verification-key: |
