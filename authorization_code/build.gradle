@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'org.springframework.boot'
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE')
 	compile('io.pivotal.spring.cloud:spring-cloud-sso-connector:2.1.2.RELEASE')
 }
