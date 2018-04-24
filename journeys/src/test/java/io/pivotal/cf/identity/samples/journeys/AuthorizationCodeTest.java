@@ -26,6 +26,8 @@ public class AuthorizationCodeTest extends FluentTest {
         assertThat(el("body").text()).contains("sample-client");
         assertThat(el("body").text()).contains("sample.scope");
 
+        assertThat(el("body").text()).contains("FirstName LastName");
+
         $("#logout").click();
         assertThat(url()).contains("/uaa/login");
 
