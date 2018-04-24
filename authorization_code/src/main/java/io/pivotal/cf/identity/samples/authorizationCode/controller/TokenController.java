@@ -26,10 +26,9 @@ public class TokenController {
     @Value("${security.oauth2.resource.userInfoUri}")
     private String userInfoUri;
 
-    @RequestMapping(value = "/secured/token")
-    public String show(OAuth2Authentication principal) throws IOException {
+    @RequestMapping(value = "/secured/access_token")
+    public String showAccessToken(OAuth2Authentication principal) throws IOException {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) principal.getDetails();
-        Map<String, Object> userInfoResponse = oauth2RestTemplate.getForObject(userInfoUri, Map.class);
 
         Jwt decodedToken = JwtHelper.decode(details.getTokenValue());
         return "<html>\n" +
@@ -40,6 +39,21 @@ public class TokenController {
                 "</form>\n" +
                 "\n" +
                 "<pre>" + prettyPrint(decodedToken.getClaims()) + "</pre>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>";
+    }
+
+    @RequestMapping(value = "/secured/userinfo")
+    public String showUserinfo() throws IOException {
+        Map<String, Object> userInfoResponse = oauth2RestTemplate.getForObject(userInfoUri, Map.class);
+
+        return "<html>\n" +
+                "<body>\n" +
+                "\n" +
+                "<form action=\"/logout\" method=\"POST\">\n" +
+                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
+                "</form>\n" +
                 "\n" +
                 "<pre>" + prettyPrint(userInfoResponse) + "</pre>\n" +
                 "\n" +
@@ -53,7 +67,7 @@ public class TokenController {
                 .writeValueAsString(this.objectMapper.readValue(decodedTokenJson, Object.class));
     }
 
-    private String prettyPrint(Map<String, Object> objectMap) throws IOException {
+    private String prettyPrint(Object objectMap) throws IOException {
         return prettyPrint(this.objectMapper.writeValueAsString(objectMap));
     }
 }
