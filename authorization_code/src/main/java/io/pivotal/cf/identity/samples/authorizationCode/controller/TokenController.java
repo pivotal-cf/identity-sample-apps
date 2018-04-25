@@ -44,6 +44,24 @@ public class TokenController {
                 "</html>";
     }
 
+    @RequestMapping(value = "/secured/id_token")
+    public String showAccessToken() throws IOException {
+        String idToken = oauth2RestTemplate.getAccessToken().getAdditionalInformation().get("id_token").toString();
+
+        Jwt decodedToken = JwtHelper.decode(idToken);
+        return "<html>\n" +
+                "<body>\n" +
+                "\n" +
+                "<form action=\"/logout\" method=\"POST\">\n" +
+                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
+                "</form>\n" +
+                "\n" +
+                "<pre>" + prettyPrint(decodedToken.getClaims()) + "</pre>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>";
+    }
+
     @RequestMapping(value = "/secured/userinfo")
     public String showUserinfo() throws IOException {
         Map<String, Object> userInfoResponse = oauth2RestTemplate.getForObject(userInfoUri, Map.class);
