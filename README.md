@@ -173,7 +173,7 @@ pushd /path/to/identity-sample-apps
 popd
 ```
 
-Now you can visit the server at `http://localhost:8888/secured/token`
+Now you can visit the server at `http://localhost:8888/secured/access_token`
 
 ---
 
