@@ -9,10 +9,9 @@ oauth:
          redirect-uri: http://localhost:8888/**
 
 scim:
-  groups:
-    sample.scope: Sample Scope for Journeys
   users:
-    - sample-user|sample-password|user@example.com|FirstName|LastName|sample.scope,openid
+    - sample-user|sample-password|user@example.com|FirstName|LastName|openid
+
 jwt:
   token:
     verification-key: |
