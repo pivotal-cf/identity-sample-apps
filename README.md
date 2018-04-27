@@ -1,5 +1,14 @@
 # Sample Applications for Pivotal Single Sign-On
 
+The authorization_code app serves the following endpoints:
+
+Endpoint | Description | Required scopes
+-------- | ----------- | ----------------
+/secured/access_token | Displays your JWT access token | n/a
+/secured/userinfo | Displays your openid userinfo | `openid`
+/secured/todos/read | Example protected endpoint | `todo.read`
+/secured/todos/write | Example protected endpoint | `todo.write`
+
 ## Authorization Code Grant Type
 
 To push to Pivotal Cloud Foundry:
@@ -160,6 +169,13 @@ Then, startup UAA server:
 ```
 pushd /path/to/uaa
     ./gradlew run
+popd
+```
+
+and for the resource server:
+```
+pushd /path/to/identity-sample-apps
+    ./gradlew -p resource_server clean bootRun
 popd
 ```
 

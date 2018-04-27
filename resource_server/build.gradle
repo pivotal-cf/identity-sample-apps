@@ -1,0 +1,17 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.12.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+	compile('org.springframework.cloud:spring-cloud-starter-oauth2:1.2.2.RELEASE')
+}

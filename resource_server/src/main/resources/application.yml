@@ -1,0 +1,11 @@
+---
+server:
+  port: 8889
+
+logging.level:
+  org.springframework.security: DEBUG
+security:
+  oauth2:
+    resource:
+      jwk:
+        key-set-uri: "http://localhost:8080/uaa/token_keys"

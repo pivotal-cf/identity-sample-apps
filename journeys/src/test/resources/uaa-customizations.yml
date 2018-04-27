@@ -3,14 +3,16 @@ oauth:
       sample-client:
          name: sample-client
          secret: sample-client-secret
-         scope: sample.scope,openid
+         scope: todo.read,todo.write,openid
          authorized-grant-types: authorization_code
          authorities: uaa.resource
          redirect-uri: http://localhost:8888/**
 
 scim:
   users:
-    - sample-user|sample-password|user@example.com|FirstName|LastName|openid
+    - sample-user|sample-password|sample-user@example.com|FirstName|LastName|openid
+    - sample-todo-reader|sample-password|sample-todo-reader@example.com|FirstName|LastName|openid,todo.read
+    - sample-todo-writer|sample-password|sample-todo-writer@example.com|FirstName|LastName|openid,todo.read,todo.write
 
 jwt:
   token:
