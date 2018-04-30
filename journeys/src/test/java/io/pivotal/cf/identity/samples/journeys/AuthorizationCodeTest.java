@@ -2,7 +2,6 @@ package io.pivotal.cf.identity.samples.journeys;
 
 import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;

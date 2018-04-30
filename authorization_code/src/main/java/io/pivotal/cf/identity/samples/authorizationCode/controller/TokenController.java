@@ -29,6 +29,9 @@ public class TokenController {
     @Value("${security.oauth2.resource.userInfoUri}")
     private String userInfoUri;
 
+    @Value("${resourceServerUrl}")
+    private String resourceServerUrl;
+
     @RequestMapping(value = "/secured/access_token")
     public String showAccessToken(OAuth2Authentication principal) {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) principal.getDetails();
@@ -66,8 +69,7 @@ public class TokenController {
 
     @RequestMapping(value = "/secured/todos/read")
     public String showTodosRead() {
-        String todosUri = "http://localhost:8889/todos/read";
-        String todosResponse = oauth2RestTemplate.getForObject(todosUri, String.class);
+        String todosResponse = oauth2RestTemplate.getForObject("{resourceServerUrl}/todos/read", String.class, resourceServerUrl);
 
         return "<html>\n" +
                 "<body>\n" +
@@ -83,8 +85,7 @@ public class TokenController {
 
     @RequestMapping(value = "/secured/todos/write")
     public String showTodosWrite() {
-        String todosUri = "http://localhost:8889/todos/write";
-        String todosResponse = oauth2RestTemplate.getForObject(todosUri, String.class);
+        String todosResponse = oauth2RestTemplate.getForObject("{resourceServerUrl}/todos/write", String.class, resourceServerUrl);
 
         return "<html>\n" +
                 "<body>\n" +

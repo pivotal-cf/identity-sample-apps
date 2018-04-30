@@ -185,6 +185,7 @@ and finally the auth server:
 pushd /path/to/identity-sample-apps
     export VCAP_SERVICES="$(cat journeys/src/test/resources/vcap_services.json)"
     export VCAP_APPLICATION="$(cat journeys/src/test/resources/vcap_application.json)"
+    export SPRING_APPLICATION_JSON='{"resourceServerUrl": "http://localhost:8889"}'
     ./gradlew -p authorization_code clean bootRun
 popd
 ```
