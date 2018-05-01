@@ -21,7 +21,7 @@ popd
 pushd "identity-sample-apps"
     (
         echo ">>> Sample resource_server app is starting"
-        export SPRING_APPLICATION_JSON='{"authDomain": "http://localhost:8080"}'
+        export SPRING_APPLICATION_JSON='{"authDomain": "http://localhost:8080/uaa"}'
         ./gradlew --project-cache-dir="${workspace_dir}/.gradle" -p resource_server clean bootRun &
         until nc -vz localhost 8889 >/dev/null 2>&1; do
             echo ">>> Waiting for resource_server to start"
