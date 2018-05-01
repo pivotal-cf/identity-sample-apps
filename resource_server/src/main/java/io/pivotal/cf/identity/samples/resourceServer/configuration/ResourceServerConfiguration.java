@@ -11,14 +11,14 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(ResourceServerSecurityConfigurer security) {
-        security.resourceId("todo");
+        security.resourceId("acme");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/todos/read").access("#oauth2.hasScope('todo.read')")
-            .antMatchers("/todos/write").access("#oauth2.hasScope('todo.read') and #oauth2.hasScope('todo.write')");
+            .antMatchers("/acme/abc").access("#oauth2.hasScope('acme.abc')")
+            .antMatchers("/acme/xyz").access("#oauth2.hasScope('acme.xyz')");
     }
 }

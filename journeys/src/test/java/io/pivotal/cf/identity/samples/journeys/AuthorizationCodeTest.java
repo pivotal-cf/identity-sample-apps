@@ -2,7 +2,6 @@ package io.pivotal.cf.identity.samples.journeys;
 
 import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;
@@ -14,8 +13,8 @@ public class AuthorizationCodeTest extends FluentTest {
     public void displaysAccessTokenToAllUsers() {
         goTo("http://localhost:8888/secured/access_token");
 
-        $("input[name=username]").fill().with("sample-user");
-        $("input[name=password]").fill().with("sample-password");
+        $("input[name=username]").fill().with("basic-user");
+        $("input[name=password]").fill().with("example-password");
         $("input[type=submit]").submit();
 
         if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
@@ -23,7 +22,7 @@ public class AuthorizationCodeTest extends FluentTest {
         }
 
         assertThat(el("body").text()).contains("user@example.com");
-        assertThat(el("body").text()).contains("sample-user");
+        assertThat(el("body").text()).contains("basic-user");
         assertThat(el("body").text()).contains("sample-client");
         assertThat(el("body").text()).contains("openid");
 
@@ -38,8 +37,8 @@ public class AuthorizationCodeTest extends FluentTest {
     public void displaysUserinfoToAllUsers() {
         goTo("http://localhost:8888/secured/userinfo");
 
-        $("input[name=username]").fill().with("sample-user");
-        $("input[name=password]").fill().with("sample-password");
+        $("input[name=username]").fill().with("basic-user");
+        $("input[name=password]").fill().with("example-password");
         $("input[type=submit]").submit();
 
         if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
@@ -52,11 +51,11 @@ public class AuthorizationCodeTest extends FluentTest {
     }
 
     @Test
-    public void doesNotDisplayResourcesToUnauthorizedUsers() {
-        goTo("http://localhost:8888/secured/todos/read");
+    public void basicUser() {
+        goTo("http://localhost:8888/secured/abc");
 
-        $("input[name=username]").fill().with("sample-user");
-        $("input[name=password]").fill().with("sample-password");
+        $("input[name=username]").fill().with("basic-user");
+        $("input[name=password]").fill().with("example-password");
         $("input[type=submit]").submit();
 
         if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
@@ -64,39 +63,51 @@ public class AuthorizationCodeTest extends FluentTest {
         }
 
         assertThat(el("body").text()).contains("Invalid token");
-    }
 
-    @Test
-    public void todoReaders() {
-        goTo("http://localhost:8888/secured/todos/read");
-
-        $("input[name=username]").fill().with("sample-todo-reader");
-        $("input[name=password]").fill().with("sample-password");
-        $("input[type=submit]").submit();
-
-        if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
-            $("#authorize").click();
-        }
-
-        assertThat(el("body").text()).contains("Verified that token contains todo.read");
-
+        goTo("http://localhost:8888/secured/access_token");
         $("#logout").click();
     }
 
     @Test
-    public void todoWriters() {
-        goTo("http://localhost:8888/secured/todos/write");
+    public void abcUser() {
+        goTo("http://localhost:8888/secured/abc");
 
-        $("input[name=username]").fill().with("sample-todo-writer");
-        $("input[name=password]").fill().with("sample-password");
+        $("input[name=username]").fill().with("abc-user");
+        $("input[name=password]").fill().with("example-password");
         $("input[type=submit]").submit();
 
         if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
             $("#authorize").click();
         }
 
-        assertThat(el("body").text()).contains("Verified that token contains todo.read and todo.write");
+        assertThat(el("body").text()).contains("Verified that token contains acme.abc");
 
+        goTo("http://localhost:8888/secured/xyz");
+        assertThat(el("body").text()).contains("Insufficient scope for this resource");
+
+
+        goTo("http://localhost:8888/secured/access_token");
+        $("#logout").click();
+    }
+
+    @Test
+    public void xyzUser() {
+        goTo("http://localhost:8888/secured/xyz");
+
+        $("input[name=username]").fill().with("xyz-user");
+        $("input[name=password]").fill().with("example-password");
+        $("input[type=submit]").submit();
+
+        if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
+            $("#authorize").click();
+        }
+
+        assertThat(el("body").text()).contains("Verified that token contains acme.xyz");
+
+        goTo("http://localhost:8888/secured/abc");
+        assertThat(el("body").text()).contains("Insufficient scope for this resource");
+
+        goTo("http://localhost:8888/secured/access_token");
         $("#logout").click();
     }
 }

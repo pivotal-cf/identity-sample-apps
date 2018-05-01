@@ -29,6 +29,9 @@ public class TokenController {
     @Value("${security.oauth2.resource.userInfoUri}")
     private String userInfoUri;
 
+    @Value("${resourceServerUrl}")
+    private String resourceServerUrl;
+
     @RequestMapping(value = "/secured/access_token")
     public String showAccessToken(OAuth2Authentication principal) {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) principal.getDetails();
@@ -64,10 +67,9 @@ public class TokenController {
                 "</html>";
     }
 
-    @RequestMapping(value = "/secured/todos/read")
-    public String showTodosRead() {
-        String todosUri = "http://localhost:8889/todos/read";
-        String todosResponse = oauth2RestTemplate.getForObject(todosUri, String.class);
+    @RequestMapping(value = "/secured/abc")
+    public String showAbc() {
+        String todosResponse = oauth2RestTemplate.getForObject("{resourceServerUrl}/acme/abc", String.class, resourceServerUrl);
 
         return "<html>\n" +
                 "<body>\n" +
@@ -81,10 +83,9 @@ public class TokenController {
                 "</html>";
     }
 
-    @RequestMapping(value = "/secured/todos/write")
-    public String showTodosWrite() {
-        String todosUri = "http://localhost:8889/todos/write";
-        String todosResponse = oauth2RestTemplate.getForObject(todosUri, String.class);
+    @RequestMapping(value = "/secured/xyz")
+    public String showXyz() {
+        String response = oauth2RestTemplate.getForObject("{resourceServerUrl}/acme/xyz", String.class, resourceServerUrl);
 
         return "<html>\n" +
                 "<body>\n" +
@@ -93,7 +94,7 @@ public class TokenController {
                 "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
                 "</form>\n" +
                 "\n" +
-                "<pre>" + todosResponse + "</pre>\n" +
+                "<pre>" + response + "</pre>\n" +
                 "</body>\n" +
                 "</html>";
     }

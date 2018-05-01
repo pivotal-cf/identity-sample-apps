@@ -16,5 +16,19 @@
       "tags": [],
       "volume_mounts": []
     }
+  ],
+  "user-provided": [
+    {
+      "binding_name": null,
+      "credentials": {
+        "url": "http://localhost:8889"
+      },
+      "instance_name": "resource-server",
+      "label": "user-provided",
+      "name": "resource-server",
+      "syslog_drain_url": "",
+      "tags": [],
+      "volume_mounts": []
+    }
   ]
 }
