@@ -47,5 +47,5 @@ pushd "identity-sample-apps"
     ./gradlew --project-cache-dir="${workspace_dir}/.gradle" build
 popd
 
-cp "identity-sample-apps/authorization_code/build/libs/authorization_code.jar" sample-app-jars/authorization_code.jar
-cp "identity-sample-apps/resource_server/build/libs/resource_server.jar" sample-app-jars/resource_server.jar
+cp "identity-sample-apps/authorization_code/build/libs/authorization_code-0.0.1-SNAPSHOT.jar" sample-app-jars/authorization_code.jar
+cp "identity-sample-apps/resource_server/build/libs/resource_server-0.0.1-SNAPSHOT.jar" sample-app-jars/resource_server.jar
