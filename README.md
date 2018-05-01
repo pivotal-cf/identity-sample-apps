@@ -4,10 +4,10 @@ The authorization_code app serves the following endpoints:
 
 Endpoint | Description | Required scopes
 -------- | ----------- | ----------------
-/secured/access_token | Displays your JWT access token | n/a
+/secured/access_token | Displays your JWT access token | at least 1 scope
 /secured/userinfo | Displays your openid userinfo | `openid`
-/secured/todos/read | Example protected endpoint | `todo.read`
-/secured/todos/write | Example protected endpoint | `todo.write`
+/secured/abc | Displays a resource requiring a custom scope | `acme.abc`
+/secured/xyz | Displays a resource requiring a custom scope | `acme.xyz`
 
 ## Authorization Code Grant Type
 
@@ -61,110 +61,75 @@ To push to Pivotal Cloud Foundry:
     
 - Access to an `Org` and `Space` to deploy these sample applications (e.g. `sample-org` & `sample-space`)
 
-    ```
-    $ cf create-org sample-org
-    Creating org sample-org as admin...
-    OK
-    
-    Assigning role OrgManager to user admin in org sample-org ...
-    OK
-    
-    TIP: Use 'cf target -o "sample-org"' to target new org
-    
-    $ cf target -o sample-org
-    api endpoint:   https://api.sys.example.com
-    api version:    2.103.0
-    user:           admin
-    org:            sample-org
-    No space targeted, use 'cf target -s SPACE'
-    
-    $ cf create-space sample-space
-    Creating space sample-space in org sample-org as admin...
-    OK
-    Assigning role RoleSpaceManager to user admin in org sample-org / space sample-space as admin...
-    OK
-    Assigning role RoleSpaceDeveloper to user admin in org sample-org / space sample-space as admin...
-    OK
-    
-    TIP: Use 'cf target -o "sample-org" -s "sample-space"' to target new space
-    
-    $  cf target -s sample-space
-    api endpoint:   https://api.sys.example.com
-    api version:    2.103.0
-    user:           admin
-    org:            sample-org
-    space:          sample-space
-    ```
+```
+cf create-org sample-org
+cf target -o sample-org
+cf create-space sample-space
+cf target -s sample-space
+```
 
 - Access to a Single Sign-On `Plan` (e.g. `sample-plan`)  
    - Create a new Single Sign-On `Plan` in the Single Sign-On dashboard; usually at https://p-identity.sys.example.com/
  
 ### PCF Deployment Steps
 
-```
-$ ./gradlew clean build -x test
-  
-BUILD SUCCESSFUL in 4s
-8 actionable tasks: 8 executed
-  
-$ cf push authorization_code --no-start -p authorization_code/build/libs/authorization_code-0.0.1-SNAPSHOT.jar
-Pushing app authorization_code to org sample-org / space sample-space as admin...
-Getting app info...
-Creating app with these attributes...
-+ name:       authorization_code
-  path:       /path/to/identity-sample-apps/authorization_code/build/libs/authorization_code-0.0.1-SNAPSHOT.jar
-  routes:
-+   authorizationcode.apps.example.com
-
-Creating app authorization_code...
-Mapping routes...
-Comparing local files to remote cache...
-Packaging files to upload...
-Uploading files...
- 19.18 MiB / 19.18 MiB [=========================================================================================] 100.00% 1s
-
-Waiting for API to complete processing files...
-
-name:              authorization_code
-requested state:   stopped
-instances:         0/1
-usage:             1G x 1 instances
-routes:            authorizationcode.apps.example.com
-last uploaded:     Fri 23 Mar 12:02:45 PDT 2018
-stack:             cflinuxfs2
-buildpack:
-start command:
-
-There are no running instances of this app.
-
-$ cf create-service p-identity sample-plan sample-plan-service-instance
-Creating service instance sample-plan-service-instance in org sample-org / space sample-space as admin...
-OK
-
-$ cf bind-service authorization_code sample-plan-service-instance
-Binding service sample-plan-service-instance to app authorization_code in org sample-org / space sample-space as admin...
-OK
-TIP: Use 'cf restage authorization_code' to ensure your env variable changes take effect
-
-$ cf start authorization_code
-...
+1. Build all samples
 
 ```
+./gradlew clean build -x test
+```
 
-NOTE: The `cf start` above will fail if the UAA has a self-signed SSL certificate (example error below). Our 
-recommendation is to use an SSL certificate signed by a trusted CA instead.
+2. Push `resource_server`
+
+```
+cf push resource_server --no-start -p resource_server/build/libs/resource_server-0.0.1-SNAPSHOT.jar
+cf set-env resource_server SPRING_APPLICATION_JSON '{"authDomain":"https://sample-plan.login.sys.example.com"}'
+cf start resource_server
+```
+
+NOTE: The `cf start` above will fail if the UAA has a self-signed SSL certificate. Our recommendation is to use an SSL
+certificate signed by a trusted CA instead.
+
+3. Push `authorization_code`
+
+```
+cf push authorization_code --no-start -p authorization_code/build/libs/authorization_code-0.0.1-SNAPSHOT.jar
+cf create-service p-identity sample-plan sample-plan-service-instance
+cf bind-service authorization_code sample-plan-service-instance \
+  -c '{"resources":{"acme.abc":"ABC","acme.xyz":"XYZ"},"scopes":["openid","acme.abc","acme.xyz"],"authorities":["uaa.resource"],"redirect_uris":["https://authorization-code.sfo.identity.team/**"]}'
+cf set-env authorization_code SPRING_APPLICATION_JSON '{"resourceServerUrl":"https://resource_server.apps.example.com"}'
+cf start authorization_code
+```
+
+NOTE: The `cf start` above will fail if the UAA has a self-signed SSL certificate. Our recommendation is to use an SSL
+certificate signed by a trusted CA instead.
+
+4. Create a user
+
+```
+uaac --zone sample-plan user add sample-user --password sample-password --emails sample-user@example.com
+uaac --zone sample-plan member add acme.abc sample-user
+uaac --zone sample-plan member add acme.xyz sample-user
+```
 
 ### Local Development
 
 UAA configuration can be done by running the following commands (requires the [`yq`](https://yq.readthedocs.io/en/latest/) command for manipulating yaml):
 
+1. Clone UAA and identity-sample-apps projects
+
 ```
 git clone https://github.com/cloudfoundry/uaa.git
 git clone https://github.com/pivotal-cf/identity-sample-apps.git
+```
+
+2. Configure UAA for identity-sample-apps
+
+```
 yq merge --inplace uaa/uaa/src/main/resources/uaa.yml identity-sample-apps/journeys/src/test/resources/uaa-customizations.yml
 ```
 
-Then, startup UAA server:
+3. Start UAA:
 
 ```
 pushd /path/to/uaa
@@ -172,19 +137,28 @@ pushd /path/to/uaa
 popd
 ```
 
-and for the resource server:
+4. Build samples:
+
+```
+./gradlew clean build -x test
+```
+
+5. Start `resource_server`
+
 ```
 pushd /path/to/identity-sample-apps
+    export SPRING_APPLICATION_JSON='{"uaaUrl":"http://localhost:8080/uaa"}'
     ./gradlew -p resource_server clean bootRun
 popd
 ```
 
-and finally the auth server:
+6. Start `authorization_code`
 
 ```
 pushd /path/to/identity-sample-apps
     export VCAP_SERVICES="$(cat journeys/src/test/resources/vcap_services.json)"
     export VCAP_APPLICATION="$(cat journeys/src/test/resources/vcap_application.json)"
+    export SPRING_APPLICATION_JSON='{"resourceServerUrl":"http://localhost:8889"}'
     ./gradlew -p authorization_code clean bootRun
 popd
 ```
