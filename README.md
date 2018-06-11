@@ -147,7 +147,7 @@ popd
 
 ```
 pushd /path/to/identity-sample-apps
-    export SPRING_APPLICATION_JSON='{"uaaUrl":"http://localhost:8080/uaa"}'
+    export SPRING_APPLICATION_JSON='{"authDomain":"http://localhost:8080/uaa"}'
     ./gradlew -p resource_server clean bootRun
 popd
 ```
