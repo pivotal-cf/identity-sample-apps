@@ -104,7 +104,8 @@ cf start authorization_code
 NOTE: The `cf start` above will fail if the UAA has a self-signed SSL certificate. Our recommendation is to use an SSL
 certificate signed by a trusted CA instead.
 
-4. Create a user
+4. Create a user using uaac
+- [Install uaac](https://docs.cloudfoundry.org/uaa/uaa-user-management.html) if not installed already.
 
 ```
 uaac --zone sample-plan user add sample-user --password sample-password --emails sample-user@example.com
