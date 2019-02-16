@@ -4,116 +4,139 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.JwtHelper;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
+import java.util.Base64;
 import java.util.Map;
+
+import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient;
 
 @RestController
 public class TokenController {
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private OAuth2RestTemplate oauth2RestTemplate;
-
-    @Value("${security.oauth2.resource.userInfoUri}")
-    private String userInfoUri;
+    WebClient webClient;
 
     @Value("${resourceServerUrl}")
     private String resourceServerUrl;
 
-    @RequestMapping(value = "/secured/access_token")
-    public String showAccessToken(OAuth2Authentication principal) {
-        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) principal.getDetails();
+    @RequestMapping(value = "/")
+    public String home() {
 
-        Jwt decodedToken = JwtHelper.decode(details.getTokenValue());
         return "<html>\n" +
                 "<body>\n" +
-                "\n" +
-                "<form action=\"/logout\" method=\"POST\">\n" +
-                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
-                "</form>\n" +
-                "\n" +
-                "<pre>" + prettyPrint(decodedToken.getClaims()) + "</pre>\n" +
-                "\n" +
+                "<a href=\"/app\">Login</a>\n" + "<br/>" +
                 "</body>\n" +
                 "</html>";
     }
 
-    @RequestMapping(value = "/secured/userinfo")
-    public String showUserinfo() {
-        Map<String, Object> userInfoResponse = oauth2RestTemplate.getForObject(userInfoUri, Map.class);
+    @RequestMapping(value = "/app")
+    public String app(@RegisteredOAuth2AuthorizedClient("sso") OAuth2AuthorizedClient oauth2client, @AuthenticationPrincipal OidcUser oidcUser) {
 
         return "<html>\n" +
                 "<body>\n" +
-                "\n" +
-                "<form action=\"/logout\" method=\"POST\">\n" +
-                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
-                "</form>\n" +
-                "\n" +
-                "<pre>" + prettyPrint(userInfoResponse) + "</pre>\n" +
-                "\n" +
+                "Access Token: " + oauth2client.getAccessToken().getTokenValue() + "<br/>" +
+                displayAccessToken(oauth2client.getAccessToken().getTokenValue()) + "<br/>" +
+                "ID Token: " + oidcUser.getIdToken().getTokenValue() + "<br/>" +
+                displayIdToken(oidcUser.getIdToken().getTokenValue().toString()) + "<br/>" +
+                "User Info Endpoint: " + oauth2client.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri() + "<br/>" +
+                displayUserInfo(oidcUser.getUserInfo().getClaims()) + "<br/>" + "\n" +
+                "<a href=\"/api\">Resource Server</a>\n" + "<br/>" +
+                "<a href=\"/logout\">Logout</a>\n" + "<br/>" +
                 "</body>\n" +
                 "</html>";
     }
 
-    @RequestMapping(value = "/secured/abc")
-    public String showAbc() {
-        String todosResponse = oauth2RestTemplate.getForObject("{resourceServerUrl}/acme/abc", String.class, resourceServerUrl);
+    @RequestMapping(value = "/api")
+    public String getResourceServerData(@RegisteredOAuth2AuthorizedClient("sso") OAuth2AuthorizedClient oauth2client) {
+
+        String response = this.webClient
+                .get()
+                .uri(resourceServerUrl)
+                .attributes(oauth2AuthorizedClient(oauth2client))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
         return "<html>\n" +
                 "<body>\n" +
-                "\n" +
-                "<form action=\"/logout\" method=\"POST\">\n" +
-                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
-                "</form>\n" +
-                "\n" +
-                "<pre>" + todosResponse + "</pre>\n" +
+                "Get Response: " + response + "<br/>" +
+                "<br/>" +
+                "<a href=\"/api/post\">Post</a>\n" + "<br/>" +
+                "<a href=\"/app\">Back</a>\n" + "<br/>" +
                 "</body>\n" +
                 "</html>";
     }
 
-    @RequestMapping(value = "/secured/xyz")
-    public String showXyz() {
-        String response = oauth2RestTemplate.getForObject("{resourceServerUrl}/acme/xyz", String.class, resourceServerUrl);
-
-        return "<html>\n" +
-                "<body>\n" +
-                "\n" +
-                "<form action=\"/logout\" method=\"POST\">\n" +
-                "    <button id=\"logout\" type=\"submit\">Logout</button>\n" +
-                "</form>\n" +
-                "\n" +
-                "<pre>" + response + "</pre>\n" +
-                "</body>\n" +
-                "</html>";
+    @RequestMapping(value = "/api/post")
+    public void postResourceServerData(HttpServletResponse response, @RegisteredOAuth2AuthorizedClient("sso") OAuth2AuthorizedClient oauth2client) throws IOException {
+        this.webClient
+                .post()
+                .uri(resourceServerUrl)
+                .attributes(oauth2AuthorizedClient(oauth2client))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        response.sendRedirect("/api");
     }
 
-    private String prettyPrint(String decodedTokenJson) {
+    private String displayAccessToken(String token) {
+        return "Access Token:" +
+                "\n" +
+                "<pre>" +  prettyPrintJwtBody(token) + "</pre>\n";
+    }
+
+    private String displayIdToken(String token) {
+        return "ID Token:" +
+                "\n" +
+                "<pre>" +  prettyPrintJwtBody(token) + "</pre>\n";
+    }
+
+    private String displayUserInfo(Map<String,Object> userInfo) {
+        String userInfoJson;
         try {
-            return this.objectMapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(this.objectMapper.readValue(decodedTokenJson, Object.class));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String prettyPrint(Object objectMap)  {
-        try {
-            return prettyPrint(this.objectMapper.writeValueAsString(objectMap));
+            userInfoJson = new ObjectMapper().writeValueAsString(userInfo);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return "Error parsing User Info response";
+        }
+        return "User Info:" +
+                "\n" +
+                "<pre>" +  prettyPrintJSON(userInfoJson) + "</pre>\n";
+    }
+
+    private String prettyPrintJwtBody(String jwtToken)  {
+            String[] split_string = jwtToken.split("\\.");
+            try {
+                String base64EncodedBody = split_string[1];
+                byte[] decodedBytes = Base64.getDecoder().decode(base64EncodedBody);
+                return prettyPrintJSON(new String(decodedBytes));
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return "Error parsing JWT token";
+            }
+    }
+
+    private String prettyPrintJSON(String json)  {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(json,Object.class));
+        } catch (JsonProcessingException e) {
+            return "Error parsing JSON";
+        } catch (IOException e) {
+            return "Error parsing token";
         }
     }
+
 }

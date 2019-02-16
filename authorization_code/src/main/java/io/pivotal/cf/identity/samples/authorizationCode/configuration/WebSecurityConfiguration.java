@@ -1,38 +1,58 @@
 package io.pivotal.cf.identity.samples.authorizationCode.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.*;
+import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.http.HttpHeaders.REFERER;
 
 @Configuration
-@EnableOAuth2Sso
+@EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${ssoServiceUrl}")
     private String ssoServiceUrl;
 
-    @Value("${security.oauth2.client.clientId}")
+    @Value("${spring.security.oauth2.client.registration.sso.client-id}")
     private String clientId;
+
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        http.authorizeRequests()
-                .antMatchers("/secured/**").authenticated()
+        http.oauth2Login()
             .and()
-                .logout().logoutSuccessHandler(logoutSuccessHandler())
-                .permitAll();
+                .authorizeRequests()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/app/**").authenticated()
+            .and()
+                .logout().logoutSuccessHandler(logoutSuccessHandler()).permitAll();
+    }
+
+
+    @Bean
+    WebClient webClient(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientRepository authorizedClients) {
+        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 = new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrationRepository, authorizedClients);
+        return WebClient.builder()
+                .apply(oauth2.oauth2Configuration())
+                .build();
     }
 
     @Bean
@@ -43,10 +63,5 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             response.setHeader("Location", authServerLogoutUrl);
             response.setStatus(HttpServletResponse.SC_FOUND);
         };
-    }
-
-    @Bean
-    public OAuth2RestTemplate oauth2RestTemplate(OAuth2ProtectedResourceDetails oa2prd, OAuth2ClientContext oa2cc) {
-        return new OAuth2RestTemplate(oa2prd, oa2cc);
     }
 }

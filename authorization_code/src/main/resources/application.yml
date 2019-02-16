@@ -2,8 +2,29 @@
 server:
   port: 8888
 
-security:
-  basic:
-    enabled: false
-logging.level:
-  org.springframework.security: DEBUG
+logging.level.org.springframework.security: "DEBUG"
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          sso:
+            provider: "sso-provider"
+            client-id: "client id"
+            client-secret: "client secret"
+            authorization-grant-type: "authorization_code" #can we pull from the SSO manifest env property in connector? what does this do for bind parameters?
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: "openid,profile" #openid is required to use OIDC classes, profile (or another OIDC standard claim) is required to trigger userinfo - can we get spring boot to not implicitly require these scopes?
+        provider:
+          sso-provider:
+            authorization-uri: "https://demo.login.run.pivotal.io/oauth/authorize" #do we have to set this if issuer-uri is set? it does override the value from OIDC discovery which otherwise causes login session w/ UAA issues as plan.login.* and plan.uaa.* are distinct sessions
+            #token-uri: "https://demo.login.run.pivotal.io/oauth/token"
+            user-info-uri: "https://demo.login.run.pivotal.io/userinfo"
+            #user-info-authentication-method: "header"
+            #jwk-set-uri: "https://demo.login.run.pivotal.io/token_keys" #setting just this value - does it still validate issuer? docs say it won't
+            issuer-uri: "https://demo.uaa.run.pivotal.io/oauth/token"
+            userNameAttribute: "user_name"
+
+ssoServiceUrl: "https://demo.login.run.pivotal.io"
+resourceServerUrl: "http://localhost:8889"
