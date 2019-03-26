@@ -395,10 +395,10 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 Bouncy Castle Licence
 
-http://www.bouncycastle.org/licence.html
+https://www.bouncycastle.org/licence.html
 
 License
-Copyright (c) 2000 - 2011 The Legion Of The Bouncy Castle (http://www.bouncycastle.org)
+Copyright (c) 2000 - 2011 The Legion Of The Bouncy Castle (https://www.bouncycastle.org)
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -406,7 +406,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 >>> bcprov-jdk15on-1.47
 
-Copyright (c) 2000-2008 The Legion Of The Bouncy Castle (http://www.bouncycastle.org)
+Copyright (c) 2000-2008 The Legion Of The Bouncy Castle (https://www.bouncycastle.org)
 <p>
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -694,7 +694,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  THE
 SOFTWARE.
 
 A small portion of the environ dup'ing code in ext/posix-spawn.c
-was taken from glibc <http://www.gnu.org/s/libc/> and is maybe
+was taken from glibc <https://www.gnu.org/s/libc/> and is maybe
 Copyright (c) 2011 by The Free Software Foundation or maybe
 by others mentioned in the glibc LICENSES file. glibc is
 distributed under the terms of the LGPL license.
@@ -790,7 +790,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 >>> rest-client-1.6.7
 
-Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
+Released under the MIT License: https://www.opensource.org/licenses/mit-license.php
 
 Copyright (c) 2003, 2004 Jim Weirich
 
@@ -978,7 +978,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 >>> tilt-1.3.3
 
-Copyright (c) 2010 Ryan Tomayko <http://tomayko.com/about>
+Copyright (c) 2010 Ryan Tomayko <https://tomayko.com/about>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -1000,7 +1000,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 >>> yajl-ruby-0.8.3
 
-Copyright (c) 2008-2011 Brian Lopez - http://github.com/brianmario
+Copyright (c) 2008-2011 Brian Lopez - https://github.com/brianmario
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -1127,7 +1127,7 @@ Apache Commons CLI
 Copyright 2001-2009 The Apache Software Foundation
 
 This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
+The Apache Software Foundation (https://www.apache.org/).
 
 
 >>> commons-codec-1.3
@@ -1189,7 +1189,7 @@ Apache Commons Pool
 Copyright 1999-2009 The Apache Software Foundation
 
 This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
+The Apache Software Foundation (https://www.apache.org/).
 
 
 >>> hibernate-validator-4.3.1.final
@@ -1217,7 +1217,7 @@ Apache HttpComponents HttpClient
 Copyright 1999-2012 The Apache Software Foundation
 
 This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
+The Apache Software Foundation (https://www.apache.org/).
 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -1240,7 +1240,7 @@ under the License.
 This software consists of voluntary contributions made by many
 individuals on behalf of the Apache Software Foundation.  For more
 information on the Apache Software Foundation, please see
-<http://www.apache.org/>.
+<https://www.apache.org/>.
 
 
 >>> httpcore-4.2.1
@@ -1249,10 +1249,10 @@ Apache HttpComponents HttpCore
 Copyright 2005-2012 The Apache Software Foundation
 
 This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
+The Apache Software Foundation (https://www.apache.org/).
 
 This project contains annotations derived from JCIP-ANNOTATIONS
-Copyright (c) 2005 Brian Goetz and Tim Peierls. See http://www.jcip.net
+Copyright (c) 2005 Brian Goetz and Tim Peierls. See http://jcip.net/
 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -1275,7 +1275,7 @@ under the License.
 This software consists of voluntary contributions made by many
 individuals on behalf of the Apache Software Foundation.  For more
 information on the Apache Software Foundation, please see
-<http://www.apache.org/>.
+<https://www.apache.org/>.
 
 
 >>> jackson-core-asl-1.9.2
@@ -1335,7 +1335,7 @@ Apache log4j
 Copyright 2007 The Apache Software Foundation
 
 This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
+The Apache Software Foundation (https://www.apache.org/).
 
 
 >>> objenesis-1.0
@@ -1354,7 +1354,7 @@ Unless required by applicable law or agreed to in writing, software  distributed
 
 >>> snakeyaml-1.12
 
-Copyright (c) 2008-2012, http://www.snakeyaml.org
+Copyright (c) 2008-2012, https://bitbucket.org/asomov/snakeyaml
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -1809,7 +1809,7 @@ If you have questions or comments about this library send e-mail to
 vt-middleware-users@googlegroups.com.
 
 DOCUMENTATION
-See the wiki: http://code.google.com/p/vt-middleware/wiki/vtcrypt
+See the wiki: https://code.google.com/p/vt-middleware/wiki/vtcrypt
 
 
 ADDITIONAL LICENSE INFORMATION:
@@ -1823,7 +1823,7 @@ Apache Commons CLI
 Copyright 2001-2009 The Apache Software Foundation
 
 This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
+The Apache Software Foundation (https://www.apache.org/).
 
 
 >>> vt-dictionary-3.0
@@ -1840,7 +1840,7 @@ DICTIONARY 3.0 README
     vt-middleware-users@googlegroups.com.
 
 DOCUMENTATION
-    See the wiki: http://code.google.com/p/vt-middleware/wiki/vtdictionary
+    See the wiki: https://code.google.com/p/vt-middleware/wiki/vtdictionary
 
 
 >>> vt-password-3.1.1
@@ -2023,7 +2023,7 @@ Copyright (c) 1999-2001 Xerox Corporation, 2002 Palo Alto Research Center, Incor
 
 All rights reserved.
 
-This program and the accompanying materials are made available  under the terms of the Eclipse Public License v1.0  which accompanies this distribution and is available at  http://www.eclipse.org/legal/epl-v10.html
+This program and the accompanying materials are made available  under the terms of the Eclipse Public License v1.0  which accompanies this distribution and is available at  https://www.eclipse.org/legal/epl-v10.html
 
 Contributors: Xerox/PARC initial implementation
 
@@ -2035,7 +2035,7 @@ All rights reserved.
 This program and the accompanying materials are made available
 under the terms of the Eclipse Public License v1.0
 which accompanies this distribution and is available at
-http://www.eclipse.org/legal/epl-v10.html
+https://www.eclipse.org/legal/epl-v10.html
 
 Contributors:
 Andy Clement -     initial implementation {date}
@@ -2067,7 +2067,7 @@ distribution.
 3. The end-user documentation included with the redistribution,
 if any, must include the following acknowledgment:
 "This product includes software developed by the
-Apache Software Foundation (http://www.apache.org/)."
+Apache Software Foundation (https://www.apache.org/)."
 Alternately, this acknowledgment may appear in the software itself,
 if and wherever such third-party acknowledgments normally appear.
 
@@ -2119,7 +2119,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this software; if not, write to the Free
 Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-02110-1301 USA, or see the FSF site: http://www.fsf.org.
+02110-1301 USA, or see the FSF site: https://www.fsf.org.
 
 
 >>> org.mariadb.jdb-1.1.3
@@ -2322,7 +2322,7 @@ Prototype JavaScript framework, version 1.6.0
 
 (c) 2005-2007 Sam Stephenson
 
-Prototype is freely distributable under the terms of an MIT-style license. For details, see the Prototype web site: http://www.prototypejs.org/
+Prototype is freely distributable under the terms of an MIT-style license. For details, see the Prototype web site: http://prototypejs.org/
 
 > MIT Style License
 
@@ -2346,10 +2346,10 @@ Unicode, Inc. hereby grants the right to freely use the information supplied in 
 == Licence
 
 This software is available under a triple disjunctive licence:
-{Ruby's licence}[http://www.ruby-lang.org/en/LICENSE.txt],
+{Ruby's licence}[https://www.ruby-lang.org/en/LICENSE.txt],
 the
-{Perl Artistic licence}[http://www.perl.com/pub/a/language/misc/Artistic.html],
-or the {GNU GPL version 2}[http://www.gnu.org/licenses/old-licenses/gpl-2.0.html]
+{Perl Artistic licence}[https://www.perl.com/pub/a/language/misc/Artistic.html],
+or the {GNU GPL version 2}[https://www.gnu.org/licenses/old-licenses/gpl-2.0.html]
 (or at your option, any later verison).
 
 If you do not accept one of these licences, you may not use this software.
@@ -3746,7 +3746,7 @@ to a jury trial in any resulting litigation.
 		   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
@@ -3920,7 +3920,7 @@ available (as would be noted above), you may obtain a copy of
 the source code corresponding to the binaries for such open
 source components and modifications thereto, if any, (the
 "Source Files"), by downloading the Source Files from VMware's website at
-http://www.vmware.com/download/open_source.html, or by sending a
+https://www.vmware.com/download/open_source.html, or by sending a
 request, with your name and address to: GoPivotal, Inc., 1900 S.
 Norfolk Street #125, San Mateo, CA 94403, Attention: General Counsel.
 All such requests should clearly specify: OPEN SOURCE FILES REQUEST,
