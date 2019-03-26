@@ -14,7 +14,7 @@ file.
 
 1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-4/index.html)
 1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/1-4/manage-service-plans.html) for the SSO Service that is visible to your Org.
-1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/1-4/manage-users.html).
+1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](https://docs.pivotal.io/p-identity/1-4/manage-users.html).
 
 ### Step 0: Deploy a sample resource server
 
@@ -76,7 +76,7 @@ You can verify the app is successfully running by viewing the output of `cf apps
 You can test this sample application with users who have the `todo.read` and `todo.write` scopes for your plan. An operator can create these
 users with these permissions using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
 
-To create the resource and permissions, an operator must follow [these steps](http://docs.pivotal.io/p-identity/manage-resources.html). After 
+To create the resource and permissions, an operator must follow [these steps](https://docs.pivotal.io/p-identity/manage-resources.html). After 
 the resource and permissions have been created, you need to update the authcode-sample app with the previously created scopes on the App dashboard.
 
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
