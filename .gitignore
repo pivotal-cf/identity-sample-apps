@@ -1,3 +1,4 @@
+!**/gradle/wrapper/gradle-wrapper.jar
 **/*.iml
 **/.idea
 **/build
@@ -5,3 +6,4 @@
 **/.gradle
 **/classes
 **/out
+**/.DS_Store

@@ -1,23 +1,26 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.5.RELEASE')
-    }
+plugins {
+	id 'org.springframework.boot' version '2.1.3.RELEASE'
+	id 'java'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'io.pivotal.identityService'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+ext {
+	springVersion = '2.1.3.RELEASE'
+	springSecurityVersion = '5.1.4.RELEASE'
+}
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    compile 'org.springframework.cloud:spring-cloud-starter-oauth2:1.2.1.RELEASE'
-    compile 'io.pivotal.spring.cloud:spring-cloud-sso-connector:2.1.3.RELEASE'
-    compile 'org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE'
+	implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
+	implementation "org.springframework.security:spring-security-oauth2-resource-server:$springSecurityVersion"
+	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
+	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
 }
