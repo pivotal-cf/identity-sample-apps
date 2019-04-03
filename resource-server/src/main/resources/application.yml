@@ -10,8 +10,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: "https://demo.login.run.pivotal.io/token_keys"
+          jwk-set-uri: "${AUTH_SERVER}/token_keys"
 
 sso:
-  issuer: "https://demo.uaa.run.pivotal.io/oauth/token"
+  issuer: "${AUTH_SERVER}/oauth/token"
   audience: "foo,todo"

@@ -6,5 +6,4 @@ applications:
    buildpack: java_buildpack
    path: build/libs/resource-server.jar
    env:
-     SKIP_SSL_VALIDATION: "true"
      AUTH_SERVER: https://<plan-auth-domain>.login.<your-domain>.com
