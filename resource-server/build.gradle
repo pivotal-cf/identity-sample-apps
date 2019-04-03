@@ -6,7 +6,6 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'io.pivotal.identityService'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 ext {
