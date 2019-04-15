@@ -10,8 +10,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: "${AUTH_SERVER}/token_keys"
+          issuer-uri: "${AUTH_SERVER}/oauth/token"
 
 sso:
-  issuer: "${AUTH_SERVER}/oauth/token"
-  audience: "foo,todo"
+  audience: "todo"
