@@ -1,16 +1,29 @@
+---
 server:
-  port: 8888
-  tomcat:
-    remote_ip_header: x-forwarded-for
-    protocol_header: x-forwarded-proto
-    internal_proxies: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
-spring:
-  thymeleaf:
-    cache: false
-security:
-  ignored: /favicon.ico, /, /authorization_code
-  basic:
-    enabled: false
+  port: 8080
+
 logging.level:
   org.springframework.security: DEBUG
-resourceServerUrl: ${RESOURCE_URL:https://resource-server.domain}
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          sso:
+            client-id: "your-application-client-id"
+            client-secret: "your-application-client-secret"
+            authorization-grant-type: "${GRANT_TYPE}"
+            client-name: "sso"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            # NOTE: scope must explicitly be defined or else spring security will request a predefined list of scopes
+            # 'email' or 'profile' is required to access the "/userinfo" endpoint via DefaultOidcUser
+            scope: "${SSO_SCOPES}"
+        provider:
+          sso:
+            issuer-uri: "${uaaIssuerUrl}/oauth/token"
+            authorization-uri: "${ssoServiceUrl}/oauth/authorize"
+
+uaaIssuerUrl: "https://<plan-auth-domain>.uaa.<your-domain>.com"
+ssoServiceUrl: "https://<plan-auth-domain>.login.<your-domain>.com"
+applicationUrl: "http://localhost:8080"

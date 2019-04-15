@@ -25,7 +25,7 @@ applications:
      # SSO_REDIRECT_URIS: https://my-domain-here.domain.org
 
      # Client scope(s) for the application, not used for client credentials grant type
-     SSO_SCOPES: openid, todo.read, todo.write
+     SSO_SCOPES: openid, email, todo.read, todo.write
 
      # Client scope(s) for the application that are automatically authorized when acting on behalf of a user
      # SSO_AUTO_APPROVED_SCOPES: openid, todo.read

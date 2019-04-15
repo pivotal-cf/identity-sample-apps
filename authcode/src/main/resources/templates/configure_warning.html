@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1 th:text="${header}">Warning: You need to bind to the SSO service.</h1>
-    <div th:if="${displayWarning}">
+    <div th:if="${warning}">
       <p>1. Push the Resource Server sample application. </p>
       <p>2. In the Authentication Code sample application, set the resource server URL for the environment variable {RESOURCE_URL} and restart the application.</p>
       <p>3. In the Resource Server sample application, set the auth server URL for the environment variable {AUTH_SERVER} and restart the application.</p>

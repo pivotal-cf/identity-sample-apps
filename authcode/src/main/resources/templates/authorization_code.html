@@ -9,7 +9,7 @@
   <h1>Authcode sample</h1>
 
   <p>You've used the authcode flow! Here's the result of calling /userinfo:</p>
-  <pre th:text="${response}"></pre>
+  <pre th:utext="${user_info}"></pre>
   <p>This is the Access Token that was used:</p>
   <pre th:text="${access_token}"></pre>
   <p>This is the ID Token:</p>
@@ -24,7 +24,14 @@
       <a target="uaa" th:href="|${ssoServiceUrl}/profile|">See your account profile (so you can de-authorize this client)</a>
     </li>
     <li>
-      <a href="/logout">Log out</a>
+      <form action="/logout" method="POST">
+        <!--
+          By default, spring security recommend logout in the form of a POST to protect form CSRF attacks
+          For more info, visit: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/configurers/LogoutConfigurer.html#logoutUrl-java.lang.String-
+        -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button>Log out</button>
+      </form>
     </li>
   </ul>
 
