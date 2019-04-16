@@ -6,5 +6,5 @@ applications:
    buildpack: java_buildpack
    path: build/libs/resource-server.jar
    env:
-     # to find issuer uri, go to auth domain's well-known endpoint (e.g.: https://PLAN_AUTH_DOMAIN.login.YOUR_DOMAIN/.well-known/openid-configuration)
-     ISSUER_URI: https://PLAN_AUTH_DOMAIN.uaa.YOUR_DOMAIN/oauth/token
+     # to find issuer uri, go to auth domain's well-known endpoint (e.g.: https://<PLAN_AUTH_DOMAIN>.login.<YOUR_DOMAIN>/.well-known/openid-configuration)
+     ISSUER_URI: https://<PLAN_AUTH_DOMAIN>.uaa.<YOUR_DOMAIN>/oauth/token
