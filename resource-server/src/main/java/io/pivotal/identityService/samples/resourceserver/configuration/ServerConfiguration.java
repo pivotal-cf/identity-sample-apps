@@ -15,15 +15,13 @@ public class ServerConfiguration {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        NimbusJwtDecoderJwkSupport jwtDecoder = (NimbusJwtDecoderJwkSupport)
-                JwtDecoders.fromOidcIssuerLocation(issuerUri); // spring docs says use withOidcIssuerLocation
+        NimbusJwtDecoderJwkSupport jwtDecoder = (NimbusJwtDecoderJwkSupport) JwtDecoders.fromOidcIssuerLocation(issuerUri);
 
-        // Validate `iss` and `aud` claims from application.yml
         OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator();
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
-        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+        OAuth2TokenValidator<Jwt> issuerValidator = JwtValidators.createDefaultWithIssuer(issuerUri);
 
-        jwtDecoder.setJwtValidator(withAudience);
+        OAuth2TokenValidator<Jwt> jwtValidators = new DelegatingOAuth2TokenValidator<>(issuerValidator, audienceValidator);
+        jwtDecoder.setJwtValidator(jwtValidators);
 
         return jwtDecoder;
     }
