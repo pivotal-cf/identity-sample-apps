@@ -17,10 +17,11 @@ public class ServerConfiguration {
     JwtDecoder jwtDecoder() {
         NimbusJwtDecoderJwkSupport jwtDecoder = (NimbusJwtDecoderJwkSupport) JwtDecoders.fromOidcIssuerLocation(issuerUri);
 
+        OAuth2TokenValidator<Jwt> issuerValidator = new JwtIssuerValidator(issuerUri);
+        OAuth2TokenValidator<Jwt> timestampValidator = new JwtTimestampValidator();
         OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator();
-        OAuth2TokenValidator<Jwt> issuerValidator = JwtValidators.createDefaultWithIssuer(issuerUri);
+        OAuth2TokenValidator<Jwt> jwtValidators = new DelegatingOAuth2TokenValidator<>(issuerValidator, timestampValidator, audienceValidator);
 
-        OAuth2TokenValidator<Jwt> jwtValidators = new DelegatingOAuth2TokenValidator<>(issuerValidator, audienceValidator);
         jwtDecoder.setJwtValidator(jwtValidators);
 
         return jwtDecoder;
