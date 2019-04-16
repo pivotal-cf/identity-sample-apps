@@ -6,4 +6,4 @@ applications:
    buildpack: java_buildpack
    path: build/libs/resource-server.jar
    env:
-     AUTH_SERVER: https://<plan-auth-domain>.login.<your-domain>.com
+     AUTH_SERVER: https://<plan-auth-domain>.login.<your-domain>
