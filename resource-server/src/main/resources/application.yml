@@ -11,6 +11,3 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: "${AUTH_SERVER}/oauth/token"
-
-sso:
-  audience: "todo"
