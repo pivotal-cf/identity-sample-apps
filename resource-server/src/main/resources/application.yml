@@ -10,4 +10,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "${AUTH_SERVER}/oauth/token"
+          issuer-uri: "${ISSUER_URI}"
