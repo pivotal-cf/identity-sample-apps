@@ -9,14 +9,14 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.ArrayList;
 
 @Controller
-public class TodosController {
+public class TodoController {
 
     @Value("${resourceServerUrl}")
     private String resourceServerUrl;
 
     private final TodoService todoService;
 
-    public TodosController(TodoService todoService) {
+    public TodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
