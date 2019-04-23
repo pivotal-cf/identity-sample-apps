@@ -26,4 +26,12 @@ public class Todo {
     public void setTask(String task) {
         this.task = task;
     }
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "id=" + id +
+                ", task='" + task + '\'' +
+                '}';
+    }
 }

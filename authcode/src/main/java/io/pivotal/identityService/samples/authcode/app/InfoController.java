@@ -19,17 +19,17 @@ import java.io.IOException;
 import java.util.Map;
 
 @Controller
-public class SampleController {
+public class InfoController {
     @Value("${ssoServiceUrl:placeholder}")
     String ssoServiceUrl;
 
     private ObjectMapper objectMapper;
 
-    public SampleController(ObjectMapper objectMapper) {
+    public InfoController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/authorization_code")
+    @GetMapping("/info")
     public String authorizationCode(
             Model model,
             OAuth2AuthenticationToken authentication,
@@ -59,7 +59,7 @@ public class SampleController {
             model.addAttribute("access_token", toPrettyJsonString(parseToken(accessTokenValue)));
         }
 
-        return "authorization_code";
+        return "info";
     }
 
     private Map<String, ?> parseToken(String base64Token) throws IOException {

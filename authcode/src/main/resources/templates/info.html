@@ -18,18 +18,17 @@
   <h2>What do you want to do?</h2>
   <ul>
     <li>
-      <a href="/todo">TODO List (You need to configure the Resource Server sample app before using this)</a>
+      <a href="/todos">TODO List (You need to configure the Resource Server sample app before using this)</a>
     </li>
     <li>
       <a target="uaa" th:href="|${ssoServiceUrl}/profile|">See your account profile (so you can de-authorize this client)</a>
     </li>
     <li>
-      <form action="/logout" method="POST">
+      <form th:action="|/logout|" method="POST">
         <!--
           By default, spring security recommend logout in the form of a POST to protect form CSRF attacks
           For more info, visit: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/configurers/LogoutConfigurer.html#logoutUrl-java.lang.String-
         -->
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <button>Log out</button>
       </form>
     </li>
