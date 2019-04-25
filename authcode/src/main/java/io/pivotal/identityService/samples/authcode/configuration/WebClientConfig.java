@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${resourceServerUrl}")
+    @Value("${RESOURCE_URL}")
     private String resourceServerUrl;
 
     @Bean

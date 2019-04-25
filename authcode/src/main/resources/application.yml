@@ -27,4 +27,3 @@ spring:
 uaaIssuerUrl: "https://<plan-auth-domain>.uaa.<your-domain>.com"
 ssoServiceUrl: "https://<plan-auth-domain>.login.<your-domain>.com"
 applicationUrl: "https://client-app.domain"
-resourceServerUrl: "https://resource-server.domain"

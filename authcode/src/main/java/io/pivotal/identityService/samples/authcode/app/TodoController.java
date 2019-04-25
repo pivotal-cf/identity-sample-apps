@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Controller
 public class TodoController {
 
-    @Value("${resourceServerUrl}")
+    @Value("${RESOURCE_URL}")
     private String resourceServerUrl;
 
     private final TodoService todoService;
@@ -22,7 +22,7 @@ public class TodoController {
 
     @GetMapping("/todos")
     public String todo(Model model) {
-        if (resourceServerUrl.equals("https://resource-server.domain")) {
+        if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
             model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
             model.addAttribute("displayWarning", true);
             return "configure_warning";
