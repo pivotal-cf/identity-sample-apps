@@ -1,0 +1,22 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Client Credentials sample</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+  <h1>Client Credentials sample</h1>
+
+  <p>This is the Access Token that was used:</p>
+  <pre th:text="${access_token}"></pre>
+
+  <h2>What do you want to do?</h2>
+  <ul>
+    <li>
+      <a href="/todos">TODO List (You need to configure the Resource Server sample app before using this)</a>
+    </li>
+  </ul>
+
+</body>
+</html>

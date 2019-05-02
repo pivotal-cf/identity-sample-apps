@@ -1,0 +1,27 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.4.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'io.pivotal.identityService'
+sourceCompatibility = '1.8'
+
+ext {
+	springVersion = '2.1.4.RELEASE'
+	springSecurityVersion = '5.1.5.RELEASE'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
+	implementation "org.springframework.boot:spring-boot-starter-thymeleaf:$springVersion"
+	implementation "org.springframework.boot:spring-boot-starter-webflux:$springVersion"
+	implementation "org.springframework.security:spring-security-oauth2-client:$springSecurityVersion"
+	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
+	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
+}

@@ -1,14 +1,17 @@
 ---
 applications:
- - name: clientcredentials-sample
+ - name: authcode-sample
    memory: 1G
    instances: 1
+   path: build/libs/authcode.jar
    buildpack: java_buildpack
-   path: build/libs/client_credentials.jar
    env:
      SKIP_SSL_VALIDATION: "true"
 
-     # Grant type to be set for the application's client configurations - Only one grant type per application is supported by SSO
+     # The location of the deployed resource server sample application
+     RESOURCE_URL: https://resource-server-sample.<your-domain>.com
+
+     # Grant type to be set for the application's UAA client configurations. Only one grant type per application is supported by the SSO service.
      GRANT_TYPE: client_credentials
 
      # Identity provider(s) to be set for the application's client configurations
@@ -20,12 +23,12 @@ applications:
      # SSO_REDIRECT_URIS: https://my-domain-here.domain.org
 
      # Client scope(s) for the application, not used for client credentials grant type
-     # SSO_SCOPES: openid, todo.read, todo.write 
+     SSO_SCOPES: openid, email, profile, todo.read, todo.write
 
      # Client scope(s) for the application that are automatically authorized when acting on behalf of a user
      # SSO_AUTO_APPROVED_SCOPES: openid, todo.read
 
-     # Client authorities for the application, only used for client credentials grant type 
+     # Client authorities for the application, only used for client credentials grant type
      # SSO_AUTHORITIES: openid, uaa.resource, todo.read, todo.write
 
      # List of groups a user must have in order to authenticate successfully for the application
@@ -38,9 +41,9 @@ applications:
      # SSO_REFRESH_TOKEN_LIFETIME: 1800
 
      # Resource(s) that the application will use as scopes/authorities to be created if they do not already exist during bootstrapping
-     # SSO_RESOURCES: |
-     #   todo.read:  Read Objects
-     #   todo.write: <Blank for no description>
+     SSO_RESOURCES: |
+       todo.read:  Read Objects
+       todo.write: Write Objects
 
      # Application icon with the application name and launch URL that will be displayed on the Pivotal Account dashboard if configured to show
      # SSO_ICON: <base64 encoded image - do not exceed 64kb>

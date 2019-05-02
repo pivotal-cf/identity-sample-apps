@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Authcode sample</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>TODO List</h1>
+
+<form th:action="|/todos|" method="post" th:object="${todo}">
+  <label>Add Item:</label>
+  <input th:field="*{task}" type="text"/>
+  <input type="submit" value="Add"/>
+</form>
+
+<div th:if="${error}">
+  <h1 th:text="${error.getStatusCode()}"></h1>
+  <p th:text="${error.getHeaders().toString()}"></p>
+</div>
+
+<table border="1" th:if="${todoList.size() > 0}">
+  <thead>
+    <td>Id</td>
+    <td>Task</td>
+    <td>Delete</td>
+  </thead>
+  <tbody>
+    <tr th:each="todo : ${todoList}">
+      <td th:text="${todo.id}"></td>
+      <td th:text="${todo.task}"></td>
+      <td>
+        <form th:action="|/todos/${todo.id}|" method="post">
+          <input type="hidden" name="_method" value="DELETE"/>
+          <input type="submit" value="Delete"/>
+        </form>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
