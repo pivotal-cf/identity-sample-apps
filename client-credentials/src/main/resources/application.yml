@@ -4,21 +4,3 @@ server:
 
 logging.level:
   org.springframework.security: DEBUG
-
-spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          sso:
-            client-id: "your-application-client-id"
-            client-secret: "your-application-client-secret"
-            authorization-grant-type: "${GRANT_TYPE}"
-            scope: "${SSO_SCOPES}"
-            client-name: "sso"
-        provider:
-          sso:
-            issuer-uri: "${uaaIssuerUrl}/oauth/token"
-
-uaaIssuerUrl: "https://<plan-auth-domain>.uaa.<your-domain>.com"
-ssoServiceUrl: "https://<plan-auth-domain>.login.<your-domain>.com"
