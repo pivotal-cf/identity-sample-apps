@@ -1,4 +1,4 @@
-package io.pivotal.identityService.samples.authcode.app;
+package io.pivotal.identityService.samples.clientcredentials.app;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

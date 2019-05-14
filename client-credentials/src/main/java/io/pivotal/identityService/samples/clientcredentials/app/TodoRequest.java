@@ -1,4 +1,4 @@
-package io.pivotal.identityService.samples.authcode.app;
+package io.pivotal.identityService.samples.clientcredentials.app;
 
 public class TodoRequest {
     private String task;

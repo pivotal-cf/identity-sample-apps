@@ -1,4 +1,4 @@
-package io.pivotal.identityService.samples.authcode;
+package io.pivotal.identityService.samples.clientcredentials;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

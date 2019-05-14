@@ -1,4 +1,4 @@
-package io.pivotal.identityService.samples.authcode.app;
+package io.pivotal.identityService.samples.clientcredentials.app;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;

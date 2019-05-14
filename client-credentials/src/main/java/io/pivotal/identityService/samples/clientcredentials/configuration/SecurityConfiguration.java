@@ -1,4 +1,4 @@
-package io.pivotal.identityService.samples.authcode.configuration;
+package io.pivotal.identityService.samples.clientcredentials.configuration;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
