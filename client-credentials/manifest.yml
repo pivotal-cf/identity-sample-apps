@@ -9,16 +9,16 @@ applications:
    - sample-instance
    env:
      # Skips client validation of SSL certs
-     SKIP_SSL_VALIDATION: "true"
+     SKIP_SSL_VALIDATION: true
 
      # The location of the deployed resource server sample application
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com
 
      # The grant type used in the /authorize call by Spring Security 5
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: "client_credentials"
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: client_credentials
 
      # The scopes used in the /authorize call by Spring Security 5
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: "openid, uaa.resource, todo.read, todo.write"
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: uaa.resource, todo.read, todo.write
 
      # *** BEGIN: env vars for the initial 'cf bind-service' command ***
      # Grant type to be set for the application's UAA client configurations. Only one grant type per application is supported by the SSO service.
@@ -39,7 +39,7 @@ applications:
      # SSO_AUTO_APPROVED_SCOPES: openid, todo.read
 
      # Client authorities for the application, only used for client credentials grant type
-     SSO_AUTHORITIES: openid, uaa.resource, todo.read, todo.write
+     SSO_AUTHORITIES: uaa.resource, todo.read, todo.write
 
      # List of groups a user must have in order to authenticate successfully for the application
      # SSO_REQUIRED_USER_GROUPS: my_group_here
