@@ -4,7 +4,8 @@ applications:
    memory: 1G
    instances: 1
    path: build/libs/client-credentials.jar
-   buildpack: java_buildpack
+   buildpacks:
+   - java_buildpack
    services:
    - sample-instance
    env:

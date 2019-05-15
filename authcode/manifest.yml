@@ -4,7 +4,8 @@ applications:
    memory: 1G
    instances: 1
    path: build/libs/authcode.jar
-   buildpack: java_buildpack
+   buildpacks:
+   - java_buildpack
    env:
      SKIP_SSL_VALIDATION: "true"
 
