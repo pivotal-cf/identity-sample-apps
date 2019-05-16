@@ -1,6 +1,13 @@
 # Pivotal Single Sign-On Service Sample Applications
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The GRANT_TYPE environment variable is already set to the relevant value mentioned below for each sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
+This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
+
+Application Type  | Grant Type
+------------- | -------------
+[Web App](/authcode)  | authorization_code
+[Native Mobile App](/password)  | password
+[Service-to-Service App](/client_credentials) | client_credentials
+[Single Page JavaScript App](/implicit) | implicit
 
 The latest version of this repository supports the following dependencies:
 
@@ -14,35 +21,27 @@ The last version to support Spring Boot 1.5.5+ is tagged at [spring-boot/1.5](ht
 
 The sample applications for the corresponding grant types are located in subdirectories of this project:  
 
-Application Type  | Grant Type
-------------- | -------------
-[Web App](/authcode)  | authorization_code
-[Native Mobile App](/password)  | password
-[Service-to-Service App](/client_credentials) | client_credentials
-[Single Page JavaScript App](/implicit) | implicit
-
 ## <a name="step-1">Step 1</a>: Prerequisites
 
 1. Login as a Space Developer into the required Org and Space on your PCF Foundation
 
        cf login -a api.<your-domain>
         
-1. Ensure that a p-identity [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) exists for your Org
+1. Ensure that an SSO (p-identity) [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) exists for your Org
 
        cf marketplace | grep p-identity
 
 1. Create a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named 'sample-instance' from the 'p-identity' service using an available Service Plan 
 
-       # replace <plan_tier> with a valid tier from the marketplace list in the last command 
        cf create-service p-identity <plan_tier> sample-instance
 
 ## <a name="quick-start">Quick Start</a>: Authcode Sample App and Resource Server on SSO
 
 You can deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
 
-1. Update the `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI` <PLAN_AUTH_DOMAIN> and <YOUR_DOMAIN> placeholders in the *resource-service* manifest. 
-
 1. Navigate to the the *resource-server* directory
+
+1. Update the `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI` <PLAN_AUTH_DOMAIN> and <YOUR_DOMAIN> placeholders in the *resource-service* manifest. 
 
 1. Build (`./gradlew build`) and push (`cf push`) the *resource-server* application.
 
