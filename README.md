@@ -21,39 +21,36 @@ Application Type  | Grant Type
 [Service-to-Service App](/client_credentials) | client_credentials
 [Single Page JavaScript App](/implicit) | implicit
 
-## <a name="step-1">Step 1</a>: Deploy Sample Application to Pivotal Cloud Foundry
+## <a name="step-1">Step 1</a>: Prerequisites
 
-Login as a Space Developer into the required Org and Space
+1. Login as a Space Developer into the required Org and Space on your PCF Foundation
 
-    cf login -a api.<your-domain>
-    
-List the configured Service Plans for the 'p-identity' service
+       cf login -a api.<your-domain>
+        
+1. Ensure that a p-identity [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) exists for your Org
 
-    cf services | grep p-identity
+       cf marketplace | grep p-identity
 
-Create a Service Instance from the 'p-identity' service using an available Service Plan 
-    
-    # replace PLAN_TIER with a valid tier from the service list in the last command 
-    cf create-service p-identity [PLAN_TIER] sample-instance 
-    
-Go to your application directory and push the app.
+1. Create a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named 'sample-instance' from the 'p-identity' service using an available Service Plan 
 
-    ./gradlew build
-    cf push
+       # replace <plan_tier> with a valid tier from the marketplace list in the last command 
+       cf create-service p-identity <plan_tier> sample-instance
 
 ## <a name="quick-start">Quick Start</a>: Authcode Sample App and Resource Server on SSO
 
-As an alternative to Steps 1 and 2 above, you can also quickly deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
-
-1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `sample-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
+You can deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
 
 1. Update the `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI` <PLAN_AUTH_DOMAIN> and <YOUR_DOMAIN> placeholders in the *resource-service* manifest. 
 
-1. Build (`./gradlew build`) and push (`cf push`) the *resource-server* project to your Space where you are logged in as a Space Developer.
+1. Navigate to the the *resource-server* directory
 
-1. Update the `RESOURCE_URL` value in the manifest `<YOUR_DOMAIN>` in the *authcode* manifest.
+1. Build (`./gradlew build`) and push (`cf push`) the *resource-server* application.
 
-1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project to your Space where you are logged in as a Space Developer.
+1. Update the `RESOURCE_URL` value in the manifest to the route of the *resource-server* in the *authcode* manifest.
+
+1. Navigate to the *authcode* directory
+
+1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
    
 The sample application and resource server be available immediately bound to the SSO Service on start-up. You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
 
