@@ -4,25 +4,3 @@ server:
 
 logging.level:
   org.springframework.security: DEBUG
-
-spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          sso:
-            client-id: "your-application-client-id"
-            client-secret: "your-application-client-secret"
-            authorization-grant-type: "${GRANT_TYPE}"
-            client-name: "sso"
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            # NOTE: scope must explicitly be defined or else spring security will request a predefined list of scopes
-            # 'email' or 'profile' is required to access the "/userinfo" endpoint via DefaultOidcUser
-            scope: "${SSO_SCOPES}"
-        provider:
-          sso:
-            issuer-uri: "${uaaIssuerUrl}/oauth/token"
-            authorization-uri: "${ssoServiceUrl}/oauth/authorize"
-
-uaaIssuerUrl: "https://<plan-auth-domain>.uaa.<your-domain>.com"
-ssoServiceUrl: "https://<plan-auth-domain>.login.<your-domain>.com"

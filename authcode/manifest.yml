@@ -6,11 +6,21 @@ applications:
    path: build/libs/authcode.jar
    buildpacks:
    - java_buildpack
+   services:
+   - <your-p-identity-instance>
    env:
-     SKIP_SSL_VALIDATION: "true"
+     # *** BEGIN: env vars for the application ***
 
      # The location of the deployed resource server sample application
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com
+
+     # The grant type used in the /authorize call by Spring Security 5
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: authorization_code
+
+     # The scopes requested when obtaining a token by Spring Security 5
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: openid, email, profile, todo.read, todo.write
+
+     # *** END: env vars for the application ***
 
      # Grant type to be set for the application's UAA client configurations. Only one grant type per application is supported by the SSO service.
      GRANT_TYPE: authorization_code
