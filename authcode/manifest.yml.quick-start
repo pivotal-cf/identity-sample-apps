@@ -5,7 +5,7 @@ applications:
    instances: 1
    path: build/libs/authcode.jar
    services:
-    - sample-instance
+    - p-identity-instance
    env:
      SKIP_SSL_VALIDATION: "true"
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com 

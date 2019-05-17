@@ -51,7 +51,7 @@ NOTE: You must leave off the trailing slash (`/`) in the `RESOURCE_URL`.
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#services-block) 
 called `services`. Your app will be bound to any service instances you list in this section when it is pushed.
 
-Replace `p-identity-sample-instance` in the `services` block with the name of the service instance created in Step 1.
+Replace `p-identity-instance` in the `services` block with the name of the service instance created in Step 1.
 
 ### Step 4: Deploy Sample Application to Pivotal Cloud Foundry
     

@@ -33,7 +33,7 @@ Restart your application after binding the service using Apps Manager or CF CLI.
 
 As an alternative to Steps 1 and 2 above, you can also quickly deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
 
-1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `sample-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
+1. First, make sure you created a [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for your Org as well as a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named `p-identity-instance` for your Space, and login via CF CLI as a Space Developer into the required Org and Space.
 
 2. Replace `manifest.yml` with `manifest.yml.quick-start` for the *authcode* and *resource-server* projects and update the `RESOURCE_URL` and `AUTH_URL` values in the manifest with your plan and domain values.
 

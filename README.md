@@ -2,12 +2,12 @@
 
 This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
 
-Application Type  | Grant Type
-------------- | -------------
-[Web App](/authcode)  | authorization_code
-[Native Mobile App](/password)  | password
-[Service-to-Service App](/client_credentials) | client_credentials
-[Single Page JavaScript App](/implicit) | implicit
+Application Type  | Grant Type | Uses Spring Cloud SSO starter library
+------------- | -------------- | ---------------------
+[Web App](/authcode)  | authorization_code | yes
+[Native Mobile App](/password)  | password | no
+[Service-to-Service App](/client_credentials) | client_credentials | yes
+[Single Page JavaScript App](/implicit) | implicit | no
 
 The latest version of this repository supports the following dependencies:
 
@@ -31,9 +31,19 @@ The sample applications for the corresponding grant types are located in subdire
 
        cf marketplace | grep p-identity
 
-1. Create a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named 'sample-instance' from the 'p-identity' service using an available Service Plan 
+1. Create a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named 'p-identity-instance' from the 'p-identity' service using an available Service Plan
 
-       cf create-service p-identity <plan_tier> sample-instance
+       cf create-service p-identity <plan_tier> p-identity-instance
+
+1. Preparing a test user with sufficient scopes
+
+     Contact your cloud administrator to determine whether your Service Plan is has configured the "Internal User Store" as an Identity Provider or an external Identity Provider (like LDAP).
+
+     - If your SSO Service plans is configured with the 'Internal User Store' option, you can use the instruction in [Manage Users in an Internal User Store](https://docs.pivotal.io/p-identity/manage-users.html) documentation to create a user to `todo.read` and `todo.write` scopes.
+
+     - If your plan is configured with an alternative Identity Provider (like LDAP), your administrator will need to provide you credentials with memberships to the `todo.read` and `todo.write` scopes.
+
+You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
 
 ## <a name="quick-start">Quick Start</a>: Authcode Sample App and Resource Server on SSO
 
@@ -51,7 +61,7 @@ You can deploy the authcode and resource server sample applications using applic
 
 1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
    
-The sample application and resource server be available immediately bound to the SSO Service on start-up. You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
+The sample application and resource server be available immediately bound to the SSO Service on start-up.
 
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can set environment variables in your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.

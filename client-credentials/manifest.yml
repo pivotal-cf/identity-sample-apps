@@ -7,7 +7,7 @@ applications:
    buildpacks:
    - java_buildpack
    services:
-   - sample-instance
+   - p-identity-instance
    env:
      # *** BEGIN: env vars the application ***
 
