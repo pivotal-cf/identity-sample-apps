@@ -5,7 +5,7 @@ The Authorization Code OAuth2 grant type is the most commonly used for web appli
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
 OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-9/index.html)
 to automatically register this sample application as an OAuth2 client of the UAA and the 
-[Spring Cloud SSO Connector](https://github.com/pivotal-cf/spring-cloud-sso-connector) to automatically consume those configurations.
+[SSO CFEnv Processor](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) to automatically consume those configurations.
 
 App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
 file.
