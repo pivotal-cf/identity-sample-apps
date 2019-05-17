@@ -3,18 +3,18 @@
 The Authorization Code OAuth2 grant type is the most commonly used for web applications deployed into Cloud Foundry.
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
-OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-4/index.html) 
+OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-9/index.html) 
 to automatically register this sample application as an OAuth2 client of the UAA and the 
-[Spring Cloud SSO Connector](https://github.com/pivotal-cf/spring-cloud-sso-connector) to automatically consume those configurations.
+[SSO CFEnv Processor](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) to automatically consume those configurations.
 
 App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
 file.
 
 ## Prerequisites:
 
-1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-4/index.html)
-1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/1-4/manage-service-plans.html) for the SSO Service that is visible to your Org.
-1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/1-4/manage-users.html).
+1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-9/index.html)
+1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/1-9/manage-service-plans.html) for the SSO Service that is visible to your Org.
+1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/1-9/manage-users.html).
 
 ### Step 0: Deploy a sample resource server
 
@@ -67,7 +67,7 @@ Running `cf push` should result in
  
   - The app being bound to the identity service instance, which results in the creation of a new client registration for the sample app in the UAA.
   - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. You can view these values yourself with `cf env authcode-sample`.
-  - When the app starts, the spring-cloud-sso-connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by `org.springframework.security.oauth` to make the sample application OAuth-aware.
+  - When the app starts, the SSO CFEnv Processor reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by `org.springframework.security.oauth` to make the sample application OAuth-aware.
 
 You can verify the app is successfully running by viewing the output of `cf apps`. You can visit the authcode app by navigating to `https://<authcode-app-url>` where `authcode-app-url` is the route output from `cf push` or `cf apps`.
 
