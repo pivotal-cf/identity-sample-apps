@@ -39,7 +39,7 @@ The sample applications for the corresponding grant types are located in subdire
 
 You can deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
 
-1. Navigate to the the *resource-server* directory
+1. Navigate to the *resource-server* directory
 
 1. Update the `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI` <PLAN_AUTH_DOMAIN> and <YOUR_DOMAIN> placeholders in the *resource-service* manifest. 
 
@@ -47,7 +47,7 @@ You can deploy the authcode and resource server sample applications using applic
 
 1. Navigate to the *authcode* directory
 
-1. Update the `RESOURCE_URL` value in the manifest to the route of the *resource-server* in the *authcode* manifest.
+1. Update the `RESOURCE_URL` value in the *authcode* manifest to the route of the deployed *resource-server*.
 
 1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
    
