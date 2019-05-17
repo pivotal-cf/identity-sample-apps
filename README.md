@@ -45,9 +45,9 @@ You can deploy the authcode and resource server sample applications using applic
 
 1. Build (`./gradlew build`) and push (`cf push`) the *resource-server* application.
 
-1. Update the `RESOURCE_URL` value in the manifest to the route of the *resource-server* in the *authcode* manifest.
-
 1. Navigate to the *authcode* directory
+
+1. Update the `RESOURCE_URL` value in the manifest to the route of the *resource-server* in the *authcode* manifest.
 
 1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
    
