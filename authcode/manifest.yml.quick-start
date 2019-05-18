@@ -5,7 +5,7 @@ applications:
    instances: 1
    path: build/libs/authcode.jar
    services:
-    - p-identity-instance
+    - p-identity-instance # Make sure you have created an sso service instance with this name. Your app will be bound to this service instance you list here when it is pushed.
    env:
      SKIP_SSL_VALIDATION: "true"
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com 

@@ -7,7 +7,7 @@ applications:
    buildpacks:
    - java_buildpack
    services:
-   - <your-p-identity-instance>
+   - p-identity-instance # Make sure you have created an sso service instance with this name. Your app will be bound to this service instance you list here when it is pushed.
    env:
      # *** BEGIN: env vars for the application ***
 
