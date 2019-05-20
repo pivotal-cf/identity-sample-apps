@@ -25,7 +25,7 @@ applications:
      # Grant type to be set for the application's UAA client configurations. Only one grant type per application is supported by the SSO service.
      GRANT_TYPE: authorization_code
 
-     # Identity provider(s) to be set for the application's client configurations
+     # Identity provider(s) to be set for the application's client configurations. This value represents the allowed identity providers for the app through the SSO service plan.
      SSO_IDENTITY_PROVIDERS: uaa
 
      # The following are bootstrap configurations you may use to automatically create client configurations in the SSO service for your application if the configurations do not exist. These configurations take effect when binding or rebinding to the SSO, and will overwrite existing client configurations if any. The values provided below are examples.
