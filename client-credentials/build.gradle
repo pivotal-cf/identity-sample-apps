@@ -16,7 +16,7 @@ ext {
 
 repositories {
 	mavenCentral()
-	mavenLocal()
+        maven { url "http://repo.spring.io/libs-snapshot-local" }
 }
 
 dependencies {
