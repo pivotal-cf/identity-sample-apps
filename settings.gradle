@@ -1,0 +1,6 @@
+rootProject.name = 'identity-sample-apps'
+
+include 'resource-server'
+include 'authcode'
+include 'client-credentials'
+
