@@ -104,3 +104,46 @@ The table below provides a description and the default values. Further details a
 | SSO_SHOW_ON_HOME_PAGE |  If set to true, the application will appear on the Pivotal Account dashboard with the corresponding icon and launch URL| True |
 
 To remove any variables set through bootstrapping, you must use `cf unset-env <APP_NAME> <PROPERTY_NAME>` and rebind the application.
+
+## Troubleshooting
+
+#### Scenario:
+
+You have received an error during `cf push`, or an explict `cf bind-service` call, to the SSO Service that looks like this:
+
+```
+Binding Failure:
+Creating app authcode-sample...
+Mapping routes...
+Binding services...
+Unexpected Response
+Response code: 502
+CC code:       0
+CC error code:
+Request ID:    78c53a54-8e03-4922-4833-8b51156e6078::fd0c88e1-8e2e-4eb3-85db-cfea8e078e01
+Description:   {
+  "description": "Service broker error: The resource name \"todo\" already exists in another space. Please enter a unique resource name before saving",
+  "error_code": "CF-ServiceBrokerBadResponse",
+  "code": 10001,
+  "http": {
+    "uri": "https://p-identity-broker.<CF_DOMAIN>/v2/service_instances/bc9a7563-e8b0-4dce-aef2-d7d50b486d9d/service_bindings/80adcbdf-7832-4d45-a58f-76fde5056c8f",
+    "method": "PUT",
+    "status": 500
+  }
+}
+```
+
+This means that `todo` resource has already been created on the same SSO service plan in a different space. For more information see the [SSO Documentation](https://docs.pivotal.io/p-identity/1-9/manage-resources.html#space-protection).
+
+#### Solution:
+
+1. Comment out the `SSO_RESOURCES` in the `manifest.yml`
+
+1. Unset the `SSO_RESOURCES` env var on the deployed authcode-sample application.
+     ```
+     cf unset-env authcode-sample SSO_RESOURCES
+     ```
+1. Push the authcode-sample application again.
+     ```
+     cf push
+     ```   
