@@ -61,7 +61,9 @@ You can deploy the authcode and resource server sample applications using applic
 
 1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
    
-The sample application and resource server be available immediately bound to the SSO Service on start-up.
+The sample application and resource server will be immediately bound to the SSO Service on start-up.
+
+You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.
 
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can set environment variables in your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
