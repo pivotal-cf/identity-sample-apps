@@ -147,3 +147,5 @@ This means that `todo` resource has already been created on the same SSO service
      ```
      cf push
      ```   
+     
+Removing the `SSO_RESOURCES` env var will result in a call to bind the application to the SSO Service Instance without an attempt to create any additional Groups in UAA. However, the SSO Client created for your application will be allowed to use these Groups and Scopes. The User will still have to have memberships to the `todo.read` and `todo.write` Groups to receive a token with those scopes.
