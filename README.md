@@ -1,6 +1,6 @@
 # Pivotal Single Sign-On Service Sample Applications
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard.
+This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard. For more information about how to determine SSO Application Type, please read [PCF SSO Documentation](https://docs.pivotal.io/p-identity/determine-type.html).
 
 Application Type  | Grant Type | Uses Spring Cloud SSO starter library
 ------------- | -------------- | ---------------------
