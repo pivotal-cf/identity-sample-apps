@@ -104,3 +104,57 @@ The table below provides a description and the default values. Further details a
 | SSO_SHOW_ON_HOME_PAGE |  If set to true, the application will appear on the Pivotal Account dashboard with the corresponding icon and launch URL| True |
 
 To remove any variables set through bootstrapping, you must use `cf unset-env <APP_NAME> <PROPERTY_NAME>` and rebind the application.
+
+## Troubleshooting
+
+#### Scenario:
+
+You have received an error during `cf push`, or an explict `cf bind-service` call, to the SSO Service that looks like this:
+
+```
+Binding Failure:
+Creating app client-credentials...
+Mapping routes...
+Binding services...
+Unexpected Response
+Response code: 502
+CC code:       0
+CC error code:
+Request ID:    78c53a54-8e03-4922-4833-8b51156e6078::fd0c88e1-8e2e-4eb3-85db-cfea8e078e01
+Description:   {
+  "description": "Service broker error: The resource name \"todo\" already exists in another space. Please enter a unique resource name before saving",
+  "error_code": "CF-ServiceBrokerBadResponse",
+  "code": 10001,
+  "http": {
+    "uri": "https://p-identity-broker.<CF_DOMAIN>/v2/service_instances/bc9a7563-e8b0-4dce-aef2-d7d50b486d9d/service_bindings/80adcbdf-7832-4d45-a58f-76fde5056c8f",
+    "method": "PUT",
+    "status": 500
+  }
+}
+```
+
+This means that the `todo` resource is a cross-space resource, namely, a resource that has already been created on the same SSO service plan in a different space. Since SSO enforces some extra restrictions on using cross-space resource, you have to perform some additional steps as a workaround. For more information see the [SSO Documentation](https://docs.pivotal.io/p-identity/manage-resources.html#space-protection).
+
+#### Solution:
+
+1. Comment out the `SSO_RESOURCES` in the `manifest.yml`
+
+1. Unset the `SSO_RESOURCES` env var on the deployed `client-credentials` application.
+     ```
+     cf unset-env client-credentials SSO_RESOURCES
+     ```
+1. Push the `client-credentials` application again.
+     ```
+     cf push
+     ```   
+     
+Removing the `SSO_RESOURCES` env var will result in a call to bind the application to the SSO Service Instance without an attempt to create any additional Groups in UAA. However, the SSO Client created for your application will be allowed to use these Groups and Scopes.
+
+** Important Authorization Followup **
+
+For client-credentials applications, there will be some additional work to allow your SSO Application access to the proper cross-space `authorities` which will result in the `todo.read` and `todo.wrote` scopes on your token. Client Crednetials `authorities` are handled a bit differently than User permissions that are used to authorize token scopes in the Authorization Code Flow. Since there is no intersection of User permissions involved in the Client Credentials grant type token scopes, you will need SSO Plan Admin intervention to ultimately receive a token with the appropriate cross-space scopes. We have attempted to outline some suggestions on how to correctly authorize your SSO Client Credentials application that was created as a result of this sample app binding to an SSO service.
+
+You may choose one of the follow remediation steps:
+
+* You will need to contact your SSO Plan Administrator to whitelist the Authorites for your SSO Application created from the binding of client-credentials. CF System Operator with access to OpsManager can manage and identify SSO Plan Admistrators through the [SSO Service Plans UI](https://docs.pivotal.io/p-identity/manage-service-plans.html#create-svc-plan). An SSO Plan Administrator will then need to navigate to the [SSO Dev Dashboard](https://docs.pivotal.io/p-identity/manage-service-instances.html#access-svc-instance-developer-dashboard), navigate to the SSO Application with the name `client-credentails` and then check the `todo.read` and `todo.write` checkboxes.
+* Ask a CF System Operator with access to OpsManager to create a new SSO Service Plan that you can reference in a `create-service` command to give you a clean namespace for resources.
