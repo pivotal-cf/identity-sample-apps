@@ -47,9 +47,6 @@ pushd "identity-sample-apps"
         echo ">>> Sample authcode app is up"
     )
 
-#    echo ">>>> ABOUT TO GO TO SLEEP"
-#    sleep 1800
-
     ./gradlew --project-cache-dir="${workspace_dir}/.gradle" test
     ./gradlew --project-cache-dir="${workspace_dir}/.gradle" build  #TODO: is this build step necessary? won't the test step have already built the jars?
 popd

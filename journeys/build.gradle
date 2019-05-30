@@ -14,3 +14,9 @@ dependencies {
 tasks.withType(Test) {
     systemProperty "fluentlenium.capabilities", "{chromeOptions: {args:[--no-sandbox, --headless, --disable-gpu]}}"
 }
+
+test {
+    afterTest { desc, result ->
+        logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}

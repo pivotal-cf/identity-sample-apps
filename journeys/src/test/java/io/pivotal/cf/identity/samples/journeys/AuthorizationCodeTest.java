@@ -24,16 +24,16 @@ public class AuthorizationCodeTest extends FluentTest {
         }
 
         //TODO: consider parsing the stringified JSON and asserting on specific values
-        assertThat(el("body").text()).contains("user@example.com");
+        assertThat(el("body").text()).contains("user@example.com"); //TODO: the actual email is basic-user@example.com, but the test fails. why?
         assertThat(el("body").text()).contains("basic-user");
         assertThat(el("body").text()).contains("sample-client");
         assertThat(el("body").text()).contains("openid");
 
         $("#logout").click();
-        //assertThat(url()).isEqualTo(AUTHCODE_CLIENT_BASE_URL);
+        assertThat(url()).isEqualTo(AUTHCODE_CLIENT_BASE_URL + "/");
 
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
-//        assertThat(url()).contains("/uaa/login");
+        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
+        assertThat(url()).contains("/uaa/login");
     }
 
 //    @Test
