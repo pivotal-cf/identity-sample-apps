@@ -26,7 +26,7 @@ resources:
   type: git
   source:
     uri: https://github.com/pivotal-cf/identity-sample-apps.git
-    branch: master
+    branch: spring-boot-2.1
 
 - name: uaa
   type: git
