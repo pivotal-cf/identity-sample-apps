@@ -1,0 +1,60 @@
+---
+jobs:
+- name: journeys
+  plan:
+    - in_parallel:
+      - get: uaa
+        trigger: true
+      - get: identity-sample-apps
+        trigger: true
+
+    - task: journeys
+      file: identity-sample-apps/ci/tasks/journeys/task.yml
+
+    - put: s3-resource-server-jar
+      params:
+        file: sample-app-jars/resource-server.jar
+    - put: s3-authcode-jar
+      params:
+        file: sample-app-jars/authcode.jar
+    - put: s3-client-credentials-jar
+      params:
+        file: sample-app-jars/client-credentials.jar
+
+resources:
+- name: identity-sample-apps
+  type: git
+  source:
+    uri: https://github.com/pivotal-cf/identity-sample-apps.git
+    branch: master
+
+- name: uaa
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/uaa.git
+    branch: master
+
+- name: s3-resource-server-jar
+  type: s3
+  source:
+    bucket: ((sample-app-jars-bucket))
+    region_name: ((sample-app-jars-region))
+    versioned_file: 'sample-apps/jars/resource-server.jar'
+    access_key_id: ((sample-app-jars-access-key-id))
+    secret_access_key: ((sample-app-jars-secret-access-key))
+- name: s3-authcode-jar
+  type: s3
+  source:
+    bucket: ((sample-app-jars-bucket))
+    region_name: ((sample-app-jars-region))
+    versioned_file: 'sample-apps/jars/authcode.jar'
+    access_key_id: ((sample-app-jars-access-key-id))
+    secret_access_key: ((sample-app-jars-secret-access-key))
+- name: s3-client-credentials-jar
+  type: s3
+  source:
+    bucket: ((sample-app-jars-bucket))
+    region_name: ((sample-app-jars-region))
+    versioned_file: 'sample-apps/jars/client-credentials.jar'
+    access_key_id: ((sample-app-jars-access-key-id))
+    secret_access_key: ((sample-app-jars-secret-access-key))

@@ -1,6 +1,6 @@
 rootProject.name = 'identity-sample-apps'
 
+include 'journeys'
 include 'resource-server'
 include 'authcode'
 include 'client-credentials'
-

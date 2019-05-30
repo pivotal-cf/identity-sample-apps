@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
+    testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
+}
+
+tasks.withType(Test) {
+    systemProperty "fluentlenium.capabilities", "{chromeOptions: {args:[--no-sandbox, --headless, --disable-gpu]}}"
+}
