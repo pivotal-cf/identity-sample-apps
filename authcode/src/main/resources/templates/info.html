@@ -9,11 +9,11 @@
   <h1>Authcode sample</h1>
 
   <p>You've used the authcode flow! Here's the result of calling /userinfo:</p>
-  <pre th:utext="${user_info}"></pre>
+  <pre th:utext="${user_info}" class="user_info"></pre>
   <p>This is the Access Token that was used:</p>
-  <pre th:text="${access_token}"></pre>
+  <pre th:text="${access_token}" class="access_token"></pre>
   <p>This is the ID Token:</p>
-  <pre th:text="${id_token}"></pre>
+  <pre th:text="${id_token}" class="id_token"></pre>
 
   <h2>What do you want to do?</h2>
   <ul>
