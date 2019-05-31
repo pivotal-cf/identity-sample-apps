@@ -1,5 +1,7 @@
 package io.pivotal.cf.identity.samples.journeys;
 
+import java.util.concurrent.TimeUnit;
+
 import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
 import org.junit.Test;
@@ -60,11 +62,41 @@ public class AuthorizationCodeTest extends FluentTest {
         $("#logout").click();
     }
 
+    @Test
+    public void readOnlyUser() {
+        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
+
+        $("input[name=username]").fill().with("read-user");
+        $("input[name=password]").fill().with("example-password");
+        $("input[type=submit]").submit();
+
+        if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
+            $("#authorize").click();
+        }
+
+        $("a", containingText("TODO List")).click();
+
+        assertThat(el("body").text()).contains("seed-task-1");
+
+        $("input[name=task]").fill().with("all the things");
+        $("input[value=Add]").click();
+
+        assertThat(el("body").text()).contains("403 Forbidden");
+
+        goTo(AUTHCODE_CLIENT_BASE_URL + "/todos");
+
+        el("input[value=Delete]").click();
+        assertThat(el("body").text()).contains("403 Forbidden");
+
+        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
+        $("#logout").click();
+    }
+
 //    @Test
-//    public void abcUser() {
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/secured/abc");
+//    public void readWriteUser() {
+//        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
 //
-//        $("input[name=username]").fill().with("abc-user");
+//        $("input[name=username]").fill().with("read-write-user");
 //        $("input[name=password]").fill().with("example-password");
 //        $("input[type=submit]").submit();
 //
@@ -72,34 +104,17 @@ public class AuthorizationCodeTest extends FluentTest {
 //            $("#authorize").click();
 //        }
 //
-//        assertThat(el("body").text()).contains("Verified that token contains acme.abc");
+//        $("a", containingText("TODO List")).click();
 //
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/secured/xyz");
-//        assertThat(el("body").text()).contains("Insufficient scope for this resource");
+//        assertThat(el("body").text()).contains("seed-task-1");
+//        assertThat(el("body").text()).doesNotContain("all the things");
 //
+//        $("input[name=task]").fill().with("all the things");
+//        $("input[value=Add]").click();
 //
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/secured/access_token");
-//        $("#logout").click();
-//    }
+//        assertThat(el("body").text()).contains("all the things");
 //
-//    @Test
-//    public void xyzUser() {
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/secured/xyz");
-//
-//        $("input[name=username]").fill().with("xyz-user");
-//        $("input[name=password]").fill().with("example-password");
-//        $("input[type=submit]").submit();
-//
-//        if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
-//            $("#authorize").click();
-//        }
-//
-//        assertThat(el("body").text()).contains("Verified that token contains acme.xyz");
-//
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/secured/abc");
-//        assertThat(el("body").text()).contains("Insufficient scope for this resource");
-//
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/secured/access_token");
+//        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
 //        $("#logout").click();
 //    }
 }
