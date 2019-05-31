@@ -37,7 +37,7 @@ pushd "identity-sample-apps"
         export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE="openid, email, profile, roles, user_attributes, todo.read, todo.write"
         export SPRING_APPLICATION_JSON='{"server.port": 8888}'
         export VCAP_SERVICES="$(cat journeys/src/test/resources/vcap_services.json)"
-        export VCAP_APPLICATION="$(cat journeys/src/test/resources/vcap_application.json)"
+
         echo ">>> Sample authcode app is starting"
         ./gradlew --project-cache-dir="${workspace_dir}/.gradle" -p authcode clean bootRun &
         until nc -vz localhost 8888 >/dev/null 2>&1; do
@@ -45,6 +45,22 @@ pushd "identity-sample-apps"
             sleep 15
         done
         echo ">>> Sample authcode app is up"
+    )
+
+    (
+        export RESOURCE_URL="http://localhost:8889"
+        export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE="client_credentials"
+        export SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE="uaa.resource, todo.read, todo.write"
+        export SPRING_APPLICATION_JSON='{"server.port": 8887}'
+        export VCAP_SERVICES="$(cat journeys/src/test/resources/vcap_services_client_credentials.json)"
+
+        echo ">>> Sample client-credentials app is starting"
+        ./gradlew --project-cache-dir="${workspace_dir}/.gradle" -p client-credentials clean bootRun &
+        until nc -vz localhost 8887 >/dev/null 2>&1; do
+            echo ">>> Waiting for client-credentials to start"
+            sleep 15
+        done
+        echo ">>> Sample client-credentials app is up"
     )
 
     ./gradlew --project-cache-dir="${workspace_dir}/.gradle" test

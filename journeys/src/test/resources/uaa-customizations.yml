@@ -7,6 +7,12 @@ oauth:
        authorized-grant-types: authorization_code
        authorities: uaa.resource
        redirect-uri: http://localhost:8888/**
+    sample-client-client-credentials:
+      name: sample-client-client-credentials
+      secret: sample-client-client-credentials-secret
+      authorized-grant-types: client_credentials
+      authorities: uaa.resource, todo.read, todo.write
+      redirect-uri: http://localhost:8887/**
 
 scim:
   users:
