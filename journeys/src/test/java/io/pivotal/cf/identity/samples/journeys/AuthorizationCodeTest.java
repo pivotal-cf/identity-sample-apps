@@ -24,14 +24,18 @@ public class AuthorizationCodeTest extends FluentTest {
             $("#authorize").click();
         }
 
+        String userInfo = el(".user_info").text();
+        assertThat(userInfo).contains("FirstName LastName");
+
         String accessToken = el(".access_token").text();
         assertThat(accessToken).contains("basic-user@example.com");
         assertThat(accessToken).contains("basic-user");
         assertThat(accessToken).contains("sample-client");
         assertThat(accessToken).contains("openid");
+        assertThat(accessToken).contains("authorization_code");
 
-        String userInfo = el(".user_info").text();
-        assertThat(userInfo).contains("FirstName LastName");
+        String idToken = el(".id_token").text();
+        assertThat(idToken).contains("openid");
 
         $("#logout").click();
         assertThat(url()).isEqualTo(AUTHCODE_CLIENT_BASE_URL + "/");
