@@ -1,7 +1,5 @@
 package io.pivotal.cf.identity.samples.journeys;
 
-import java.util.concurrent.TimeUnit;
-
 import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
 import org.junit.Test;
@@ -92,29 +90,33 @@ public class AuthorizationCodeTest extends FluentTest {
         $("#logout").click();
     }
 
-//    @Test
-//    public void readWriteUser() {
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
-//
-//        $("input[name=username]").fill().with("read-write-user");
-//        $("input[name=password]").fill().with("example-password");
-//        $("input[type=submit]").submit();
-//
-//        if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
-//            $("#authorize").click();
-//        }
-//
-//        $("a", containingText("TODO List")).click();
-//
-//        assertThat(el("body").text()).contains("seed-task-1");
-//        assertThat(el("body").text()).doesNotContain("all the things");
-//
-//        $("input[name=task]").fill().with("all the things");
-//        $("input[value=Add]").click();
-//
-//        assertThat(el("body").text()).contains("all the things");
-//
-//        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
-//        $("#logout").click();
-//    }
+    @Test
+    public void readWriteUser() {
+        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
+
+        $("input[name=username]").fill().with("read-write-user");
+        $("input[name=password]").fill().with("example-password");
+        $("input[type=submit]").submit();
+
+        if ($("h1").present() && el("h1").text().equals("Application Authorization")) {
+            $("#authorize").click();
+        }
+
+        $("a", containingText("TODO List")).click();
+
+        assertThat(el("body").text()).contains("seed-task-1");
+        assertThat(el("body").text()).doesNotContain("all the things");
+
+        $("input[name=task]").fill().with("all the things");
+        $("input[value=Add]").click();
+
+        assertThat(el("body").text()).contains("all the things");
+
+        $("tbody tr:last-child input[value=Delete]").click();
+
+        assertThat(el("body").text()).doesNotContain("all the things");
+
+        goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
+        $("#logout").click();
+    }
 }
