@@ -65,6 +65,14 @@ The sample application and resource server will be immediately bound to the SSO 
 
 You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.
 
+# Unsupported Grant Types
+
+### Resource Owner Password Credentials (i.e. Password):
+
+Spring Security 5 has dropped support for the Resource Owner Password Credentials grant type: https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support. If your use cases require the Password grant type, you will need to implement the access token request using your own tooling. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2). If your Java based CF application is bound to an SSO service instance  and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the Spring Security 5 properies built from `VCAP_SERVICES`: https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications. 
+
+Native Mobile App
+
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can set environment variables in your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
