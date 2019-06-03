@@ -65,6 +65,19 @@ The sample application and resource server will be immediately bound to the SSO 
 
 You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.
 
+# Unsupported Grant Types
+
+### Implicit Grant Type:
+
+The Implicit Grant Type is supported by Spring Security 5, but has generally fallen out of favor as an architectural pattern for SPAs. It has been determined that we will not provide Sample Apps to demonstrate this grant type moving forward. The current recommendation for SPAs is to use the Authorization Code Flow in conjuntion with the [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) to protect the Authorization Code in the client's browser. For more information, please see the Okta developers blog article: [Is The OAuth Implict Flow Dead](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead#the-oauth-authorization-code-flow-is-better).
+
+### Resource Owner Password Credentials (i.e. Password) Type:
+
+The Resource Owner Password Credentials grant type is no longer supported by Spring Security 5 (see the Grant Type [Support Matrix](projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support)). The Password grant type is more commonly used with programs, like CLIs, that are unlikley to be dependendant on Spring or other Web based software libraries. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2). 
+
+If your use cases require the Password grant type, you will need to implement the access token request on your own. 
+However, if your Java based CF application is bound to an SSO service instance and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the table of [Spring Security 5 Java properties](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications) built from VCAP_SERVICES to help craft your request. 
+
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can set environment variables in your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
