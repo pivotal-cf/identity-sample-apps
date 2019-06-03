@@ -6,7 +6,7 @@ Application Type  | Grant Type | Uses Spring Cloud SSO starter library
 ------------- | -------------- | ---------------------
 [Web App](/authcode)  | authorization_code | yes
 [Native Mobile App](/password)  | password | no
-[Service-to-Service App](/client_credentials) | client_credentials | yes
+[Service-to-Service App](/client-credentials) | client_credentials | yes
 [Single Page JavaScript App](/implicit) | implicit | no
 
 The latest version of this repository supports the following dependencies:
@@ -15,7 +15,7 @@ Dependency | Version
 ------------- | ---------- 
 [Spring Boot](https://github.com/spring-projects/spring-boot/tree/2.1.x) | 2.1.1+
 [Spring Security](https://github.com/spring-projects/spring-security/tree/5.1.x) | 5.0+ 
-[Java CfEnv Boot Pivotal SSO](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.0.2+ 
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | TO BE RELEASED
 
 The last version to support Spring Boot 1.5.5+ is tagged at [spring-boot/1.5](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.5).
 
@@ -27,7 +27,7 @@ The sample applications for the corresponding grant types are located in subdire
 
        cf login -a api.<your-domain>
         
-1. Ensure that an SSO (p-identity) [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) exists for your Org
+1. Ensure that an SSO (p-identity) [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) exists for your Org. Record the name of the plan you wish to select to be used as the `<plan_tier>` value for the next step.
 
        cf marketplace | grep p-identity
 
@@ -57,7 +57,7 @@ You can deploy the authcode and resource server sample applications using applic
 
 1. Navigate to the *authcode* directory
 
-1. Update the `RESOURCE_URL` value in the *authcode* manifest to the route of the deployed *resource-server*.
+1. Update the `RESOURCE_URL` value in the *authcode* manifest to the route of the deployed *resource-server* (which you can find by running `cf apps`).
 
 1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
    
@@ -75,3 +75,11 @@ When you specify your own scopes and authorities, consider including openid for 
 The table in [SSO Documentation - Configure SSO Properties with Environment Variables](https://docs.pivotal.io/p-identity/configure-apps/index.html#configure) provides a description and the default values. Further details and examples are provided in the sample application manifests.
 
 To remove any variables set through bootstrapping, you must use `cf unset-env <APP_NAME> <PROPERTY_NAME>` and rebind the application.
+
+---
+
+#### Running in Unsafe Environment with Self-signed Certificates
+
+⚠️⚠️⚠️ **WARNING** ⚠️⚠️⚠️ Do not use the following steps in your production environments; instead, use trusted certificates within your environment.
+
+If necessary to push the sample apps to an unsafe environment with self-signed certificates, you can add the [cloudfoundry-certificate-truster](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) dependency to the gradle file. Follow the instructions from the cloudfoundry-certificate-truster readme.
