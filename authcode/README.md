@@ -3,7 +3,7 @@
 The Authorization Code OAuth2 grant type is the most commonly used for web applications deployed into Cloud Foundry.
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
-OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-9/index.html)
+OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
 to automatically register this sample application as an OAuth2 client of the UAA and the 
 [SSO CFEnv Processor](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) to automatically consume those configurations.
 
@@ -12,9 +12,9 @@ file.
 
 ## Prerequisites:
 
-1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/1-9/index.html)
-1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/1-9/manage-service-plans.html) for the SSO Service that is visible to your Org.
-1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/1-9/manage-users.html).
+1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
+1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for the SSO Service that is visible to your Org.
+1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/manage-users.html).
 
 ### Step 0: Deploy a sample resource server
 
@@ -32,9 +32,7 @@ Using the CF CLI, login and target the space where you'd like the sample app to 
 
 Using the plan created as part of the Prerequisites, create a service instance in your space
 
-    cf create-service p-identity <plan-name> <service-instance-name>
-    
-The name of your service instance can be whatever you like.
+    cf create-service p-identity <plan-name> p-identity-instance
 
 ### Step 2: Update authcode manifest.yml with the location of the sample resource server
 
@@ -82,26 +80,9 @@ the resource and permissions have been created, you need to update the authcode-
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
-When you specify your own scopes and authorities, consider including openid for scopes on auth code, implicit, and password grant type applications, and uaa.resource for client credentials grant type applications, as these will not be provided if they are not specified.
+The [SSO Documentation](https://docs.pivotal.io/p-identity/configure-apps/index.html#configure-app-manifest) provides descriptions and default values for these SSO properties. Further details and examples are provided in the sample application manifests.
 
-The table below provides a description and the default values. Further details and examples are provided in the sample application manifests.
-
-| Property Name | Description | Default |
-| ------------- | ------------- | ------------- |
-| name | Name of the application | (N/A - Required Value) |
-| GRANT_TYPE | Allowed grant type for the application through the SSO service - only one grant type per application is supported by SSO | authorization_code |
-| SSO_IDENTITY_PROVIDERS | Allowed identity providers for the application through the SSO service plan | uaa |
-| SSO_REDIRECT_URIS | Comma separated whitelist of redirection URIs allowed for the application - Each value must start with http:// or https:// |  (Will always include the application route) |
-| SSO_SCOPES | Comma separated list of scopes that belong to the application and are registered as client scopes with the SSO service. This value is ignored for client credential grant type applications. |  openid |
-| SSO_AUTO_APPROVED_SCOPES | Comma separated list of scopes that the application is automatically authorized when acting on behalf of users through SSO service | <Defaults to existing scopes/authorities> |
-| SSO_AUTHORITIES | Comma separated list of authorities that belong to the application and are registered as client authorities with the SSO service. Authorities are restricted to the space they were originally created. Privileged identity zone/plan administrator scopes (e.g. scim.read, idps.write) cannot be bootstrapped and must be assigned by zone/plan administrators. This value is ignored for any grant type other than client credentials. | uaa.resource |
-| SSO_REQUIRED_USER_GROUPS | Comma separated list of groups a user must have in order to authenticate successfully for the application | (No value) |
-| SSO_ACCESS_TOKEN_LIFETIME | Lifetime in seconds for the access token issued to the application by the SSO service | 43200 |
-| SSO_REFRESH_TOKEN_LIFETIME | Lifetime in seconds for the refresh token issued to the application by the SSO service | 2592000 (not used for client credentials) |
-| SSO_RESOURCES |  Resources that the application will use as scopes/authorities for the SSO service to be created during bootstrapping if they do not already exist - The input format can be referenced in the provided sample manifest. Note that currently all permissions within the same top level permission (e.g. todo.read, todo.write) must be specified in the same application manifest. Currently you cannot specify additional permissions in the same top level permission (e.g. todo.admin) in additional application manifests.| (No value) |
-| SSO_ICON |  Application icon that will be displayed next to the application name on the Pivotal Account dashboard if show on home page is enabled - do not exceed 64kb | (No value) |
-| SSO_LAUNCH_URL |  Application launch URL that will be used for the application on the Pivotal Account dashboard if show on home page is enabled | (Application route) |
-| SSO_SHOW_ON_HOME_PAGE |  If set to true, the application will appear on the Pivotal Account dashboard with the corresponding icon and launch URL| True |
+When you specify your own `SSO_SCOPES` and `SSO_AUTHORITIES` values, consider including `openid` for Authorization Code grant type applications, and `uaa.resource` for Client Credentials grant type applications, as these will not be provided if they are not specified.
 
 To remove any variables set through bootstrapping, you must use `cf unset-env <APP_NAME> <PROPERTY_NAME>` and rebind the application.
 
@@ -133,7 +114,7 @@ Description:   {
 }
 ```
 
-This means that `todo` resource has already been created on the same SSO service plan in a different space. For more information see the [SSO Documentation](https://docs.pivotal.io/p-identity/1-9/manage-resources.html#space-protection).
+This means that `todo` resource has already been created on the same SSO service plan in a different space. For more information see the [SSO Documentation](https://docs.pivotal.io/p-identity/manage-resources.html#space-protection).
 
 #### Solution:
 
