@@ -5,9 +5,7 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 Application Type  | Grant Type | Uses Spring Cloud SSO starter library
 ------------- | -------------- | ---------------------
 [Web App](/authcode)  | authorization_code | yes
-[Native Mobile App](/password)  | password | no
 [Service-to-Service App](/client-credentials) | client_credentials | yes
-[Single Page JavaScript App](/implicit) | implicit | no
 [Resource Server App](/resource-server) | n/a | no
 
 The latest version of this repository supports the following dependencies:
