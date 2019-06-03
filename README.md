@@ -8,6 +8,7 @@ Application Type  | Grant Type | Uses Spring Cloud SSO starter library
 [Native Mobile App](/password)  | password | no
 [Service-to-Service App](/client-credentials) | client_credentials | yes
 [Single Page JavaScript App](/implicit) | implicit | no
+[Resource Server App](/resource-server) | n/a | no
 
 The latest version of this repository supports the following dependencies:
 
@@ -21,7 +22,7 @@ The last version to support Spring Boot 1.5.5+ is tagged at [spring-boot/1.5](ht
 
 The sample applications for the corresponding grant types are located in subdirectories of this project:  
 
-## <a name="step-1">Step 1</a>: Prerequisites
+## Prerequisites
 
 1. Login as a Space Developer into the required Org and Space on your PCF Foundation
 
@@ -45,25 +46,33 @@ The sample applications for the corresponding grant types are located in subdire
 
 You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
 
-## <a name="quick-start">Quick Start</a>: Authcode Sample App and Resource Server on SSO
+## <a name="quick-start">Quick Start</a>
 
 You can deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
+
+### Deploying Resource Server Sample App
 
 1. Navigate to the *resource-server* directory
 
 1. Update the `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI` <PLAN_AUTH_DOMAIN> and <YOUR_DOMAIN> placeholders in the *resource-service* manifest. 
 
-1. Build (`./gradlew build`) and push (`cf push`) the *resource-server* application.
+1. Build (`./gradlew build`) and push (`cf push`) the *resource-server* application. (You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.)
+
+### Deploying Authorization Code Sample App
 
 1. Navigate to the *authcode* directory
 
-1. Update the `RESOURCE_URL` value in the *authcode* manifest to the route of the deployed *resource-server* (which you can find by running `cf apps`).
+1. Update the `RESOURCE_URL` value in the *authcode* manifest.yml file to the route of the deployed *resource-server* (which you can find by running `cf apps`).
 
-1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project.
-   
-The sample application and resource server will be immediately bound to the SSO Service on start-up.
+1. Build (`./gradlew build`) and push (`cf push`) the *authcode* project. (You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.) The sample application will be immediately bound to the SSO Service after `cf push`.
 
-You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.
+### Deploying Client Credentials Sample App
+
+1. Navigate to the *client-credentials* directory
+
+1. Update the `RESOURCE_URL` value in the *client-credentials* manifest.yml file to the route of the deployed *resource-server* (which you can find by running `cf apps`).
+
+1. Build (`./gradlew build`) and push (`cf push`) the *client-credentials* project. (You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.) The sample application will be immediately bound to the SSO Service after `cf push`.
 
 # Unsupported Grant Types
 
