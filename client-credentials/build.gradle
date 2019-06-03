@@ -11,12 +11,12 @@ sourceCompatibility = '1.8'
 ext {
 	springVersion = '2.1.4.RELEASE'
 	springSecurityVersion = '5.1.5.RELEASE'
-	cfEnvSsoVersion = '1.0.2.BUILD-SNAPSHOT'
+	cfEnvSsoVersion = '1.1.0.M1'
 }
 
 repositories {
 	mavenCentral()
-        maven { url "http://repo.spring.io/libs-snapshot-local" }
+	maven { url "http://repo.spring.io/libs-milestone-local" }
 }
 
 dependencies {
