@@ -69,7 +69,10 @@ You may have to use `--random-route` flag when cf pushing your application if a 
 
 ### Resource Owner Password Credentials (i.e. Password):
 
-Spring Security 5 has dropped support for the Resource Owner Password Credentials grant type: https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support. If your use cases require the Password grant type, you will need to implement the access token request using your own tooling. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2). If your Java based CF application is bound to an SSO service instance  and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the Spring Security 5 properies built from `VCAP_SERVICES`: https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications. 
+Spring Security 5 no longer supports the [Resource Owner Password Credentials grant type](projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support). The Password grant type is more commonly used with programs, like CLIs, that are unlikley to be dependendant on Spring or other Web based software libraries. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2). 
+
+If your use cases require the Password grant type, you will need to implement the access token request on your own. 
+However, if your Java based CF application is bound to an SSO service instance and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the table of [Spring Security 5 Java properties](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications) built from VCAP_SERVICES to help craft your request. 
 
 Native Mobile App
 
