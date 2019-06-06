@@ -34,16 +34,6 @@ The sample applications for the corresponding grant types are located in subdire
 
        cf create-service p-identity <plan_tier> p-identity-instance
 
-1. Preparing a test user with sufficient scopes
-
-     Contact your cloud administrator to determine whether your Service Plan is has configured the "Internal User Store" as an Identity Provider or an external Identity Provider (like LDAP).
-
-     - If your SSO Service plans is configured with the 'Internal User Store' option, you can use the instruction in [Manage Users in an Internal User Store](https://docs.pivotal.io/p-identity/manage-users.html) documentation to create a user to `todo.read` and `todo.write` scopes.
-
-     - If your plan is configured with an alternative Identity Provider (like LDAP), your administrator will need to provide you credentials with memberships to the `todo.read` and `todo.write` scopes.
-
-You can then test the applications by creating test users with the `todo.read` and `todo.write` scopes for your plan using the steps [here](https://docs.pivotal.io/p-identity/configure-id-providers.html#add-to-int).
-
 ## <a name="quick-start">Quick Start</a>
 
 You can deploy the authcode and resource server sample applications using application bootstrapping with the steps below. You can read more about these topics in the following sections.
@@ -71,6 +61,18 @@ You can deploy the authcode and resource server sample applications using applic
 1. Update the `RESOURCE_URL` value in the *client-credentials* manifest.yml file to the route of the deployed *resource-server* (which you can find by running `cf apps`).
 
 1. Build (`./gradlew build`) and push (`cf push`) the *client-credentials* project. (You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.) The sample application will be immediately bound to the SSO Service after `cf push`.
+
+## Testing the Sample Apps
+
+1. Preparing a test user with sufficient scopes
+
+     Contact your cloud administrator to determine whether your Service Plan is has configured the "Internal User Store" as an Identity Provider or an external Identity Provider (like LDAP).
+
+     - If your SSO Service plans is configured with the 'Internal User Store' option, you can use the instruction in [Manage Users in an Internal User Store](https://docs.pivotal.io/p-identity/manage-users.html) documentation to create a user to `todo.read` and `todo.write` scopes.
+
+     - If your plan is configured with an alternative Identity Provider (like LDAP), your administrator will need to provide you credentials with memberships to the `todo.read` and `todo.write` scopes.
+
+1. Visit the deployed Authorization Code and Client Credentials sample apps by entering the urls of the apps (which you can find by running `cf apps`). (The Resource Server sample app is a backend API and not intended to be accessed through a browser.)
 
 # Unsupported Grant Types
 
