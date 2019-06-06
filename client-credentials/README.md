@@ -68,11 +68,6 @@ Running `cf push` should result in
 
 You can verify the app is successfully running by viewing the output of `cf apps`. You can visit the client-credentials app by navigating to `https://<client-credentials-app-url>` where `client-credentials-app-url` is the route output from `cf push` or `cf apps`.
 
-## Testing the TODO application
-
-To create the resource and permissions, an operator must follow [these steps](http://docs.pivotal.io/p-identity/manage-resources.html). After 
-the resource and permissions have been created, you need to update the client-credentials-sample app with the previously created scopes on the App dashboard.
-
 # Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
