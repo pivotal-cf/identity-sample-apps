@@ -18,7 +18,7 @@ applications:
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: authorization_code
 
      # The scopes requested when obtaining a token by Spring Security 5
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: openid, email, profile, roles, user_attributes, todo.read, todo.write
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: openid, profile, roles, user_attributes, todo.read, todo.write
 
      # *** END: env vars for the application ***
 
@@ -34,7 +34,7 @@ applications:
      # SSO_REDIRECT_URIS: https://my-domain-here.domain.org
 
      # Client scope(s) for the application, not used for client credentials grant type
-     SSO_SCOPES: openid, email, profile, roles, user_attributes, todo.read, todo.write
+     SSO_SCOPES: openid, profile, roles, user_attributes, todo.read, todo.write
 
      # Client scope(s) for the application that are automatically authorized when acting on behalf of a user
      # SSO_AUTO_APPROVED_SCOPES: openid, todo.read
