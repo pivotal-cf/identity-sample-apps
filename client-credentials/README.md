@@ -85,7 +85,7 @@ You have received an error during `cf push`, or an explict `cf bind-service` cal
 
 ```
 Binding Failure:
-Creating app client-credentials...
+Creating app client-credentials-sample...
 Mapping routes...
 Binding services...
 Unexpected Response
@@ -111,11 +111,11 @@ This means that the `todo` resource is a cross-space resource, namely, a resourc
 
 1. Comment out the `SSO_RESOURCES` in the `manifest.yml`
 
-1. Unset the `SSO_RESOURCES` env var on the deployed `client-credentials` application.
+1. Unset the `SSO_RESOURCES` env var on the deployed `client-credentials-sample` application.
      ```
-     cf unset-env client-credentials SSO_RESOURCES
+     cf unset-env client-credentials-sample SSO_RESOURCES
      ```
-1. Push the `client-credentials` application again.
+1. Push the `client-credentials-sample` application again.
      ```
      cf push
      ```   
@@ -124,9 +124,9 @@ Removing the `SSO_RESOURCES` env var will result in a call to bind the applicati
 
 ** Important Authorization Followup **
 
-For client-credentials applications, there will be some additional work to allow your SSO Application access to the proper cross-space `authorities` which will result in the `todo.read` and `todo.wrote` scopes on your token. Client Crednetials `authorities` are handled a bit differently than User permissions that are used to authorize token scopes in the Authorization Code Flow. Since there is no intersection of User permissions involved in the Client Credentials grant type token scopes, you will need SSO Plan Admin intervention to ultimately receive a token with the appropriate cross-space scopes. We have attempted to outline some suggestions on how to correctly authorize your SSO Client Credentials application that was created as a result of this sample app binding to an SSO service.
+For Client Credentials applications, there will be some additional work to allow your SSO Application access to the proper cross-space `authorities` which will result in the `todo.read` and `todo.wrote` scopes on your token. Client Crednetials `authorities` are handled a bit differently than User permissions that are used to authorize token scopes in the Authorization Code Flow. Since there is no intersection of User permissions involved in the Client Credentials grant type token scopes, you will need SSO Plan Admin intervention to ultimately receive a token with the appropriate cross-space scopes. We have attempted to outline some suggestions on how to correctly authorize your SSO Client Credentials application that was created as a result of this sample app binding to an SSO service.
 
 You may choose one of the follow remediation steps:
 
-* You will need to contact your SSO Plan Administrator to whitelist the Authorites for your SSO Application created from the binding of client-credentials. CF System Operator with access to OpsManager can manage and identify SSO Plan Admistrators through the [SSO Service Plans UI](https://docs.pivotal.io/p-identity/manage-service-plans.html#create-svc-plan). An SSO Plan Administrator will then need to navigate to the [SSO Dev Dashboard](https://docs.pivotal.io/p-identity/manage-service-instances.html#access-svc-instance-developer-dashboard), navigate to the SSO Application with the name `client-credentails` and then check the `todo.read` and `todo.write` checkboxes.
+* You will need to contact your SSO Plan Administrator to whitelist the Authorites for your SSO Application created from the binding of `client-credentials-sample`. CF System Operator with access to OpsManager can manage and identify SSO Plan Admistrators through the [SSO Service Plans UI](https://docs.pivotal.io/p-identity/manage-service-plans.html#create-svc-plan). An SSO Plan Administrator will then need to navigate to the [SSO Dev Dashboard](https://docs.pivotal.io/p-identity/manage-service-instances.html#access-svc-instance-developer-dashboard), navigate to the SSO Application with the name `client-credentails-sample` and then check the `todo.read` and `todo.write` checkboxes.
 * Ask a CF System Operator with access to OpsManager to create a new SSO Service Plan that you can reference in a `create-service` command to give you a clean namespace for resources.
