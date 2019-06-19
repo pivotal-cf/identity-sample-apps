@@ -16,7 +16,7 @@ Dependency | Version
 [Spring Security](https://github.com/spring-projects/spring-security/tree/5.1.x) | 5.0+ 
 [Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.1.0.RELEASE
 
-The last version to support Spring Boot 1.5.5+ is tagged at [spring-boot/1.5](https://github.com/pivotal-cf/identity-sample-apps/releases/tag/spring-boot%2F1.5).
+The sample apps using Spring Boot 1.5 and Spring Security 2 is located on the [spring-boot-1.5 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5).
 
 The sample applications for the corresponding grant types are located in subdirectories of this project:  
 
