@@ -1,0 +1,58 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Multi-grant type sample</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+  <h1>Multi-grant type (Authcode/Client Credentials) sample</h1>
+
+  <div>
+    <h2>Authcode Credentials</h2>
+    <p>You've used the authcode flow! Here's the result of calling /userinfo:</p>
+    <pre th:utext="${userInfo}" class="user_info"></pre>
+    <p>This is the Access Token that was used:</p>
+    <pre th:text="${authcodeAccessToken}" class="access_token"></pre>
+    <p>This is the ID Token:</p>
+    <pre th:text="${idToken}" class="id_token"></pre>
+
+    <h2>What do you want to do?</h2>
+    <ul>
+      <li>
+        <a href="/user-todos">TODO List (You need to configure the Resource Server sample app before using this)</a>
+      </li>
+      <li>
+        <a target="uaa" th:href="|${ssoServiceUrl}/profile|">See your account profile (so you can de-authorize this client)</a>
+      </li>
+      <li>
+        <form th:action="|/logout|" method="POST">
+          <!--
+            By default, spring security recommend logout in the form of a POST to protect form CSRF attacks
+            For more info, visit: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/configurers/LogoutConfigurer.html#logoutUrl-java.lang.String-
+          -->
+          <button id="logout">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <div>
+    <h2>Client Credentials</h2>
+
+    <p>This is the Access Token that was used:</p>
+    <pre th:text="${clientCredentialsToken}" class="access_token"></pre>
+
+    <h2>What do you want to do?</h2>
+    <ul>
+      <li>
+        <a href="/client-todos">TODO List (You need to configure the Resource Server sample app before using this)</a>
+      </li>
+    </ul>
+  </div>
+
+
+</body>
+</html>
