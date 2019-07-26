@@ -33,8 +33,8 @@ public class InfoController {
     public String info(
             Model model,
             OAuth2AuthenticationToken authentication,
-            @RegisteredOAuth2AuthorizedClient("sso") OAuth2AuthorizedClient authcodeClient,
-            @RegisteredOAuth2AuthorizedClient("test") OAuth2AuthorizedClient clientCredentialsClient) throws Exception {
+            @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authcodeClient,
+            @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient clientCredentialsClient) throws Exception {
         // Check if app has been bound to SSO
         if (ssoServiceUrl.equals("placeholder")) {
             model.addAttribute("header", "Warning: You need to bind to the SSO service.");

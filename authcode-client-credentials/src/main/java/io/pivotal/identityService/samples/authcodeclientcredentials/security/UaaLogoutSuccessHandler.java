@@ -16,7 +16,7 @@ public class UaaLogoutSuccessHandler implements LogoutSuccessHandler {
     @Value("${ssoServiceUrl:placeholder}")
     String ssoServiceUrl;
 
-    @Value("${spring.security.oauth2.client.registration.sso.client-id:placeholder}")
+    @Value("${spring.security.oauth2.client.registration.ssoauthorizationcode.client-id:placeholder}")
     String clientId;
 
     @Override

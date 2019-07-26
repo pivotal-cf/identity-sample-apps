@@ -15,20 +15,15 @@ applications:
      # The grant type used in the /authorize call by Spring Security 5
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: authorization_code
 
-     # The scopes requested when obtaining a token by Spring Security 5
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: openid, profile, roles, user_attributes, todo.read
-
-     # TODO: How are we going to set these up using using java-cfenv?
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_TEST_CLIENTID: XXXXX
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_TEST_CLIENTSECRET: XXXXX
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_TEST_PROVIDER: sso
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_TEST_AUTHORIZATIONGRANTTYPE: client_credentials
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_TEST_SCOPE: uaa.resource, todo.read, todo.write
+     # The scopes requested when obtaining a user access token by Spring Security 5
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOAUTHORIZATIONCODE_SCOPE: openid, profile, roles, user_attributes, todo.read, todo.write
+     # The scopes requested when obtaining a application access token by Spring Security 5
+     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOCLIENTCREDENTIALS_SCOPE: todo.read, todo.write
 
      # *** END: env vars for the application ***
 
      # Grant type to be set for the application's UAA client configurations. Only one grant type per application is supported by the SSO service.
-     GRANT_TYPE: authorization_code
+     GRANT_TYPE: authorization_code, client_credentials
 
      # Identity provider(s) to be set for the application's client configurations. This value represents the allowed identity providers for the app through the SSO service plan.
      SSO_IDENTITY_PROVIDERS: uaa
@@ -39,7 +34,7 @@ applications:
      # SSO_REDIRECT_URIS: https://my-domain-here.domain.org
 
      # Client scope(s) for the application, not used for client credentials grant type
-     SSO_SCOPES: openid, profile, roles, user_attributes, todo.read
+     SSO_SCOPES: openid, profile, roles, user_attributes, todo.read, todo.write
 
      # Client scope(s) for the application that are automatically authorized when acting on behalf of a user
      # SSO_AUTO_APPROVED_SCOPES: openid, todo.read

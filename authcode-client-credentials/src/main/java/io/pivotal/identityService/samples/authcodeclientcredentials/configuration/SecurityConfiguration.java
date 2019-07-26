@@ -20,7 +20,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated()
                 .and()
                     .oauth2Login()
-                        .loginPage("/oauth2/authorization/sso")
+                        .loginPage("/oauth2/authorization/ssoauthorizationcode")
                 .and()
                     .logout().logoutSuccessHandler(uaaLogoutSuccessHandler);
     }
