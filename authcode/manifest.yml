@@ -20,7 +20,7 @@ applications:
 
      # *** END: env vars for the application ***
 
-     # Grant type to be set for the application's UAA client configurations. Only one grant type per application is supported by the SSO service.
+     # Grant type to be set for the application's UAA client configurations.
      GRANT_TYPE: authorization_code
 
      # Identity provider(s) to be set for the application's client configurations. This value represents the allowed identity providers for the app through the SSO service plan.
