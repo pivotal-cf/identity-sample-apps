@@ -12,9 +12,6 @@ applications:
      # The location of the deployed resource server sample application
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com
 
-     # The grant type used in the /authorize call by Spring Security 5
-     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: authorization_code
-
      # The scopes requested when obtaining a user access token by Spring Security 5
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOAUTHORIZATIONCODE_SCOPE: openid, profile, roles, user_attributes, todo.read, todo.write
      # The scopes requested when obtaining a application access token by Spring Security 5
