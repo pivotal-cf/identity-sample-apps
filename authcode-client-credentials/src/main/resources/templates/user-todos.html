@@ -8,7 +8,7 @@
 <h1>TODO List</h1>
 <h3>You are accessing resources with the user's Access Token via Authcode flow</h3>
 
-<form th:action="|/user-todos|" method="post" th:object="${todo}">
+<form th:action="|/user/todos|" method="post" th:object="${todo}">
   <label>Add Item:</label>
   <input th:field="*{task}" type="text"/>
   <input type="submit" value="Add"/>
@@ -30,7 +30,7 @@
       <td th:text="${todo.id}"></td>
       <td th:text="${todo.task}"></td>
       <td>
-        <form th:action="|/user-todos/${todo.id}|" method="post">
+        <form th:action="|/user/todos/${todo.id}|" method="post">
           <input type="hidden" name="_method" value="DELETE"/>
           <input type="submit" value="Delete"/>
         </form>

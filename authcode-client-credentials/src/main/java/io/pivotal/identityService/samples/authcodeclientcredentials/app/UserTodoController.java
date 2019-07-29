@@ -11,18 +11,19 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.ArrayList;
 
 @Controller
-public class TodoController {
+@RequestMapping(value = "/user")
+public class UserTodoController {
 
     @Value("${RESOURCE_URL}")
     private String resourceServerUrl;
 
     private final TodoService todoService;
 
-    public TodoController(TodoService todoService) {
+    public UserTodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
-    @GetMapping("/user-todos")
+    @GetMapping("/todos")
     public String userGetTodos(Model model, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
         if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
             model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
@@ -41,46 +42,15 @@ public class TodoController {
         return "user-todos";
     }
 
-    @PostMapping("/user-todos")
+    @PostMapping("/todos")
     public String userCreateTodo(@ModelAttribute TodoRequest body, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
         todoService.create(body, authorizedClient);
-        return "redirect:/user-todos";
+        return "redirect:/user/todos";
     }
 
-    @DeleteMapping("/user-todos/{id}")
+    @DeleteMapping("/todos/{id}")
     public String userDeleteTodo(@PathVariable String id, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
         todoService.delete(id, authorizedClient);
-        return "redirect:/user-todos";
-    }
-
-    @GetMapping("/client-todos")
-    public String clientGetTodos(Model model, @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient authorizedClient) {
-        if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
-            model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
-            model.addAttribute("displayWarning", true);
-            return "configure_warning";
-        }
-
-        try {
-            model.addAttribute("todoList", todoService.getAll(authorizedClient));
-        } catch (WebClientResponseException error) {
-            model.addAttribute("error", error);
-            model.addAttribute("todoList", new ArrayList<Todo>());
-        }
-
-        model.addAttribute("todo", new TodoRequest());
-        return "client-todos";
-    }
-
-    @PostMapping("/client-todos")
-    public String clientCreateTodo(@ModelAttribute TodoRequest body, @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient authorizedClient) {
-        todoService.create(body, authorizedClient);
-        return "redirect:/client-todos";
-    }
-
-    @DeleteMapping("/client-todos/{id}")
-    public String clientDeleteTodo(@PathVariable String id, @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient authorizedClient) {
-        todoService.delete(id, authorizedClient);
-        return "redirect:/client-todos";
+        return "redirect:/user/todos";
     }
 }
