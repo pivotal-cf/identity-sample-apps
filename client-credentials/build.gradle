@@ -12,10 +12,17 @@ ext {
 	springVersion = '2.1.4.RELEASE'
 	springSecurityVersion = '5.1.5.RELEASE'
 	cfEnvSsoVersion = '1.1.0.RELEASE'
+	cfEnvSsoVersion = '1.1.1.BUILD-SNAPSHOT' // note that for multi-grant-type support, we need to use at least this version
+	//certTrusterVersion = '1.0.1.RELEASE'
 }
 
 repositories {
 	mavenCentral()
+
+	// this is the repo for java-cfenv's snapshot builds
+	maven {
+		url 'https://repo.spring.io/libs-snapshot-local'
+	}
 }
 
 dependencies {
@@ -26,4 +33,9 @@ dependencies {
 	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
 	implementation "io.pivotal.cfenv:java-cfenv-boot-pivotal-sso:$cfEnvSsoVersion"
+
+	// This library can be used to skip all TLS cert checks for development environments which use self-signed certs.
+	// See https://github.com/pivotal-cf/cloudfoundry-certificate-truster
+	// DO NOT USE THIS IN PRODUCTION!!!
+	//implementation "io.pivotal.spring.cloud:cloudfoundry-certificate-truster:$certTrusterVersion"
 }

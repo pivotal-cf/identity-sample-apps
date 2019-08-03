@@ -1,6 +1,6 @@
 # Deploying the Client Credentials Sample Application
 
-The Authorization Code OAuth2 grant type is the most commonly used for web applications deployed into Cloud Foundry.
+##Introduction
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [Client Credentials](https://tools.ietf.org/html/rfc6749#section-4.4) 
 OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html) 
@@ -9,6 +9,14 @@ to automatically register this sample application as an OAuth2 client of the UAA
 
 App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
 file.
+
+##Use Case for Using Client Credentials
+
+The Client Credentials OAuth2 grant type is most commonly used for web applications which:
+
+1. Do not require a human user to authenticate
+1. The backend needs to authenticate as itself, not on behalf of any particular human user,
+   to perform requests to another service (service-to-service auth).
 
 ## Prerequisites:
 
@@ -33,7 +41,7 @@ Using the plan created as part of the Prerequisites, create a service instance i
 
     cf create-service p-identity <plan-name> p-identity-instance
 
-### Step 2: Update client-credentials manifest.yml with the location of the sample resource server
+### Step 2: Update `client-credentials/manifest.yml` with the location of the sample resource server
 
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#env-block) 
 called `env`. This section is used to list environment variables that will be available to the deployed application.
@@ -43,7 +51,7 @@ resource server application. Replace `RESOURCE_URL: https://resource-server-samp
 
 NOTE: You must leave off the trailing slash (`/`) in the `RESOURCE_URL`.
 
-### Step 3: Update client-credentials manifest.yml with the name of your p-identity service instance
+### Step 3: Update `client-credentials/manifest.yml` with the name of your p-identity service instance
 
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#services-block) 
 called `services`. Your app will be bound to any service instances you list in this section when it is pushed.

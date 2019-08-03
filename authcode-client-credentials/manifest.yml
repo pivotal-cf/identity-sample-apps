@@ -12,12 +12,23 @@ applications:
      # The location of the deployed resource server sample application
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com
 
-     # The scopes requested when obtaining a user access token by Spring Security 5
+     # The scopes requested when obtaining a user access token using the authcode client by Spring Security 5
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOAUTHORIZATIONCODE_SCOPE: openid, profile, roles, user_attributes, todo.read, todo.write
-     # The scopes requested when obtaining a application access token by Spring Security 5
+     # The scopes requested when obtaining a application access token using the client credentials client by Spring Security 5
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOCLIENTCREDENTIALS_SCOPE: todo.read, todo.write
 
+     # This can be used in conjunction with the cloudfoundry-certificate-truster library to skip all cert checks for
+     # development environments which use self-signed certs.
+     # DO NOT USE THIS IN PRODUCTION!!!
+     # TRUST_CERTS: login.sfo.identity.team
+
      # *** END: env vars for the application ***
+
+     # *** BEGIN: env vars for the service broker to use during bind ***
+     # The following are bootstrap configurations you may use to automatically create client configurations in
+     # the SSO service for your application if the configurations do not exist. These configurations take effect
+     # when binding or rebinding to the SSO, and will overwrite existing client configurations if any.
+     # The values provided below are examples.
 
      # Grant type to be set for the application's UAA client configurations.
      GRANT_TYPE: authorization_code, client_credentials
@@ -57,3 +68,5 @@ applications:
      # SSO_ICON: <base64 encoded image - do not exceed 64kb>
      # SSO_LAUNCH_URL: <url>
      # SSO_SHOW_ON_HOME_PAGE: <true/false>
+
+     # *** END: env vars for the service broker to use during bind ***

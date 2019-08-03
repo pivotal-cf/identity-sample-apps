@@ -16,12 +16,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/").permitAll()
+                    .antMatchers("/", "/client/todos", "/client/todos/*").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .oauth2Login()
                         .loginPage("/oauth2/authorization/ssoauthorizationcode")
+                        .failureUrl("/login?error")
+                        .permitAll()
                 .and()
-                    .logout().logoutSuccessHandler(uaaLogoutSuccessHandler);
+                    .logout()
+                        .logoutSuccessHandler(uaaLogoutSuccessHandler);
     }
 }

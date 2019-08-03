@@ -1,18 +1,25 @@
 oauth:
   clients:
-    sample-client:
-       name: sample-client
-       secret: sample-client-secret
+    sample-client-authcode:
+       name: sample-client-authcode
+       secret: sample-client-authcode-secret
        scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
        authorized-grant-types: authorization_code
        authorities: uaa.resource
-       redirect-uri: http://localhost:8888/**
+       redirect-uri: http://localhost:8888/**,http://localhost:8890/**
     sample-client-client-credentials:
       name: sample-client-client-credentials
       secret: sample-client-client-credentials-secret
       authorized-grant-types: client_credentials
       authorities: uaa.resource, todo.read, todo.write
-      redirect-uri: http://localhost:8887/**
+      redirect-uri: http://localhost:8887/**,http://localhost:8890/**
+    sample-client-authcode-client-credentials:
+      name: sample-client-authcode-client-credentials
+      secret: sample-client-authcode-client-credentials-secret
+      authorized-grant-types: client_credentials,authorization_code
+      scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
+      authorities: uaa.resource, todo.read, todo.write
+      redirect-uri: http://localhost:8887/**,http://localhost:8890/**
 
 scim:
   users:

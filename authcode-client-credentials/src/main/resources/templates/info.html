@@ -9,18 +9,30 @@
   <h1>Multi-grant type (Authcode/Client Credentials) sample</h1>
 
   <div>
+
     <h2>Authcode Credentials</h2>
-    <p>You've used the authcode flow! Here's the result of calling /userinfo:</p>
-    <pre th:utext="${userInfo}" class="user_info"></pre>
-    <p>This is the user's Access Token that was used:</p>
-    <pre th:text="${authcodeAccessToken}" class="access_token"></pre>
-    <p>This is the ID Token:</p>
-    <pre th:text="${idToken}" class="id_token"></pre>
+    <div class="authcode">
+      <p>You've used the authcode flow! Here's the result of calling /userinfo:</p>
+      <pre th:utext="${userInfo}" class="user_info"></pre>
+      <p>This is the user's Access Token that was used:</p>
+      <pre th:text="${authcodeAccessToken}" class="access_token"></pre>
+      <p>This is the ID Token:</p>
+      <pre th:text="${idToken}" class="id_token"></pre>
+    </div>
+
+    <h2>Client Credentials</h2>
+    <div class="clientcreds">
+      <p>This is the application's Access Token:</p>
+      <pre th:text="${clientCredentialsToken}" class="access_token"></pre>
+    </div>
 
     <h2>What do you want to do?</h2>
     <ul>
       <li>
-        <a href="/user/todos">TODO List (You need to configure the Resource Server sample app before using this)</a>
+        <a href="/user/todos">TODO List using the authcode user token (You need to configure the Resource Server sample app before using this)</a>
+      </li>
+      <li>
+        <a href="/client/todos">TODO List using the client credentials token (You need to configure the Resource Server sample app before using this)</a>
       </li>
       <li>
         <a target="uaa" th:href="|${ssoServiceUrl}/profile|">See your account profile (so you can de-authorize this client)</a>
@@ -36,23 +48,5 @@
       </li>
     </ul>
   </div>
-
-  <hr>
-
-  <div>
-    <h2>Client Credentials</h2>
-
-    <p>This is the application's Access Token that was used:</p>
-    <pre th:text="${clientCredentialsToken}" class="access_token"></pre>
-
-    <h2>What do you want to do?</h2>
-    <ul>
-      <li>
-        <a href="/client/todos">TODO List (You need to configure the Resource Server sample app before using this)</a>
-      </li>
-    </ul>
-  </div>
-
-
 </body>
 </html>

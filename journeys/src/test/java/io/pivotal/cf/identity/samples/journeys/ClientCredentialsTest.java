@@ -10,7 +10,7 @@ import static org.fluentlenium.core.filter.FilterConstructor.containingText;
 
 @Wait
 public class ClientCredentialsTest extends FluentTest {
-    public static final String CLIENT_CREDENTIALS_BASE_URL = "http://localhost:8887";
+    private static final String CLIENT_CREDENTIALS_BASE_URL = "http://localhost:8887";
 
     @Test
     public void displaysToken() {

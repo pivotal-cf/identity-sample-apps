@@ -4,9 +4,9 @@
       "binding_name": null,
       "credentials": {
         "auth_domain": "http://localhost:8080/uaa",
-        "client_id": "sample-client-client-credentials",
-        "client_secret": "sample-client-client-credentials-secret",
-        "grant_types": ["client_credentials"]
+        "client_id": "sample-client-authcode",
+        "client_secret": "sample-client-authcode-secret",
+        "grant_types": ["authorization_code"]
       },
       "instance_name": "system-sso",
       "label": "p-identity",

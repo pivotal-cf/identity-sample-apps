@@ -13,14 +13,22 @@ applications:
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com
 
      # The grant type used in the /authorize call by Spring Security 5
+     # This variable is not needed when using both:
+     #   - App SSO 1.10 or newer
+     #   - java-cfenv 1.1.1 or newer
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: client_credentials
 
      # The scopes requested when obtaining a token by Spring Security 5
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: uaa.resource, todo.read, todo.write
 
+     # This can be used in conjunction with the cloudfoundry-certificate-truster library to skip all cert checks for
+     # development environments which use self-signed certs.
+     # DO NOT USE THIS IN PRODUCTION!!!
+     # TRUST_CERTS: login.sfo.identity.team
+
      # *** END: env vars the application ***
 
-     # *** BEGIN: env vars for the initial 'cf bind-service' command ***
+     # *** BEGIN: env vars for the service broker to use during bind ***
      # The following are bootstrap configurations you may use to automatically create client configurations in
      # the SSO service for your application if the configurations do not exist. These configurations take effect
      # when binding or rebinding to the SSO, and will overwrite existing client configurations if any.
@@ -48,4 +56,4 @@ applications:
      # SSO_LAUNCH_URL: <url>
      # SSO_SHOW_ON_HOME_PAGE: <true/false>
 
-     # *** END: env vars for the initial 'cf bind-service' command ***
+     # *** END: env vars for the service broker to use during bind ***

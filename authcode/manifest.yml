@@ -13,10 +13,18 @@ applications:
      RESOURCE_URL: https://resource-server-sample.<your-domain>.com
 
      # The grant type used in the /authorize call by Spring Security 5
+     # This variable is not needed when using both:
+     #   - App SSO 1.10 or newer
+     #   - java-cfenv 1.1.1 or newer
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: authorization_code
 
      # The scopes requested when obtaining a token by Spring Security 5
      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: openid, profile, roles, user_attributes, todo.read, todo.write
+
+     # This can be used in conjunction with the cloudfoundry-certificate-truster library to skip all cert checks for
+     # development environments which use self-signed certs.
+     # DO NOT USE THIS IN PRODUCTION!!!
+     # TRUST_CERTS: login.sfo.identity.team
 
      # *** END: env vars for the application ***
 

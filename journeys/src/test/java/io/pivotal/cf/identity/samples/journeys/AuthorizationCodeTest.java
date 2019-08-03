@@ -30,7 +30,7 @@ public class AuthorizationCodeTest extends FluentTest {
         String accessToken = el(".access_token").text();
         assertThat(accessToken).contains("basic-user@example.com");
         assertThat(accessToken).contains("basic-user");
-        assertThat(accessToken).contains("sample-client");
+        assertThat(accessToken).contains("sample-client-authcode");
         assertThat(accessToken).contains("openid");
         assertThat(accessToken).contains("authorization_code");
 

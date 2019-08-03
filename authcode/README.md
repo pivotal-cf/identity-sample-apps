@@ -1,6 +1,6 @@
 # Deploying the Authorization Code (Authcode) Sample Application
 
-The Authorization Code OAuth2 grant type is the most commonly used for web applications deployed into Cloud Foundry.
+##Introduction
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
 OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
@@ -9,6 +9,15 @@ to automatically register this sample application as an OAuth2 client of the UAA
 
 App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
 file.
+
+##Use Case for Using Authcode
+
+The Authorization Code OAuth2 grant type is most commonly used for web applications which:
+
+1. Requires a human user to authenticate for authentication and/or authorization protection of your app's endpoints
+   and/or to access other services using the identity and the level of authorization permissions of that user.
+1. Have a backend which can receive the auth code and exchange it for a access token. In this sample app,
+   the Spring Security library performs this step.
 
 ## Prerequisites:
 
@@ -34,7 +43,7 @@ Using the plan created as part of the Prerequisites, create a service instance i
 
     cf create-service p-identity <plan-name> p-identity-instance
 
-### Step 2: Update authcode manifest.yml with the location of the sample resource server
+### Step 2: Update `authcode/manifest.yml` with the location of the sample resource server
 
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#env-block) 
 called `env`. This section is used to list environment variables that will be available to the deployed application.
@@ -44,7 +53,7 @@ resource server application. Replace `RESOURCE_URL: https://resource-server-samp
 
 NOTE: You must leave off the trailing slash (`/`) in the `RESOURCE_URL`.
 
-### Step 3: Update authcode manifest.yml with the name of your identity service instance
+### Step 3: Update `authcode/manifest.yml` with the name of your identity service instance
 
 The [`manifest.yml`](./manifest.yml) includes [a configuration block](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#services-block) 
 called `services`. Your app will be bound to any service instances you list in this section when it is pushed.
@@ -63,7 +72,7 @@ This should result in the creation of an artifact `build/libs/authcode.jar`. Nex
 
 Running `cf push` should result in
  
-  - The app being bound to the identity service instance, which results in the creation of a new client registration for the sample app in the UAA.
+  - The app being bound to the p-identity service instance, which results in the creation of a new client registration for the sample app in the UAA.
   - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. You can view these values yourself with `cf env authcode-sample`.
   - When the app starts, the spring-cloud-sso-connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by `org.springframework.security.oauth` to make the sample application OAuth-aware.
 
