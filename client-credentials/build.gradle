@@ -11,18 +11,12 @@ sourceCompatibility = '1.8'
 ext {
 	springVersion = '2.1.4.RELEASE'
 	springSecurityVersion = '5.1.5.RELEASE'
-	cfEnvSsoVersion = '1.1.0.RELEASE'
-	cfEnvSsoVersion = '1.1.1.BUILD-SNAPSHOT' // note that for multi-grant-type support, we need to use at least this version
+	cfEnvSsoVersion = '1.1.1.RELEASE'
 	//certTrusterVersion = '1.0.1.RELEASE'
 }
 
 repositories {
 	mavenCentral()
-
-	// this is the repo for java-cfenv's snapshot builds
-	maven {
-		url 'https://repo.spring.io/libs-snapshot-local'
-	}
 }
 
 dependencies {
