@@ -20,6 +20,10 @@ jobs:
     - put: s3-client-credentials-jar
       params:
         file: sample-app-jars/client-credentials.jar
+    - put: s3-authcode-client-credentials-jar
+      params:
+        file: sample-app-jars/authcode-client-credentials.jar
+
 
 resources:
 - name: identity-sample-apps
@@ -56,5 +60,13 @@ resources:
     bucket: ((sample-app-jars-bucket))
     region_name: ((sample-app-jars-region))
     versioned_file: 'sample-apps/jars/client-credentials.jar'
+    access_key_id: ((sample-app-jars-access-key-id))
+    secret_access_key: ((sample-app-jars-secret-access-key))
+- name: s3-authcode-client-credentials-jar
+  type: s3
+  source:
+    bucket: ((sample-app-jars-bucket))
+    region_name: ((sample-app-jars-region))
+    versioned_file: 'sample-apps/jars/authcode-client-credentials.jar'
     access_key_id: ((sample-app-jars-access-key-id))
     secret_access_key: ((sample-app-jars-secret-access-key))

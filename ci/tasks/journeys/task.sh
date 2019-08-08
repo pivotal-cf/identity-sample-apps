@@ -92,5 +92,6 @@ if [[ "$SKIP_TESTS" = "false" ]]; then
         cp "resource-server/build/libs/resource-server.jar" ../sample-app-jars/resource-server.jar
         cp "authcode/build/libs/authcode.jar" ../sample-app-jars/authcode.jar
         cp "client-credentials/build/libs/client-credentials.jar" ../sample-app-jars/client-credentials.jar
+        cp "authcode-client-credentials/build/libs/authcode-client-credentials.jar" ../sample-app-jars/authcode-client-credentials.jar
     popd
 fi
