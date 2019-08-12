@@ -2,11 +2,12 @@
 
 This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard. For more information about how to determine SSO Application Type, please read [PCF SSO Documentation](https://docs.pivotal.io/p-identity/determine-type.html).
 
-Application Type  | Grant Type | Uses Spring Cloud SSO starter library
-------------- | -------------- | ---------------------
-[Web App](/authcode)  | authorization_code | yes
-[Service-to-Service App](/client-credentials) | client_credentials | yes
-[Resource Server App](/resource-server) | n/a | no
+Application Type  | Grant Type | Pivotal SSO Version | Spring Cloud SSO Starter library version
+------------- | -------------- | --------------------- | ---------------------
+[Web App](/authcode)  | authorization_code | any | 1.1.1.RELEASE
+[Service-to-Service App](/client-credentials) | client_credentials | any | 1.1.1.RELEASE
+[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | v1.10+ | 1.1.1.RELEASE
+[Resource Server App](/resource-server) | n/a | any | n/a
 
 The latest version of this repository supports the following dependencies:
 
@@ -14,7 +15,7 @@ Dependency | Version
 ------------- | ---------- 
 [Spring Boot](https://github.com/spring-projects/spring-boot/tree/2.1.x) | 2.1.1+
 [Spring Security](https://github.com/spring-projects/spring-security/tree/5.1.x) | 5.0+ 
-[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.1.0.RELEASE
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.1.1.RELEASE
 
 The sample apps using Spring Boot 1.5 and Spring Security 2 is located on the [spring-boot-1.5 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5).
 
@@ -62,6 +63,14 @@ You can deploy the authcode and resource server sample applications using applic
 
 1. Build (`./gradlew build`) and push (`cf push`) the *client-credentials* project. (You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.) The sample application will be immediately bound to the SSO Service after `cf push`.
 
+### Deploying Authorization Code & Client Credentials Sample App
+
+1. Navigate to the *authcode-client-credentials* directory
+
+1. Update the `RESOURCE_URL` value in the *authcode-client-credentials* manifest.yml file to the route of the deployed *resource-server* (which you can find by running `cf apps`).
+
+1. Build (`./gradlew build`) and push (`cf push`) the *authcode-client-credentials* project. (You may have to use `--random-route` flag when cf pushing your application if a route already exists with your application name.) The sample application will be immediately bound to the SSO Service after `cf push`.
+
 ## Testing the Sample Apps
 
 1. Preparing a test user with sufficient scopes
@@ -72,7 +81,7 @@ You can deploy the authcode and resource server sample applications using applic
 
      - If your plan is configured with an alternative Identity Provider (like LDAP), your administrator will need to provide you credentials with memberships to the `todo.read` and `todo.write` scopes.
 
-1. Visit the deployed Authorization Code and Client Credentials sample apps by entering the urls of the apps (which you can find by running `cf apps`). (The Resource Server sample app is a backend API and not intended to be accessed through a browser.)
+1. Visit the deployed sample apps by entering the urls of the apps (which you can find by running `cf apps`). (The Resource Server sample app is a backend API and not intended to be accessed through a browser.)
 
 # Unsupported Grant Types
 

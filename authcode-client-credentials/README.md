@@ -1,18 +1,18 @@
 # Deploying the Authorization Code (Authcode) and Client Credentials Sample Application
 
-##Introduction
+## Introduction
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [Authorization Code](https://tools.ietf.org/html/rfc6749#section-4.1) and [Client Credentials](https://tools.ietf.org/html/rfc6749#section-4.4)
-OAuth2 grant types. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
+OAuth2 grant types. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html) (v.1.10 or newer)
 to automatically register this sample application as an OAuth2 client of the UAA and the 
-[SSO CFEnv Processor](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) to automatically consume those configurations.
+[SSO CFEnv Processor](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (v.1.1.1 or newer) to automatically consume those configurations.
 
 App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
 file.
 
-##Use Case for Using Both Authcode and Client Credentials Clients in the Same App
+## Use Case for Using Both Authcode and Client Credentials Clients in the Same App
 
-The Client Credentials OAuth2 grant type is most commonly used for web applications which:
+The Authcode and Client Credentials grant types combination is most commonly used for web applications (that has a backend) which:
 
 1. For some services, the backend needs to authenticate as itself, not on behalf of any particular human user,
    to perform requests to those services (service-to-service auth).
