@@ -1,0 +1,26 @@
+# Create a service role
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRole
+metadata:
+  name: authcode-sample-app-user
+  namespace: default
+spec:
+  rules:
+    - services: ["*"] # or maybe can do ["productpage.svc.cluster.local"]
+      methods: ["*"]
+      constraints:
+        - key: "destination.labels[app]"
+          values: ["authcode-sample-app"]
+---
+# Assign the role to users who have a certain scope
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: bind-authcode-sample-app-user
+  namespace: default
+spec:
+  subjects:
+    - user: "*"
+  roleRef:
+    kind: ServiceRole
+    name: "authcode-sample-app-user"

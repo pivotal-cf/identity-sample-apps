@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: authcode-sample-app
+  labels:
+    app: authcode-sample-app
+    service: authcode-sample-app
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: authcode-sample-app
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: authcode-sample-app-service-account
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authcode-sample-app-v1
+  labels:
+    app: authcode-sample-app
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authcode-sample-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: authcode-sample-app
+        version: v1
+    spec:
+      serviceAccountName: authcode-sample-app-service-account
+      containers:
+      - name: authcode-sample-app
+        image: pcfidentity/authcode-sample-app-no-security
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+          - name: RESOURCE_URL
+            value: http://10.66.15.243:8081

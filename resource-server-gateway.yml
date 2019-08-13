@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: resource-server-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 8066
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: resource-server
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - resource-server-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /todos
+    route:
+    - destination:
+        host: resource-server
+        port:
+          number: 8081

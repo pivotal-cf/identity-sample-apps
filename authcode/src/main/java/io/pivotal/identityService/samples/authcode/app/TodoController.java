@@ -1,19 +1,19 @@
 package io.pivotal.identityService.samples.authcode.app;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
 @Controller
 public class TodoController {
-
-    @Value("${RESOURCE_URL}")
-    private String resourceServerUrl;
-
     private final TodoService todoService;
 
     public TodoController(TodoService todoService) {
@@ -21,15 +21,9 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    public String todo(Model model) {
-        if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
-            model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
-            model.addAttribute("displayWarning", true);
-            return "configure_warning";
-        }
-
+    public String todo(HttpServletRequest request, Model model) {
         try {
-            model.addAttribute("todoList", todoService.getAll());
+            model.addAttribute("todoList", todoService.getAll(getAuthorizationHeader(request)));
         } catch (WebClientResponseException error) {
             model.addAttribute("error", error);
             model.addAttribute("todoList", new ArrayList<Todo>());
@@ -40,14 +34,18 @@ public class TodoController {
     }
 
     @PostMapping("/todos")
-    public String create(@ModelAttribute TodoRequest body) {
-        todoService.create(body);
+    public String create(HttpServletRequest request, @ModelAttribute TodoRequest body) {
+        todoService.create(getAuthorizationHeader(request), body);
         return "redirect:/todos";
     }
 
     @DeleteMapping("/todos/{id}")
-    public String delete(@PathVariable String id) {
-        todoService.delete(id);
+    public String delete(HttpServletRequest request, @PathVariable String id) {
+        todoService.delete(getAuthorizationHeader(request), id);
         return "redirect:/todos";
+    }
+
+    private String getAuthorizationHeader(HttpServletRequest request) {
+        return request.getHeader("Authorization");
     }
 }
