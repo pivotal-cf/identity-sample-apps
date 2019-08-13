@@ -15,29 +15,32 @@ public class TodoService {
         this.webClient = webClient;
     }
 
-    public List<Todo> getAll() {
+    public List<Todo> getAll(String authorizationHeaderValue) {
         return this.webClient
                 .get()
                 .uri("/todos")
+                .header("Authorization", authorizationHeaderValue)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Todo>>() {})
                 .block();
     }
 
-    public Todo create(TodoRequest todo) {
+    public Todo create(String authorizationHeaderValue, TodoRequest todo) {
         return this.webClient
                 .post()
                 .uri("/todos")
+                .header("Authorization", authorizationHeaderValue)
                 .body(BodyInserters.fromObject(todo))
                 .retrieve()
                 .bodyToMono(Todo.class)
                 .block();
     }
 
-    public void delete(String id) {
+    public void delete(String authorizationHeaderValue, String id) {
         this.webClient
                 .delete()
                 .uri("/todos/" + id)
+                .header("Authorization", authorizationHeaderValue)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

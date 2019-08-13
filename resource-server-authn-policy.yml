@@ -1,0 +1,15 @@
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: "Policy"
+metadata:
+  name: "resource-server-authn-policy"
+spec:
+  targets:
+    - name: resource-server
+  origins:
+    - jwt:
+        issuer: https://demo.uaa.run.pivotal.io/oauth/token
+        jwksUri: https://demo.login.run.pivotal.io/token_keys
+        # trigger_rules:
+        #   - included_paths:
+        #       - exact: /productpage
+  principalBinding: USE_ORIGIN

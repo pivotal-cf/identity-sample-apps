@@ -9,8 +9,7 @@ group = 'io.pivotal.identityService'
 sourceCompatibility = '1.8'
 
 ext {
-	springVersion = '2.1.13.RELEASE'
-	springSecurityVersion = '5.1.5.RELEASE'
+	springVersion = '2.1.3.RELEASE'
 }
 
 repositories {
@@ -19,7 +18,14 @@ repositories {
 
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
-	implementation "org.springframework.security:spring-security-oauth2-resource-server:$springSecurityVersion"
-	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
-	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
+}
+
+apply plugin: 'org.springframework.boot'
+bootJar {
+	baseName = 'gs-spring-boot-docker'
+	version =  '0.1.0'
+}
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web")
+	testCompile("org.springframework.boot:spring-boot-starter-test")
 }
