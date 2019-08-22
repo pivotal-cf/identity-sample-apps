@@ -45,4 +45,4 @@ spec:
         - containerPort: 8080
         env:
           - name: RESOURCE_URL
-            value: http://10.66.15.243:8081
+            value: http://resource-server:8081

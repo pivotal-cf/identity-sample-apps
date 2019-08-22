@@ -25,7 +25,11 @@ spec:
   http:
     - match:
         - uri:
-            regex: .*
+            prefix: "/info"
+        - uri:
+            prefix: "/todos"
+        - uri:
+            prefix: "/logout"
       route:
         - destination:
             host: authcode-sample-app
