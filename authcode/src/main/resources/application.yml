@@ -1,6 +1,10 @@
 ---
 server:
   port: 8080
+  tomcat:
+    # These are required for Spring controllers to redirect to https when running behind a proxy (e.g. an Envoy sidecar)
+    remote_ip_header: x-forwarded-for
+    protocol_header: x-forwarded-proto
 
 logging.level:
   org.springframework.security: DEBUG
