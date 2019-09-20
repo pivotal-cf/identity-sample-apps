@@ -39,7 +39,7 @@ spec:
       serviceAccountName: authcode-sample-app-service-account
       containers:
       - name: authcode-sample-app
-        image: pcfidentity/authcode-sample-app-no-security
+        image: pcfidentity/authcode-sample-app-no-security:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

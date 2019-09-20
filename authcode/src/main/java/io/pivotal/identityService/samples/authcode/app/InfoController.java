@@ -1,10 +1,13 @@
 package io.pivotal.identityService.samples.authcode.app;
 
+import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,19 +26,26 @@ public class InfoController {
     public String authorizationCode(HttpServletRequest request,
                                     Model model) throws Exception {
         String authorizationHeader = request.getHeader("Authorization");
-        byte[] token = Base64.decodeBase64(authorizationHeader.replace("Bearer ", ""));
+        if (authorizationHeader == null) {
+            authorizationHeader = "no Authorization header included";
+        }
+        model.addAttribute("authorization_header", authorizationHeader);
+
+        String idToken = authorizationHeader.replace("Bearer ", "");
         try {
-            DecodedJWT jwt = JWT.decode(new String(token));
-            model.addAttribute("access_token", toPrettyJsonString(jwt.getClaims()));
-            model.addAttribute("authorization_header", authorizationHeader);
-        } catch (JWTDecodeException exception){
-            //Invalid token
+            model.addAttribute("id_token", tokenClaimsAsPrettyPrintedJson(idToken));
+        } catch (JWTDecodeException exception) {
+            model.addAttribute("id_token", "the token was invalid");
         }
 
         return "info";
     }
 
-    private String toPrettyJsonString(Object object) throws Exception {
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+    private String tokenClaimsAsPrettyPrintedJson(String token) throws IOException {
+        String jsonString = new String(Base64.getDecoder().decode(JWT.decode(token).getPayload()));
+        HashMap<String, Object> hashMap = objectMapper.readValue(jsonString, new TypeReference<HashMap<String, Object>>() {
+        });
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(hashMap);
     }
+
 }
