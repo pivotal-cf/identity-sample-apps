@@ -46,6 +46,17 @@ public class TodoController {
     }
 
     private String getAuthorizationHeader(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        String authorization = request.getHeader("Authorization");
+
+        if (authorization == null) {
+            return null;
+        }
+
+        // Workaround for the tokenservice bug where it does not put "Bearer " in the header
+        // See https://github.com/istio-ecosystem/authservice/issues/6
+        if (!authorization.startsWith("Bearer ")) {
+            return "Bearer " + authorization;
+        }
+        return authorization;
     }
 }
