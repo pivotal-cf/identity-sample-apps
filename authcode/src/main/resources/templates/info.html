@@ -8,15 +8,17 @@
 <body>
   <h1>Authcode sample</h1>
 
-  <p>This is the Authorization Header that was used:</p>
-  <pre th:text="${authorization_header}" class="authorization_header"></pre>
+  <p>This is the Authorization header that was used:</p>
+  <pre th:text="${authorization_header}"></pre>
 
-  <p>This is the ID Token that was used:</p>
-  <pre th:text="${id_token}" class="id_token"></pre>
+  <p>This is the decoded JWT from the Authorization header:</p>
+  <pre th:text="${authorization_header_token}"></pre>
 
-  <p>This is the Access Token: TODO</p>
-  <!-- TODO: How should this work? -->
-  <!--  <pre th:text="${access_token}" class="access_token"></pre>-->
+  <p>This is the x-id-token header that was used:</p>
+  <pre th:text="${x_id_token_header}"></pre>
+
+  <p>This is the decoded JWT from the x-id-token header:</p>
+  <pre th:text="${x_id_token_header_token}"></pre>
 
   <h2>What do you want to do?</h2>
   <ul>

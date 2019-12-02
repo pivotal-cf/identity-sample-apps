@@ -3,6 +3,7 @@ package io.pivotal.identityService.samples.authcode.app;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -12,10 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 public class InfoController {
+
     private ObjectMapper objectMapper;
 
     public InfoController(ObjectMapper objectMapper) {
@@ -23,22 +23,26 @@ public class InfoController {
     }
 
     @GetMapping("/info")
-    public String authorizationCode(HttpServletRequest request,
-                                    Model model) throws Exception {
-        String authorizationHeader = request.getHeader("Authorization");
+    public String authorizationCode(HttpServletRequest request, Model model) throws Exception {
+        prepareHeaderInfo(request, model, "Authorization", "authorization_header", "authorization_header_token");
+        prepareHeaderInfo(request, model, "x-id-token", "x_id_token_header", "x_id_token_header_token");
+        return "info";
+    }
+
+    private void prepareHeaderInfo(HttpServletRequest request, Model model, String headerName, String headerModelKey,
+                                   String tokenHeaderKey) throws IOException {
+        String authorizationHeader = request.getHeader(headerName);
         if (authorizationHeader == null) {
             authorizationHeader = "no Authorization header included";
         }
-        model.addAttribute("authorization_header", authorizationHeader);
+        model.addAttribute(headerModelKey, authorizationHeader);
 
-        String idToken = authorizationHeader.replace("Bearer ", "");
+        String authorizationHeaderToken = authorizationHeader.replace("Bearer ", "");
         try {
-            model.addAttribute("id_token", tokenClaimsAsPrettyPrintedJson(idToken));
+            model.addAttribute(tokenHeaderKey, tokenClaimsAsPrettyPrintedJson(authorizationHeaderToken));
         } catch (JWTDecodeException exception) {
-            model.addAttribute("id_token", "the token was invalid");
+            model.addAttribute(tokenHeaderKey, "the token was invalid");
         }
-
-        return "info";
     }
 
     private String tokenClaimsAsPrettyPrintedJson(String token) throws IOException {
