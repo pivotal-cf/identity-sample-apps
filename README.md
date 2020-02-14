@@ -9,7 +9,7 @@ Application Type  | Grant Type | Pivotal SSO Version | Spring Cloud SSO Starter 
 [Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | v1.10+ | 1.1.1.RELEASE
 [Resource Server App](/resource-server) | n/a | any | n/a
 
-The latest version of this repository supports the following dependencies:
+The latest version of this repository basically supports the following dependencies:
 
 Dependency | Version
 ------------- | ---------- 
