@@ -11,7 +11,7 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
     testCompile 'com.fasterxml.jackson.core:jackson-core:2.9.8'
     testCompile 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
-    testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    testCompile 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
 }
 
 tasks.withType(Test) {
