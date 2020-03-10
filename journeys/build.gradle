@@ -7,7 +7,7 @@ repositories {
 dependencies {
     testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
     testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
-    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.13'
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
     testCompile 'com.fasterxml.jackson.core:jackson-core:2.9.8'
     testCompile 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
