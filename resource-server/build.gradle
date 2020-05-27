@@ -17,15 +17,16 @@ repositories {
 }
 
 dependencies {
+//     compile("io.pivotal.spring.cloud:cloudfoundry-certificate-truster:1.0.1.RELEASE")
 	implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
 }
-
-apply plugin: 'org.springframework.boot'
-bootJar {
-	baseName = 'gs-spring-boot-docker'
-	version =  '0.1.0'
-}
-dependencies {
-	compile("org.springframework.boot:spring-boot-starter-web")
-	testCompile("org.springframework.boot:spring-boot-starter-test")
-}
+//
+// apply plugin: 'org.springframework.boot'
+// bootJar {
+// 	baseName = 'gs-spring-boot-docker'
+// 	version =  '0.1.0'
+// }
+// dependencies {
+// 	compile("org.springframework.boot:spring-boot-starter-web")
+// 	testCompile("org.springframework.boot:spring-boot-starter-test")
+// }

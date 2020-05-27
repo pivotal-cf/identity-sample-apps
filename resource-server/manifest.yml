@@ -1,0 +1,12 @@
+---
+applications:
+ - name: resource-server-sample
+   memory: 1G
+   instances: 1
+   path: build/libs/resource-server.jar
+   env:
+     # to find issuer uri, go to auth domain's well-known endpoint (e.g.: https://<PLAN_AUTH_DOMAIN>.login.<YOUR_DOMAIN>/.well-known/openid-configuration)
+#     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: https://test-plan.uaa.tacos.sso.identity.team/oauth/token
+#     TRUST_CERTS: test-plan.uaa.tacos.sso.identity.team
+     LOGGING_LEVEL_ROOT: TRACE
+     BP_JAVA_VERSION: "8.*"

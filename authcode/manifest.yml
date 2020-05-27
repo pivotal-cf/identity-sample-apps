@@ -1,0 +1,71 @@
+---
+applications:
+ - name: authcode-sample
+   memory: 1G
+   instances: 1
+   path: build/libs/authcode.jar
+   services:
+   - p-identity-instance # Make sure you have created an sso service instance with this name. Your app will be bound to this service instance you list here when it is pushed.
+   env:
+
+     AUTHSERVICE_ENABLED: true
+
+     # *** BEGIN: env vars for the application ***
+
+     # The grant type used in the /authorize call by Spring Security 5
+     # This variable is not needed when using both:
+     #   - App SSO 1.10 or newer
+     #   - java-cfenv 1.1.1 or newer
+#     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_AUTHORIZATIONGRANTTYPE: authorization_code
+
+     # The scopes requested when obtaining a token by Spring Security 5
+#     SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: openid, profile, roles, user_attributes, todo.read, todo.write
+
+     # This can be used in conjunction with the cloudfoundry-certificate-truster library to skip all cert checks for
+     # development environments which use self-signed certs.
+     # DO NOT USE THIS IN PRODUCTION!!!
+     # TRUST_CERTS: login.sfo.identity.team
+
+     # *** END: env vars for the application ***
+
+     # Grant type to be set for the application's UAA client configurations.
+     GRANT_TYPE: authorization_code
+
+     # Identity provider(s) to be set for the application's client configurations. This value represents the allowed identity providers for the app through the SSO service plan.
+     SSO_IDENTITY_PROVIDERS: uaa
+
+     # The following are bootstrap configurations you may use to automatically create client configurations in the SSO service for your application if the configurations do not exist. These configurations take effect when binding or rebinding to the SSO, and will overwrite existing client configurations if any. The values provided below are examples.
+
+     # Client scope(s) for the application, not used for client credentials grant type
+     SSO_SCOPES: openid, profile, roles, user_attributes, todo.read, todo.write
+
+     # Client scope(s) for the application that are automatically authorized when acting on behalf of a user
+     # SSO_AUTO_APPROVED_SCOPES: openid, todo.read
+
+     # Client authorities for the application, only used for client credentials grant type
+     # SSO_AUTHORITIES: openid, uaa.resource, todo.read, todo.write
+
+     # List of groups a user must have in order to authenticate successfully for the application
+     # SSO_REQUIRED_USER_GROUPS: my_group_here
+
+     # Lifetime in seconds of the application's access token
+     # SSO_ACCESS_TOKEN_LIFETIME: 300
+
+     # Lifetime in seconds of the application's refresh token
+     # SSO_REFRESH_TOKEN_LIFETIME: 1800
+
+     # Resource(s) that the application will use as scopes/authorities to be created if they do not already exist during bootstrapping
+#     SSO_RESOURCES: |
+#       todo.read:  Read Objects
+#       todo.write: Write Objects
+
+     # Application icon with the application name and launch URL that will be displayed on the Pivotal Account dashboard if configured to show
+     # SSO_ICON: <base64 encoded image - do not exceed 64kb>
+     # SSO_LAUNCH_URL: <url>
+     # SSO_SHOW_ON_HOME_PAGE: <true/false>
+
+     RESOURCE_URL: http://resource-server-sample.tacos.sso.identity.team
+#     TRUST_CERTS: test-plan.uaa.tacos.sso.identity.team
+     LOGGING_LEVEL_ROOT: TRACE
+     BP_JAVA_VERSION: "8.*"
+     SSO_REDIRECT_URIS: http://authcode-sample.tacos.sso.identity.team
