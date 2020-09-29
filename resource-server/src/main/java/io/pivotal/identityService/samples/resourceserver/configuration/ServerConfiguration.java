@@ -15,7 +15,7 @@ public class ServerConfiguration {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        NimbusJwtDecoderJwkSupport jwtDecoder = (NimbusJwtDecoderJwkSupport) JwtDecoders.fromOidcIssuerLocation(issuerUri);
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
 
         OAuth2TokenValidator<Jwt> issuerValidator = new JwtIssuerValidator(issuerUri);
         OAuth2TokenValidator<Jwt> timestampValidator = new JwtTimestampValidator();
