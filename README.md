@@ -4,20 +4,22 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 
 Application Type  | Grant Type | Pivotal SSO Version | Spring Cloud SSO Starter library version
 ------------- | -------------- | --------------------- | ---------------------
-[Web App](/authcode)  | authorization_code | any | 1.1.1.RELEASE
-[Service-to-Service App](/client-credentials) | client_credentials | any | 1.1.1.RELEASE
-[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | v1.10+ | 1.1.1.RELEASE
+[Web App](/authcode)  | authorization_code | any | 1.1.2.RELEASE
+[Service-to-Service App](/client-credentials) | client_credentials | any | 1.1.2.RELEASE
+[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | v1.10+ | 1.1.2.RELEASE
 [Resource Server App](/resource-server) | n/a | any | n/a
 
 The latest version of this repository supports the following dependencies:
 
 Dependency | Version
 ------------- | ---------- 
-[Spring Boot](https://github.com/spring-projects/spring-boot/tree/2.1.x) | 2.1.1+
-[Spring Security](https://github.com/spring-projects/spring-security/tree/5.1.x) | 5.0+ 
-[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.1.1.RELEASE
+[Spring Boot](https://github.com/spring-projects/spring-boot/tree/2.3.x) | 2.3.4+
+[Spring Security](https://github.com/spring-projects/spring-security/tree/5.3.x) | 5.3.4+ 
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.1.2.RELEASE
 
 The sample apps using Spring Boot 1.5 and Spring Security 2 is located on the [spring-boot-1.5 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5).
+
+The sample apps using Spring Boot 2.1 and Spring Security 5.1 is located on the [spring-boot-2.1 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.1).
 
 The sample applications for the corresponding grant types are located in subdirectories of this project:  
 
