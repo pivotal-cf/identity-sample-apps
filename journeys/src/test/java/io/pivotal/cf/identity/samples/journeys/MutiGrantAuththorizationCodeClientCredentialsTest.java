@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,13 +18,14 @@ import static org.fluentlenium.core.filter.FilterConstructor.containingText;
 
 
 @Wait
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTest {
     private static final String MULTI_GRANT_BASE_URL = "http://localhost:8890";
     private static final TypeReference<Map<String, Object>> TYPE_REF = new TypeReference<Map<String, Object>>() {};
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void displaysClientCredentialsToken() {
+    public void step01_displaysClientCredentialsToken() {
         goTo(MULTI_GRANT_BASE_URL);
 
         String accessToken = el(".access_token").text();
@@ -33,7 +36,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
     }
 
     @Test
-    public void readWriteClientCredentialsClient() {
+    public void step02_readWriteClientCredentialsClient() {
         goTo(MULTI_GRANT_BASE_URL);
 
         $("a", containingText("TODO List using the client credentials token")).click();
@@ -52,7 +55,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
     }
 
     @Test
-    public void displaysAuthcodeTokenAndClientCredentialsTokenToAllLoggedInUsers() throws IOException {
+    public void step03_displaysAuthcodeTokenAndClientCredentialsTokenToAllLoggedInUsers() throws IOException {
         goTo(MULTI_GRANT_BASE_URL + "/info");
 
         $("input[name=username]").fill().with("basic-user");
@@ -93,7 +96,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
     }
 
     @Test
-    public void basicUserAuthcodeIsDeniedAccessToResource() {
+    public void step04_basicUserAuthcodeIsDeniedAccessToResource() {
         goTo(MULTI_GRANT_BASE_URL + "/info");
 
         $("input[name=username]").fill().with("basic-user");
@@ -113,7 +116,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
     }
 
     @Test
-    public void readOnlyAuthcodeUser() {
+    public void step05_readOnlyAuthcodeUser() {
         goTo(MULTI_GRANT_BASE_URL + "/info");
 
         $("input[name=username]").fill().with("read-user");
@@ -143,7 +146,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
     }
 
     @Test
-    public void readWriteAuthcodeUser() {
+    public void step06_readWriteAuthcodeUser() {
         goTo(MULTI_GRANT_BASE_URL + "/info");
 
         $("input[name=username]").fill().with("read-write-user");
