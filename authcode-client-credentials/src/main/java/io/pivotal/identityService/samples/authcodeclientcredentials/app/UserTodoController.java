@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 
@@ -44,13 +45,21 @@ public class UserTodoController {
 
     @PostMapping("/todos")
     public String userCreateTodo(@ModelAttribute TodoRequest body, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
-        todoService.create(body, authorizedClient);
-        return "redirect:/user/todos";
+        try {
+            todoService.create(body, authorizedClient);
+            return "redirect:/user/todos";
+        } catch (WebClientResponseException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
+        }
     }
 
     @DeleteMapping("/todos/{id}")
     public String userDeleteTodo(@PathVariable String id, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
-        todoService.delete(id, authorizedClient);
-        return "redirect:/user/todos";
+        try {
+            todoService.delete(id, authorizedClient);
+            return "redirect:/user/todos";
+        } catch (WebClientResponseException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
+        }
     }
 }

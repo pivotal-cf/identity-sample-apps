@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 
@@ -41,13 +42,21 @@ public class TodoController {
 
     @PostMapping("/todos")
     public String create(@ModelAttribute TodoRequest body) {
-        todoService.create(body);
-        return "redirect:/todos";
+        try {
+            todoService.create(body);
+            return "redirect:/todos";
+        } catch (WebClientResponseException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
+        }
     }
 
     @DeleteMapping("/todos/{id}")
     public String delete(@PathVariable String id) {
-        todoService.delete(id);
-        return "redirect:/todos";
+        try {
+            todoService.delete(id);
+            return "redirect:/todos";
+        } catch (WebClientResponseException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
+        }
     }
 }

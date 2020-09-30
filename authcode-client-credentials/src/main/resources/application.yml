@@ -4,3 +4,9 @@ server:
 
 logging.level:
   org.springframework.security: DEBUG
+
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true

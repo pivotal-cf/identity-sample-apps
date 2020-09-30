@@ -131,12 +131,12 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
         $("input[name=task]").fill().with("all the things");
         $("input[value=Add]").click();
 
-        assertThat(el("body").text()).contains("403 Forbidden");
+        assertThat(el("body").text()).contains("403");
 
         goTo(MULTI_GRANT_BASE_URL + "/user/todos");
 
         el("input[value=Delete]").click();
-        assertThat(el("body").text()).contains("403 Forbidden");
+        assertThat(el("body").text()).contains("403");
 
         goTo(MULTI_GRANT_BASE_URL + "/info");
         $("#logout").click();

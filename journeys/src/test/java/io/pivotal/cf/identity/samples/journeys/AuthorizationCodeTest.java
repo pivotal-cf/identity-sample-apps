@@ -58,7 +58,7 @@ public class AuthorizationCodeTest extends FluentTest {
 
         $("a", containingText("TODO List")).click();
 
-        assertThat(el("body").text()).contains("401 UNAUTHORIZED");
+        assertThat(el("body").text()).contains("401");
 
         goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
         $("#logout").click();
@@ -83,12 +83,12 @@ public class AuthorizationCodeTest extends FluentTest {
         $("input[name=task]").fill().with("all the things");
         $("input[value=Add]").click();
 
-        assertThat(el("body").text()).contains("403 Forbidden");
+        assertThat(el("body").text()).contains("403");
 
         goTo(AUTHCODE_CLIENT_BASE_URL + "/todos");
 
         el("input[value=Delete]").click();
-        assertThat(el("body").text()).contains("403 Forbidden");
+        assertThat(el("body").text()).contains("403");
 
         goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
         $("#logout").click();
