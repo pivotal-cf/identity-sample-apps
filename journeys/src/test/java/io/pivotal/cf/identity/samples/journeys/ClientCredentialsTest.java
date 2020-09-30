@@ -30,15 +30,15 @@ public class ClientCredentialsTest extends FluentTest {
         $("a", containingText("TODO List")).click();
 
         assertThat(el("body").text()).contains("seed-task-1");
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("client credentials things");
 
-        $("input[name=task]").fill().with("all the things");
+        $("input[name=task]").fill().with("client credentials things");
         $("input[value=Add]").click();
 
-        assertThat(el("body").text()).contains("all the things");
+        assertThat(el("body").text()).contains("client credentials things");
 
         $("tbody tr:last-child input[value=Delete]").click();
 
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("client credentials things");
     }
 }

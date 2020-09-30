@@ -80,7 +80,7 @@ public class AuthorizationCodeTest extends FluentTest {
 
         assertThat(el("body").text()).contains("seed-task-1");
 
-        $("input[name=task]").fill().with("all the things");
+        $("input[name=task]").fill().with("authcode things");
         $("input[value=Add]").click();
 
         assertThat(el("body").text()).contains("403");
@@ -109,16 +109,16 @@ public class AuthorizationCodeTest extends FluentTest {
         $("a", containingText("TODO List")).click();
 
         assertThat(el("body").text()).contains("seed-task-1");
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("authcode things");
 
-        $("input[name=task]").fill().with("all the things");
+        $("input[name=task]").fill().with("authcode things");
         $("input[value=Add]").click();
 
-        assertThat(el("body").text()).contains("all the things");
+        assertThat(el("body").text()).contains("authcode things");
 
         $("tbody tr:last-child input[value=Delete]").click();
 
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("authcode things");
 
         goTo(AUTHCODE_CLIENT_BASE_URL + "/info");
         $("#logout").click();

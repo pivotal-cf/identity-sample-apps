@@ -42,16 +42,16 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
         $("a", containingText("TODO List using the client credentials token")).click();
 
         assertThat(el("body").text()).contains("seed-task-1");
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("multigrant things");
 
-        $("input[name=task]").fill().with("all the things");
+        $("input[name=task]").fill().with("multigrant things");
         $("input[value=Add]").click();
 
-        assertThat(el("body").text()).contains("all the things");
+        assertThat(el("body").text()).contains("multigrant things");
 
         $("tbody tr:last-child input[value=Delete]").click();
 
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("multigrant things");
     }
 
     @Test
@@ -131,7 +131,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
 
         assertThat(el("body").text()).contains("seed-task-1");
 
-        $("input[name=task]").fill().with("all the things");
+        $("input[name=task]").fill().with("multigrant things");
         $("input[value=Add]").click();
 
         assertThat(el("body").text()).contains("403");
@@ -160,16 +160,16 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
         $("a", containingText("TODO List using the authcode user token")).click();
 
         assertThat(el("body").text()).contains("seed-task-1");
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("multigrant things");
 
-        $("input[name=task]").fill().with("all the things");
+        $("input[name=task]").fill().with("multigrant things");
         $("input[value=Add]").click();
 
-        assertThat(el("body").text()).contains("all the things");
+        assertThat(el("body").text()).contains("multigrant things");
 
         $("tbody tr:last-child input[value=Delete]").click();
 
-        assertThat(el("body").text()).doesNotContain("all the things");
+        assertThat(el("body").text()).doesNotContain("multigrant things");
 
         goTo(MULTI_GRANT_BASE_URL + "/info");
         $("#logout").click();
