@@ -9,7 +9,7 @@ group = 'io.pivotal.identityService'
 sourceCompatibility = '1.8'
 
 ext {
-	springVersion = '2.3.4.RELEASE'
+	springVersion = '2.3.5.RELEASE'
 	springSecurityVersion = '5.3.4.RELEASE'
 	cfEnvSsoVersion = '2.2.2.RELEASE'
 }
