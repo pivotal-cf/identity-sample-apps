@@ -12,6 +12,8 @@ ext {
 	springVersion = '2.3.4.RELEASE'
 	springSecurityVersion = '5.3.4.RELEASE'
 	cfEnvSsoVersion = '2.2.2.RELEASE'
+	cfCertificateTrusterVersion = '1.0.1.RELEASE'
+	useCfCertificateTruster = false // set this property to true when cert trusting is required
 }
 
 repositories {
@@ -26,4 +28,7 @@ dependencies {
 	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
 	implementation "io.pivotal.cfenv:java-cfenv-boot-pivotal-sso:$cfEnvSsoVersion"
+	if (useCfCertificateTruster) {
+		implementation "io.pivotal.spring.cloud:cloudfoundry-certificate-truster:$cfCertificateTrusterVersion"
+	}
 }
