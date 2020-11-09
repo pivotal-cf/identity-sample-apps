@@ -10,7 +10,7 @@ sourceCompatibility = '1.8'
 
 ext {
 	springVersion = '2.3.4.RELEASE'
-	springSecurityVersion = '5.3.4.RELEASE'
+	springSecurityVersion = '5.4.1'
 }
 
 repositories {
