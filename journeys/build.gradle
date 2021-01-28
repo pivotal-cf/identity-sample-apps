@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
+    testCompile 'org.fluentlenium:fluentlenium-junit:4.6.0'
     testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
     testCompile 'junit:junit:4.13.1'
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
