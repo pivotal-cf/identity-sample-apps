@@ -13,7 +13,7 @@ ext {
 	springSecurityVersion = '5.3.4.RELEASE'
 	cfEnvSsoVersion = '2.2.2.RELEASE'
 	cfCertificateTrusterVersion = '1.0.1.RELEASE'
-	useCfCertificateTruster = false // set this property to true when cert trusting is required
+	useCfCertificateTruster = true // set this property to true when cert trusting is required
 }
 
 repositories {

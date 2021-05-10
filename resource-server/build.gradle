@@ -22,4 +22,5 @@ dependencies {
 	implementation "org.springframework.security:spring-security-oauth2-resource-server:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
+  compile "io.pivotal.spring.cloud:cloudfoundry-certificate-truster:1.0.1.RELEASE"
 }
