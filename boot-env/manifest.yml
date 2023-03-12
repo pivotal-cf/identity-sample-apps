@@ -1,0 +1,8 @@
+---
+applications:
+  - name: boot-env
+    services:
+      - dev-service
+    memory: 1024M
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
