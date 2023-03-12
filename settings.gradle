@@ -5,3 +5,5 @@ include 'resource-server'
 include 'authcode'
 include 'client-credentials'
 include 'authcode-client-credentials'
+include 'boot-env'
+

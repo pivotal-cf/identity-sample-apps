@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "io.pivotal.cfenv:java-cfenv-boot:2.4.0"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+    environment "VCAP_SERVICES", "{\"p-identity\":[{\"label\":\"p-identity\",\"provider\":null,\"plan\":\"dev-plan\",\"name\":\"dev-service\",\"tags\":[],\"instance_guid\":\"5e476c18-e40e-4ce8-8a79-c4665686b74a\",\"instance_name\":\"dev-service\",\"binding_guid\":\"8345d169-1129-4132-abe0-58c4d76917d4\",\"binding_name\":null,\"credentials\":{\"auth_domain\":\"https://dev-plan.login.sys.psychedelicpurple.cf-app.com\",\"grant_types\":[\"authorization_code\"],\"client_secret\":\"c19069ac-6621-413b-a1b6-c9a41824d467\",\"issuer_uri\":\"https://some.custom.issuer.uri/\",\"client_id\":\"8345d169-1129-4132-abe0-58c4d76917d4\"},\"syslog_drain_url\":null,\"volume_mounts\":[]}]}"
+}

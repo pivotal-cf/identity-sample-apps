@@ -5,13 +5,13 @@ repositories {
 }
 
 dependencies {
-    testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
-    testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
-    testCompile 'junit:junit:4.13.1'
-    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
-    testCompile 'com.fasterxml.jackson.core:jackson-core:2.11.3'
-    testCompile 'com.fasterxml.jackson.core:jackson-annotations:2.11.2'
-    testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    testImplementation 'org.fluentlenium:fluentlenium-junit:3.5.0'
+    testImplementation 'org.fluentlenium:fluentlenium-assertj:3.5.0'
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
+    testImplementation 'com.fasterxml.jackson.core:jackson-core:2.11.3'
+    testImplementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.2'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 }
 
 tasks.withType(Test) {
