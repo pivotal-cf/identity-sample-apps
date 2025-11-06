@@ -1,16 +1,16 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'org.springframework.boot' version '2.7.18'
 	id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
 
 group = 'io.pivotal.identityService'
-sourceCompatibility = '1.8'
+sourceCompatibility = '17'
 
 ext {
-	springVersion = '2.3.4.RELEASE'
-	springSecurityVersion = '5.3.4.RELEASE'
+	springVersion = '2.7.18'
+	springSecurityVersion = '5.7.11'
 	cfEnvSsoVersion = '2.2.2.RELEASE'
 	cfCertificateTrusterVersion = '1.0.1.RELEASE'
 	useCfCertificateTruster = false // set this property to true when cert trusting is required

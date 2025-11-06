@@ -1,6 +1,6 @@
 # Deploying the Authorization Code (Authcode) Sample Application
 
-##Introduction
+## Introduction
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
 OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
@@ -10,7 +10,7 @@ to automatically register this sample application as an OAuth2 client of the UAA
 App-specific OAuth2 client configurations are made using the environment variables section of the sample app's [`manifest.yml`](./manifest.yml) 
 file.
 
-##Use Case for Using Authcode
+## Use Case for Using Authcode
 
 The Authorization Code OAuth2 grant type is most commonly used for web applications which:
 
