@@ -3,7 +3,7 @@
 ## Introduction
 
 This sample application integrates with the [UAA](https://github.com/cloudfoundry/uaa) using the [authorization code](https://tools.ietf.org/html/rfc6749#section-4.1) 
-OAuth2 grant type. This sample application relies on the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
+OAuth2 grant type. This sample application relies on [Tanzu Platform Single Sign-On](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/index.html)
 to automatically register this sample application as an OAuth2 client of the UAA and the 
 [SSO CFEnv Processor](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) to automatically consume those configurations.
 
@@ -21,9 +21,9 @@ The Authorization Code OAuth2 grant type is most commonly used for web applicati
 
 ## Prerequisites:
 
-1. An operator must have installed the [Pivotal Single Sign-On Service](https://docs.pivotal.io/p-identity/index.html)
-1. An operator must have [configured at least one plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) for the SSO Service that is visible to your Org.
-1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](http://docs.pivotal.io/p-identity/manage-users.html).
+1. An operator must have installed [Tanzu Platform Single Sign-On](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/index.html)
+1. An operator must have [configured at least one plan](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/manage-service-plans.html) for the SSO Service that is visible to your Org.
+1. The person using this sample app must know login credentials for a user in this plan. For new plans, an operator may need to [create a user](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/manage-users.html).
 
 ### Step 0: Deploy a sample resource server
 
@@ -41,7 +41,7 @@ Using the CF CLI, login and target the space where you'd like the sample app to 
 
 Using the plan created as part of the Prerequisites, create a service instance in your space
 
-    cf create-service p-identity <plan-name> p-identity-instance
+    cf create-service p-identity <plan-name> my-identity-instance
 
 ### Step 2: Update `authcode/manifest.yml` with the location of the sample resource server
 
@@ -60,7 +60,7 @@ called `services`. Your app will be bound to any service instances you list in t
 
 Make sure that the `services` block includes the name of the service instance created in Step 1.
 
-### Step 4: Deploy Sample Application to Pivotal Cloud Foundry
+### Step 4: Deploy Sample Application to Tanzu Platform
     
 Build the jar for our sample application:
 
@@ -74,14 +74,14 @@ Running `cf push` should result in
  
   - The app being bound to the p-identity service instance, which results in the creation of a new client registration for the sample app in the UAA.
   - The OAuth client id and client secret from the UAA are provided to your application through the `VCAP_SERVICES` environment variable. You can view these values yourself with `cf env authcode-sample`.
-  - When the app starts, the spring-cloud-sso-connector reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by `org.springframework.security.oauth` to make the sample application OAuth-aware.
+  - When the app starts, the SSO CFEnv Processor reads `VCAP_SERVICES` and translates configuration from `p-identity` into the configuration needed by Spring Security OAuth2 client support to make the sample application OAuth-aware.
 
 You can verify the app is successfully running by viewing the output of `cf apps`. You can visit the authcode app by navigating to `https://<authcode-app-url>` where `authcode-app-url` is the route output from `cf push` or `cf apps`.
 
-# Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
+# Bootstrap Application Client Configurations for the Tanzu Platform Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can use the following values your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
-The [SSO Documentation](https://docs.pivotal.io/p-identity/configure-apps/index.html#configure-app-manifest) provides descriptions and default values for these SSO properties. Further details and examples are provided in the sample application manifests.
+The [SSO documentation](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/config-apps.html#configure-sso-properties-with-the-app-manifest) provides descriptions and default values for these SSO properties. Further details and examples are provided in the sample application manifests.
 
 When you specify your own `SSO_SCOPES` and `SSO_AUTHORITIES` values, consider including `openid` for Authorization Code grant type applications, and `uaa.resource` for Client Credentials grant type applications, as these will not be provided if they are not specified.
 
@@ -115,7 +115,7 @@ Description:   {
 }
 ```
 
-This means that `todo` resource has already been created on the same SSO service plan in a different space. For more information see the [SSO Documentation](https://docs.pivotal.io/p-identity/manage-resources.html#space-protection).
+This means that `todo` resource has already been created on the same SSO service plan in a different space. For more information see [About Space Protection for Resources](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/manage-resources.html#about-space-protection-for-resources).
 
 #### Solution:
 
