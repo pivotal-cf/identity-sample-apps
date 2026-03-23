@@ -1,6 +1,5 @@
 package io.pivotal.cf.identity.samples.journeys;
 
-import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
 import org.junit.Test;
 
@@ -9,7 +8,7 @@ import static org.fluentlenium.core.filter.FilterConstructor.containingText;
 
 
 @Wait
-public class ClientCredentialsTest extends FluentTest {
+public class ClientCredentialsTest extends HeadlessChromeTest {
     private static final String CLIENT_CREDENTIALS_BASE_URL = "http://localhost:8887";
 
     @Test

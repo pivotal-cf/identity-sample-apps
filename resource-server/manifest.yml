@@ -3,6 +3,7 @@ applications:
  - name: resource-server-sample-cs
    memory: 1G
    instances: 1
+   buildpack: java_buildpack_offline
    path: build/libs/resource-server.jar
    env:
      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
