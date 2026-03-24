@@ -1,6 +1,6 @@
 ---
 applications:
- - name: authcode-sample-cs
+ - name: authcode-sample
    memory: 1G
    instances: 1
    buildpack: java_buildpack_offline
