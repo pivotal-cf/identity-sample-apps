@@ -29,7 +29,7 @@ public class InfoController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/info")
+    @GetMapping({"/info", "/info/"})
     public String authorizationCode(
             Model model,
             @RegisteredOAuth2AuthorizedClient("sso") OAuth2AuthorizedClient authorizedClient) throws Exception {

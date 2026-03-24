@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping(value = "/client")
+@RequestMapping(value = {"/client", "/client/"})
 public class ClientTodoController {
 
     @Value("${RESOURCE_URL}")
@@ -28,7 +28,7 @@ public class ClientTodoController {
         this.todoService = todoService;
     }
 
-    @GetMapping("/todos")
+    @GetMapping({"/todos", "/todos/"})
     public String clientGetTodos(Model model, @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient authorizedClient) {
         if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
             model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
@@ -47,13 +47,13 @@ public class ClientTodoController {
         return "client-todos";
     }
 
-    @PostMapping("/todos")
+    @PostMapping({"/todos", "/todos/"})
     public String clientCreateTodo(@ModelAttribute TodoRequest body, @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient authorizedClient) {
         todoService.create(body, authorizedClient);
         return "redirect:/client/todos";
     }
 
-    @DeleteMapping("/todos/{id}")
+    @DeleteMapping({"/todos/{id}", "/todos/{id}/"})
     public String clientDeleteTodo(@PathVariable String id, @RegisteredOAuth2AuthorizedClient("ssoclientcredentials") OAuth2AuthorizedClient authorizedClient) {
         todoService.delete(id, authorizedClient);
         return "redirect:/client/todos";

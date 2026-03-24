@@ -10,3 +10,10 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+management:
+  endpoint:
+    health:
+      # [Spring Advisor]: This property disables health-group-membership-validation with boot 3.1 for backwards compatible reasons, but the Spring team encourages to enable it.
+
+      validate-group-membership: false

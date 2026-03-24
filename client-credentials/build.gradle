@@ -11,7 +11,7 @@ sourceCompatibility = '17'
 ext {
 	springVersion = '2.7.18'
 	springSecurityVersion = '5.7.11'
-	cfEnvSsoVersion = '2.2.2.RELEASE'
+	cfEnvSsoVersion = '3.5.1'
 	cfCertificateTrusterVersion = '1.0.1.RELEASE'
 	useCfCertificateTruster = false // set this property to true when cert trusting is required
 }

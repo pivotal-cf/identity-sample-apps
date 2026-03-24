@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping(value = {"/user", "/user/"})
 public class UserTodoController {
 
     @Value("${RESOURCE_URL}")
@@ -24,7 +24,7 @@ public class UserTodoController {
         this.todoService = todoService;
     }
 
-    @GetMapping("/todos")
+    @GetMapping({"/todos", "/todos/"})
     public String userGetTodos(Model model, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
         if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
             model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
@@ -43,7 +43,7 @@ public class UserTodoController {
         return "user-todos";
     }
 
-    @PostMapping("/todos")
+    @PostMapping({"/todos", "/todos/"})
     public String userCreateTodo(@ModelAttribute TodoRequest body, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
         try {
             todoService.create(body, authorizedClient);
@@ -53,7 +53,7 @@ public class UserTodoController {
         }
     }
 
-    @DeleteMapping("/todos/{id}")
+    @DeleteMapping({"/todos/{id}", "/todos/{id}/"})
     public String userDeleteTodo(@PathVariable String id, @RegisteredOAuth2AuthorizedClient("ssoauthorizationcode") OAuth2AuthorizedClient authorizedClient) {
         try {
             todoService.delete(id, authorizedClient);

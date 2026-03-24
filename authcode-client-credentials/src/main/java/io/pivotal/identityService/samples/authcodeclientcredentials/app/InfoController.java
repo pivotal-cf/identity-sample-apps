@@ -29,7 +29,7 @@ public class InfoController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/info")
+    @GetMapping({"/info", "/info/"})
     public String info(
             Model model,
             OAuth2AuthenticationToken authentication,

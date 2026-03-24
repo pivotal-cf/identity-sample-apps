@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/todos")
+@RequestMapping({"/todos", "/todos/"})
 public class TodoController {
     private final TodoRepository todos;
 
@@ -30,7 +30,7 @@ public class TodoController {
         return todos.create(todo);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping({"/{id}", "/{id}/"})
     @PreAuthorize("hasAuthority('SCOPE_todo.write')")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         try {
