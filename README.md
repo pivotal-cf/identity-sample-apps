@@ -4,26 +4,30 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 
 Application Type  | Grant Type | Tanzu Platform SSO tile | Spring Cloud SSO Starter library version
 ------------- | -------------- | --------------------- | ---------------------
-[Web App](/authcode)  | authorization_code | any | 2.2.2.RELEASE
-[Service-to-Service App](/client-credentials) | client_credentials | any | 2.2.2.RELEASE
-[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 2.2.2.RELEASE
+[Web App](/authcode)  | authorization_code | any | 3.5.1
+[Service-to-Service App](/client-credentials) | client_credentials | any | 3.5.1
+[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 3.5.1
 [Resource Server App](/resource-server) | n/a | any | n/a
 
 Sample apps are built with Java 17 and the following dependencies (see each module’s `build.gradle`):
 
 Dependency | Version
-------------- | ---------- 
+------------- | ----------
 Java | 17
-[Spring Boot](https://github.com/spring-projects/spring-boot/tree/2.7.x) | 2.7.18
-[Spring Security](https://github.com/spring-projects/spring-security/tree/5.7.x) | 5.7.11
-[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 2.2.2.RELEASE
+Gradle | 8.12
+[Spring Boot](https://github.com/spring-projects/spring-boot/tree/3.5.x) | 3.5.12
+[Spring Security](https://github.com/spring-projects/spring-security/tree/6.5.x) | 6.5.9
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 3.5.1
 Optional: [`cloudfoundry-certificate-truster`](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) | 1.0.1.RELEASE
 
-The sample apps using Spring Boot 1.5 and Spring Security 2 is located on the [spring-boot-1.5 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5).
+Previous versions of these sample apps are available on other branches:
 
-The sample apps using Spring Boot 2.1 and Spring Security 5.1 is located on the [spring-boot-2.1 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.1).
-
-The sample applications for the corresponding grant types are located in subdirectories of this project:  
+Branch | Spring Boot | Spring Security
+------------- | ---------- | ----------
+[spring-boot-2.7](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.7) | 2.7.x | 5.7.x
+[spring-boot-2.3](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.3) | 2.3.x | 5.3.x
+[spring-boot-2.1](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.1) | 2.1.x | 5.1.x
+[spring-boot-1.5](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5) | 1.5.x | 2.x
 
 ## Prerequisites
 
@@ -91,13 +95,13 @@ You can deploy the authcode and resource server sample applications using applic
 
 ### Implicit Grant Type:
 
-The Implicit Grant Type is supported by Spring Security 5, but has generally fallen out of favor as an architectural pattern for SPAs. It has been determined that we will not provide Sample Apps to demonstrate this grant type moving forward. The current recommendation for SPAs is to use the Authorization Code Flow in conjuntion with the [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) to protect the Authorization Code in the client's browser. For more information, please see the Okta developers blog article: [Is The OAuth Implict Flow Dead](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead#the-oauth-authorization-code-flow-is-better).
+The Implicit Grant Type has generally fallen out of favor as an architectural pattern for SPAs. It has been determined that we will not provide Sample Apps to demonstrate this grant type moving forward. The current recommendation for SPAs is to use the Authorization Code Flow in conjunction with the [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) to protect the Authorization Code in the client's browser. For more information, please see the Okta developers blog article: [Is The OAuth Implicit Flow Dead](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead#the-oauth-authorization-code-flow-is-better).
 
 ### Resource Owner Password Credentials (i.e. Password) Type:
 
-The Resource Owner Password Credentials grant type is no longer supported by Spring Security 5 (see the Grant Type [Support Matrix](projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support)). The Password grant type is more commonly used with programs, like CLIs, that are unlikley to be dependendant on Spring or other Web based software libraries. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2). 
+The Resource Owner Password Credentials grant type is not supported by Spring Security 6 (see the Grant Type [Support Matrix](https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support)). The Password grant type is more commonly used with programs, like CLIs, that are unlikely to be dependent on Spring or other web-based software libraries. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2).
 
-If your use cases require the Password grant type for a Spring application, you will need to implement the access token request on your own. However, if your Java based CF application is bound to an SSO service instance and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the table of [Spring Security 5 Java properties](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications) built from VCAP_SERVICES to help craft your request. 
+If your use cases require the Password grant type for a Spring application, you will need to implement the access token request on your own. However, if your Java based CF application is bound to an SSO service instance and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the table of [Spring Security Java properties](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications) built from VCAP_SERVICES to help craft your request.
 
 # Bootstrap Application Client Configurations for the Tanzu Platform Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can set environment variables in your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
