@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.18'
+	id 'org.springframework.boot' version '3.5.12'
 	id 'java'
 }
 
@@ -9,8 +9,8 @@ group = 'io.pivotal.identityService'
 sourceCompatibility = '17'
 
 ext {
-	springVersion = '2.7.18'
-	springSecurityVersion = '5.7.11'
+	springVersion = '3.5.12'
+	springSecurityVersion = '6.5.9'
 }
 
 repositories {
