@@ -1,8 +1,8 @@
 package io.pivotal.identityService.samples.clientcredentials.app;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.codec.binary.Base64;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -52,7 +52,7 @@ public class InfoController {
 
     private Map<String, ?> parseToken(String base64Token) throws IOException {
         String token = base64Token.split("\\.")[1];
-        return objectMapper.readValue(Base64.decodeBase64(token), new TypeReference<Map<String, ?>>() {
+        return objectMapper.readValue(java.util.Base64.getDecoder().decode(token), new TypeReference<Map<String, ?>>() {
         });
     }
 
