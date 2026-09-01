@@ -81,36 +81,40 @@ works, then again after making code changes to confirm identical behavior.
   excluded from the root `settings.gradle` on purpose, so the default
   `./gradlew build` at repo root stays fast and independent of Selenium/Chrome.
 
-## Known limitation: 4 of 12 journeys tests fail under this harness
+## Known limitation: the browser-login journeys fail locally (pre-existing)
 
 `AuthorizationCodeTest`'s 4 tests and `MutiGrantAuththorizationCodeClientCredentialsTest`'s
-`step03`-`step06` (the ones requiring a full browser-driven `authorization_code`
-OIDC login) reliably fail in this harness, even against an unmodified baseline. The
-other 8 tests (everything using `client_credentials`, which never needs a browser
-login) pass reliably.
+`step03`-`step06` — the ones requiring a full browser-driven `authorization_code`
+OIDC login — fail when run locally, both inside this harness and against apps run
+directly on the host. The other 8 tests (everything using `client_credentials`, which
+never needs a browser login) pass reliably.
 
-This was investigated extensively without a root cause found. Ruled out:
-- Wait timeouts — bumped FluentLenium's `@Wait` from the 5s default to 30s, no change.
-- Selenium session-slot contention — fixed separately (see above), but didn't affect this.
+**This is not caused by the Spring Boot 4.1 upgrade.** Verified by A/B test: the same
+4 tests fail identically when run against jars built from the pre-upgrade Spring Boot
+3.5.12 commit (`ea40d73`) in the same environment, with only the Boot version differing.
+
+Ruled out during investigation:
+- Wait timeouts — FluentLenium's `@Wait` was raised from the 5s default to 30s; no change.
+- Selenium session-slot contention — real, and fixed (see `SE_NODE_MAX_SESSIONS` above),
+  but not the cause of these failures.
 - Selenium/Chromium version skew — retested with an image whose bundled grid version
-  exactly matches the Selenium Java client (4.16.1), no change.
-- The app or the UAA login page itself — confirmed via raw WebDriver protocol calls
-  (bypassing FluentLenium/JUnit) that the login page renders correctly and
-  `input[name=username]` is reliably, instantly findable. A diagnostic added
-  temporarily to the real test (`pageSource()` printed to the JUnit XML report) showed
-  the element genuinely present in the DOM moments before the same session's `$(...).
-  fill()` call times out.
+  exactly matches the Selenium Java client (4.16.1); no change.
+- Compose networking — the failures reproduce with everything on real `localhost`
+  and a real local Chrome, outside containers entirely.
+- The app and the UAA login page — raw WebDriver protocol calls (bypassing
+  FluentLenium/JUnit) show the login page rendering correctly with
+  `input[name=username]` instantly findable. A temporary diagnostic inside the failing
+  test printed `pageSource()` to the JUnit XML report and showed the element present in
+  the DOM moments before that same session's `$(...).fill()` timed out.
 
-Current best guess: something specific to the Selenium Java client's (not
-FluentLenium's necessarily) window/context handling across the cross-origin redirect
-this flow requires (authcode's origin → UAA's origin), under this compose network
-topology specifically — not yet isolated from FluentLenium's wrapper layer. The next
-diagnostic step would be a minimal standalone Java class using only `RemoteWebDriver`
-(no FluentLenium, no JUnit) to determine whether the bug lives in Selenium-Java
-itself or in FluentLenium.
+Current best guess: something in the Selenium Java client's window/context handling
+across the cross-origin redirect this flow requires (the app's origin -> UAA's origin),
+not yet isolated from FluentLenium's wrapper layer. The next diagnostic step would be a
+minimal standalone Java class using only `RemoteWebDriver` (no FluentLenium, no JUnit)
+to determine which layer owns the bug.
 
-This does not affect the Concourse CI flow, which addresses everything via literal
-`http://localhost:<port>` and never exercises this code path.
+The Concourse CI flow is a separate environment and is unaffected by the harness itself;
+whether these tests pass there has not been re-checked as part of this work.
 
 ## CI
 

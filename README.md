@@ -4,9 +4,9 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 
 Application Type  | Grant Type | Tanzu Platform SSO tile | Spring Cloud SSO Starter library version
 ------------- | -------------- | --------------------- | ---------------------
-[Web App](/authcode)  | authorization_code | any | 3.5.1
-[Service-to-Service App](/client-credentials) | client_credentials | any | 3.5.1
-[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 3.5.1
+[Web App](/authcode)  | authorization_code | any | 4.0.1
+[Service-to-Service App](/client-credentials) | client_credentials | any | 4.0.1
+[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 4.0.1
 [Resource Server App](/resource-server) | n/a | any | n/a
 
 Sample apps are built with Java 17 and the following dependencies (see each module’s `build.gradle`):
@@ -14,16 +14,17 @@ Sample apps are built with Java 17 and the following dependencies (see each modu
 Dependency | Version
 ------------- | ----------
 Java | 17
-Gradle | 8.12
-[Spring Boot](https://github.com/spring-projects/spring-boot/tree/3.5.x) | 3.5.12
-[Spring Security](https://github.com/spring-projects/spring-security/tree/6.5.x) | 6.5.9
-[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 3.5.1
+Gradle | 8.14.4
+[Spring Boot](https://github.com/spring-projects/spring-boot/tree/4.1.x) | 4.1.1
+[Spring Security](https://github.com/spring-projects/spring-security/tree/7.1.x) | 7.1.1
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 4.0.1
 Optional: [`cloudfoundry-certificate-truster`](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) | 1.0.1.RELEASE
 
 Previous versions of these sample apps are available on other branches:
 
 Branch | Spring Boot | Spring Security
 ------------- | ---------- | ----------
+[spring-boot-3.5](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-3.5) | 3.5.x | 6.5.x
 [spring-boot-2.7](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.7) | 2.7.x | 5.7.x
 [spring-boot-2.3](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.3) | 2.3.x | 5.3.x
 [spring-boot-2.1](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.1) | 2.1.x | 5.1.x
