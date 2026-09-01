@@ -15,7 +15,13 @@ public class ServerConfiguration {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
+        // The typ-header verifier default flipped from JWT_TYPE_VERIFIER to NO_TYPE_VERIFIER
+        // between Spring Security 6.5 and 7.1. Because this method replaces the whole validator
+        // chain below without a JwtTypeValidator, accepting the new default would silently stop
+        // rejecting tokens carrying a missing or wrong "typ" header.
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withIssuerLocation(issuerUri)
+                .validateType(true)
+                .build();
 
         OAuth2TokenValidator<Jwt> issuerValidator = new JwtIssuerValidator(issuerUri);
         OAuth2TokenValidator<Jwt> timestampValidator = new JwtTimestampValidator();

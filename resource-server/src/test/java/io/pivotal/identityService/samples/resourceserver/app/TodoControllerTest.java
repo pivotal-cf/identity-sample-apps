@@ -2,9 +2,9 @@ package io.pivotal.identityService.samples.resourceserver.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
@@ -34,7 +34,7 @@ class TodoControllerTest {
     // (nonexistent, in tests) issuer at context startup; replacing it is required, not optional.
     // The jwt() request post-processor injects a pre-authenticated JWT directly and never
     // invokes this bean, so its behavior here doesn't matter.
-    @MockBean
+    @MockitoBean
     private JwtDecoder jwtDecoder;
 
     @Test
