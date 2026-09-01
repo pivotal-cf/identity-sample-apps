@@ -10,15 +10,17 @@ import org.junit.runners.MethodSorters;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;
 import static org.fluentlenium.core.filter.FilterConstructor.containingText;
 
 
-@Wait
+@Wait(timeout = 30, timeUnit = TimeUnit.SECONDS)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MutiGrantAuththorizationCodeClientCredentialsTest extends HeadlessChromeTest {
-    private static final String MULTI_GRANT_BASE_URL = "http://localhost:8890";
+    private static final String MULTI_GRANT_BASE_URL =
+            System.getProperty("multigrant.base.url", "http://localhost:8890");
     private static final TypeReference<Map<String, Object>> TYPE_REF = new TypeReference<Map<String, Object>>() {};
     private final ObjectMapper objectMapper = new ObjectMapper();
 

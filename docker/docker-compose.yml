@@ -1,0 +1,108 @@
+services:
+  uaa:
+    image: docker.io/cfidentity/uaa:v78.16.0
+    platform: linux/amd64
+    mem_limit: 3g
+    environment:
+      CLOUDFOUNDRY_CONFIG_PATH: /uaa-config
+      SECRETS_DIR: /uaa-config
+      SPRING_PROFILES_ACTIVE: hsqldb
+      SERVER_SERVLET_CONTEXT_PATH: /uaa
+    volumes:
+      - ./uaa/uaa.yml:/uaa-config/uaa.yml:ro
+    ports:
+      - "8080:8080"
+
+  resource-server:
+    build:
+      context: ..
+      dockerfile: docker/apps/resource-server/Dockerfile
+    depends_on:
+      - uaa
+    environment:
+      SERVER_PORT: 8889
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://uaa:8080/uaa/oauth/token
+    ports:
+      - "8889:8889"
+
+  authcode:
+    build:
+      context: ..
+      dockerfile: docker/apps/authcode/Dockerfile
+    depends_on:
+      - uaa
+      - resource-server
+    environment:
+      SERVER_PORT: 8888
+      RESOURCE_URL: http://resource-server:8889
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: "openid, email, profile, roles, user_attributes, todo.read, todo.write"
+      VCAP_SERVICES_FILE: /config/vcap.json
+    volumes:
+      - ./vcap/vcap_services_authcode.json:/config/vcap.json:ro
+    ports:
+      - "8888:8888"
+
+  client-credentials:
+    build:
+      context: ..
+      dockerfile: docker/apps/client-credentials/Dockerfile
+    depends_on:
+      - uaa
+      - resource-server
+    environment:
+      SERVER_PORT: 8887
+      RESOURCE_URL: http://resource-server:8889
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE: "uaa.resource, todo.read, todo.write"
+      VCAP_SERVICES_FILE: /config/vcap.json
+    volumes:
+      - ./vcap/vcap_services_client_credentials.json:/config/vcap.json:ro
+    ports:
+      - "8887:8887"
+
+  authcode-client-credentials:
+    build:
+      context: ..
+      dockerfile: docker/apps/authcode-client-credentials/Dockerfile
+    depends_on:
+      - uaa
+      - resource-server
+    environment:
+      SERVER_PORT: 8890
+      RESOURCE_URL: http://resource-server:8889
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOCLIENTCREDENTIALS_SCOPE: "uaa.resource, todo.read, todo.write"
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSOAUTHORIZATIONCODE_SCOPE: "openid, email, profile, roles, user_attributes, todo.read, todo.write"
+      VCAP_SERVICES_FILE: /config/vcap.json
+    volumes:
+      - ./vcap/vcap_services_multi_grant_authcode_client_credentials.json:/config/vcap.json:ro
+    ports:
+      - "8890:8890"
+
+  selenium:
+    image: ${SELENIUM_IMAGE:-selenium/standalone-chrome:4.16.1}
+    shm_size: 2g
+    environment:
+      SE_NODE_MAX_SESSIONS: 2
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    ports:
+      - "7900:7900"
+      - "4444:4444"
+
+  journeys-runner:
+    build:
+      context: ..
+      dockerfile: docker/journeys-runner/Dockerfile
+    depends_on:
+      - uaa
+      - resource-server
+      - authcode
+      - client-credentials
+      - authcode-client-credentials
+      - selenium
+    environment:
+      JAVA_TOOL_OPTIONS: >-
+        -Dauthcode.base.url=http://authcode:8888
+        -Dclientcredentials.base.url=http://client-credentials:8887
+        -Dmultigrant.base.url=http://authcode-client-credentials:8890
+        -Dselenium.remote.url=http://selenium:4444
+    profiles:
+      - test

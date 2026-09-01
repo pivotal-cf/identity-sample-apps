@@ -22,4 +22,11 @@ dependencies {
 	implementation "org.springframework.security:spring-security-oauth2-resource-server:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
+
+	testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
+	testImplementation "org.springframework.security:spring-security-test:$springSecurityVersion"
+}
+
+test {
+	useJUnitPlatform()
 }

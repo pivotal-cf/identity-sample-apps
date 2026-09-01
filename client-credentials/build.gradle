@@ -31,4 +31,11 @@ dependencies {
 	if (useCfCertificateTruster) {
 		implementation "io.pivotal.spring.cloud:cloudfoundry-certificate-truster:$cfCertificateTrusterVersion"
 	}
+
+	testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
+	testImplementation "org.springframework.security:spring-security-test:$springSecurityVersion"
+}
+
+test {
+	useJUnitPlatform()
 }
