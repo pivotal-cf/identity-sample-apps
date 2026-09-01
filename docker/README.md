@@ -81,6 +81,27 @@ works, then again after making code changes to confirm identical behavior.
   excluded from the root `settings.gradle` on purpose, so the default
   `./gradlew build` at repo root stays fast and independent of Selenium/Chrome.
 
+## Proving an upgrade didn't change the HTTP contract
+
+`compare-contract.sh` diffs every reachable endpoint of a candidate build against a
+reference build — status, `Location`, `WWW-Authenticate`, `Content-Type` and body,
+normalising only values that legitimately vary per request (JWT `exp`/`iat`/`jti`,
+session ids, CSRF tokens, generated todo ids).
+
+To use it, run the reference build on the offset ports (default: standard port minus
+10, with resource-server on 8899) and the candidate on the standard ports, then:
+
+```
+./docker/compare-contract.sh
+```
+
+This is how the Spring Boot 4.1 upgrade was verified. It caught two changes that the
+in-process tests had been too loosely written to detect — Spring Security 7 adding an
+RFC 9728 `resource_metadata` parameter to resource-server's `WWW-Authenticate`
+challenge, and newly serving `/.well-known/oauth-protected-resource` — both since
+pinned back to their pre-upgrade behavior. A convenient way to produce the reference
+build is `git worktree add <dir> <pre-upgrade-commit>` and `gradle -p <dir> bootJar`.
+
 ## Known limitation: the browser-login journeys fail locally (pre-existing)
 
 `AuthorizationCodeTest`'s 4 tests and `MutiGrantAuththorizationCodeClientCredentialsTest`'s
