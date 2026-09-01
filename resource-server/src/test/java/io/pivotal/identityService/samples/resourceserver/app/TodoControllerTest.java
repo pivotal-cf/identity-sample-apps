@@ -50,18 +50,33 @@ class TodoControllerTest {
                 .andExpect(jsonPath("$[0]", org.hamcrest.Matchers.aMapWithSize(2)));
     }
 
+    // Header values are asserted exactly, not with startsWith/containsString. Spring
+    // Security 7 appends an RFC 9728 resource_metadata parameter to this challenge by
+    // default; that is suppressed (see LegacyBearerTokenAuthenticationEntryPoint) to keep
+    // the pre-upgrade contract, and a loose matcher here would not have caught it.
     @Test
     void list_withoutAuthentication_returns401() throws Exception {
         mockMvc.perform(get("/todos"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(header().string("WWW-Authenticate", org.hamcrest.Matchers.startsWith("Bearer")));
+                .andExpect(header().string("WWW-Authenticate", "Bearer"));
     }
 
     @Test
     void list_withWrongScope_returns403() throws Exception {
         mockMvc.perform(get("/todos").with(jwt().authorities(() -> "SCOPE_todo.write")))
                 .andExpect(status().isForbidden())
-                .andExpect(header().string("WWW-Authenticate", org.hamcrest.Matchers.containsString("insufficient_scope")));
+                .andExpect(header().string("WWW-Authenticate", org.hamcrest.Matchers.containsString("insufficient_scope")))
+                .andExpect(header().string("WWW-Authenticate", org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("resource_metadata"))));
+    }
+
+    // Spring Security 7 serves RFC 9728 metadata here; on 6.5 the path was unmatched and
+    // fell through to anyRequest().authenticated(). Pinned to the pre-upgrade behavior.
+    @Test
+    void protectedResourceMetadataEndpoint_isNotExposed() throws Exception {
+        mockMvc.perform(get("/.well-known/oauth-protected-resource"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string("WWW-Authenticate", "Bearer"));
     }
 
     // InMemoryTodoRepository is a singleton shared across all tests in this cached Spring
