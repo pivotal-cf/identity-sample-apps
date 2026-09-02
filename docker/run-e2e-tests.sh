@@ -26,18 +26,34 @@ EOF
   exit 2
 }
 
-if command -v podman >/dev/null 2>&1 && podman compose version >/dev/null 2>&1; then
-  COMPOSE=(podman compose)
-elif command -v podman-compose >/dev/null 2>&1; then
-  COMPOSE=(podman-compose)
-elif command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-  COMPOSE=(docker compose)
-elif command -v docker-compose >/dev/null 2>&1; then
-  COMPOSE=(docker-compose)
-else
-  echo "No podman-compose/docker-compose provider found on PATH" >&2
-  exit 1
-fi
+# COMPOSE_PROVIDER forces a provider instead of autodetecting. Worth setting in CI:
+# GitHub-hosted runners ship podman *and* a docker-compose binary, so `podman compose`
+# satisfies the probe below and would be preferred over the runner's first-class Docker.
+case "${COMPOSE_PROVIDER:-auto}" in
+  docker)         COMPOSE=(docker compose) ;;
+  docker-compose) COMPOSE=(docker-compose) ;;
+  podman)         COMPOSE=(podman compose) ;;
+  podman-compose) COMPOSE=(podman-compose) ;;
+  auto)
+    if command -v podman >/dev/null 2>&1 && podman compose version >/dev/null 2>&1; then
+      COMPOSE=(podman compose)
+    elif command -v podman-compose >/dev/null 2>&1; then
+      COMPOSE=(podman-compose)
+    elif command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+      COMPOSE=(docker compose)
+    elif command -v docker-compose >/dev/null 2>&1; then
+      COMPOSE=(docker-compose)
+    else
+      echo "No podman-compose/docker-compose provider found on PATH" >&2
+      exit 1
+    fi
+    ;;
+  *)
+    echo "Unknown COMPOSE_PROVIDER '$COMPOSE_PROVIDER' (want: docker|docker-compose|podman|podman-compose|auto)" >&2
+    exit 1
+    ;;
+esac
+echo ">>> compose provider: ${COMPOSE[*]} ($("${COMPOSE[@]}" version 2>&1 | head -1))"
 
 # Pinned to match the journeys module's Selenium Java client version (4.16.1) exactly --
 # newer browser/grid images paired with this older client can cause findElement calls to

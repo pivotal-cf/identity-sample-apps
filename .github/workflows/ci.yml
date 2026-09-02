@@ -53,8 +53,22 @@ jobs:
     name: End-to-end journeys
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      # Runners ship podman too, and the harness's autodetection would prefer it;
+      # pin to the runner's first-class Docker.
+      COMPOSE_PROVIDER: docker
     steps:
       - uses: actions/checkout@v4
+
+      - name: Environment diagnostics
+        run: |
+          echo "::group::versions"
+          docker version || true
+          docker compose version || true
+          echo "::endgroup::"
+          echo "::group::resources"
+          nproc; free -h; df -h /
+          echo "::endgroup::"
 
       # Brings up a real UAA plus all four sample apps and a Selenium container,
       # via the same compose harness used locally (docker/README.md). Started once
@@ -69,8 +83,12 @@ jobs:
             if ./docker/run-e2e-tests.sh up; then
               exit 0
             fi
-            echo "::warning::Stack build/start attempt $attempt failed; retrying in 30s"
-            sleep 30
+            echo "::warning::Stack build/start attempt $attempt failed"
+            echo "::group::container state after attempt $attempt"
+            docker compose -f docker/docker-compose.yml ps -a || true
+            docker compose -f docker/docker-compose.yml logs --no-color --tail=80 || true
+            echo "::endgroup::"
+            [ "$attempt" -lt 3 ] && { echo "retrying in 30s"; sleep 30; }
           done
           echo "::error::Stack failed to start after 3 attempts"
           exit 1
