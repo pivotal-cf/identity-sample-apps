@@ -82,7 +82,15 @@ oauth:
        scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
        authorized-grant-types: authorization_code
        authorities: uaa.resource
-       redirect-uri: http://authcode:8888/**,http://authcode-client-credentials:8890/**
+       # The exact URIs are required: UAA v78.16.0 resolves redirect_uri with
+       # NormalizedRedirectResolver, which matches literally -- the `/**` patterns below
+       # match nothing (RedirectResolverFactoryBean, which would select the wildcard-capable
+       # LegacyRedirectResolver when allowUnsafeMatching is set, is unreferenced in that
+       # build, so there is no config toggle to re-enable them). The wildcards are retained
+       # for older UAA versions that do honor them. Two exact entries per app: the
+       # authorization_code callback, and the app root, which UaaLogoutSuccessHandler passes
+       # to UAA as /logout.do?redirect=... and UAA validates against this same list.
+       redirect-uri: http://authcode:8888/**,http://authcode-client-credentials:8890/**,http://authcode:8888/login/oauth2/code/sso,http://authcode:8888,http://authcode:8888/
     sample-client-client-credentials:
       name: sample-client-client-credentials
       secret: sample-client-client-credentials-secret
@@ -95,7 +103,9 @@ oauth:
       authorized-grant-types: client_credentials,authorization_code
       scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
       authorities: uaa.resource, todo.read, todo.write
-      redirect-uri: http://client-credentials:8887/**,http://authcode-client-credentials:8890/**
+      # See the note on sample-client-authcode above. This app registers its
+      # authorization_code flow under the id `ssoauthorizationcode`, hence that callback path.
+      redirect-uri: http://client-credentials:8887/**,http://authcode-client-credentials:8890/**,http://authcode-client-credentials:8890/login/oauth2/code/ssoauthorizationcode,http://authcode-client-credentials:8890,http://authcode-client-credentials:8890/
 
 scim:
   users:

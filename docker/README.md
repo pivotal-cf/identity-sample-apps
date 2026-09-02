@@ -30,6 +30,26 @@ container, runs `journeys`, dumps logs to `docker/artifacts/`, and tears everyth
 down. Run it once against an unmodified baseline to confirm the harness itself
 works, then again after making code changes to confirm identical behavior.
 
+The individual stages are also available as subcommands, for when the stack needs to
+outlive a single test run — starting it once and then running several filtered passes
+against it, which is what the GitHub Actions job does (see "CI" below):
+
+```
+./docker/run-e2e-tests.sh up                  # build + start uaa, the apps, selenium
+./docker/run-e2e-tests.sh test [gradle args]  # run journeys; extra args go to `gradle test`
+./docker/run-e2e-tests.sh logs                # dump container logs to the artifacts dir
+./docker/run-e2e-tests.sh down                # tear down
+```
+
+`test` bind-mounts the `journeys` build directory out to
+`docker/artifacts/$RESULTS_NAME/` (default `journeys`) so the JUnit XML and HTML
+reports survive the container being removed. To run a subset, pass Gradle's
+`--tests` filters straight through:
+
+```
+./docker/run-e2e-tests.sh test --tests 'io.pivotal.cf.identity.samples.journeys.ClientCredentialsTest'
+```
+
 ## Notable design decisions
 
 - **UAA image**: `docker.io/cfidentity/uaa:v78.16.0`, the last UAA release before
@@ -42,9 +62,10 @@ works, then again after making code changes to confirm identical behavior.
   natively via `CLOUDFOUNDRY_CONFIG_PATH`/`SECRETS_DIR` env vars — no `yq merge`/
   image-rebuild step needed. Its `oauth.clients`/`scim.users`/`jwt.token` sections
   are copied from `../journeys/src/test/resources/uaa-customizations.yml` (the
-  canonical fixture also used by the Concourse CI flow), with only the OAuth
-  client `redirect-uri` hosts widened to compose service names. Keep both files in
-  sync if clients/users/scopes change.
+  canonical fixture also used by the Concourse CI flow), with the OAuth client
+  `redirect-uri` hosts repointed from `localhost` to compose service names. Keep both
+  files in sync if clients/users/scopes change — including the exact `redirect-uri`
+  entries, which are load-bearing (see "The `redirect_uri` wildcard trap" below).
 - **UAA SAML key**: `uaa/uaa.yml` also configures a throwaway self-signed
   `login.saml` signing key. UAA v78.16.0 eagerly builds a self-referential SAML
   "relying party registration" at startup, and its default metadata generation
@@ -69,7 +90,7 @@ works, then again after making code changes to confirm identical behavior.
   bare-metal flow is untouched — it never sets that property, so it keeps using a
   local `ChromeDriver` exactly as before. Pinned to the `120.0-chromedriver-120.0-
   grid-4.16.1-*` tag (matching the `journeys` module's Selenium Java client version,
-  4.16.1) rather than `:latest` — see "Known limitation" below.
+  4.16.1) rather than `:latest`.
 - **Selenium session slots**: `SE_NODE_MAX_SESSIONS=2` (with
   `SE_NODE_OVERRIDE_MAX_SESSIONS=true`) so a standalone node isn't limited to a
   single concurrent session by default, which caused later tests to hang
@@ -102,48 +123,91 @@ challenge, and newly serving `/.well-known/oauth-protected-resource` — both si
 pinned back to their pre-upgrade behavior. A convenient way to produce the reference
 build is `git worktree add <dir> <pre-upgrade-commit>` and `gradle -p <dir> bootJar`.
 
-## Known limitation: the browser-login journeys fail locally (pre-existing)
+## The `redirect_uri` wildcard trap (fixed — read before editing UAA client config)
 
-`AuthorizationCodeTest`'s 4 tests and `MutiGrantAuththorizationCodeClientCredentialsTest`'s
-`step03`-`step06` — the ones requiring a full browser-driven `authorization_code`
-OIDC login — fail when run locally, both inside this harness and against apps run
-directly on the host. The other 8 tests (everything using `client_credentials`, which
-never needs a browser login) pass reliably.
+All 12 journeys pass. They didn't used to: `AuthorizationCodeTest`'s 4 tests and
+`MutiGrantAuththorizationCodeClientCredentialsTest`'s `step03`-`step06` — every test
+needing a browser-driven `authorization_code` OIDC login — failed until the client
+`redirect-uri` registrations in `uaa/uaa.yml` were given **exact** URIs.
 
-**This is not caused by the Spring Boot 4.1 upgrade.** Verified by A/B test: the same
-4 tests fail identically when run against jars built from the pre-upgrade Spring Boot
-3.5.12 commit (`ea40d73`) in the same environment, with only the Boot version differing.
+**Cause.** UAA v78.16.0 resolves `redirect_uri` with `NormalizedRedirectResolver`, which
+matches *literally*. An Ant-style `http://authcode:8888/**` registration matches nothing —
+not even `http://authcode:8888/` itself. UAA does ship a wildcard-capable
+`LegacyRedirectResolver`, selected by `RedirectResolverFactoryBean` when its
+`allowUnsafeMatching` flag is set, but **nothing in the shipped v78.16.0 artifacts
+references that factory bean** (the string `unsafe` occurs in exactly one class in
+`cloudfoundry-identity-server-v78.16.0.jar`: the unused factory itself). So there is no
+config property that re-enables wildcards — exact URIs are the only option.
 
-Ruled out during investigation:
-- Wait timeouts — FluentLenium's `@Wait` was raised from the 5s default to 30s; no change.
-- Selenium session-slot contention — real, and fixed (see `SE_NODE_MAX_SESSIONS` above),
-  but not the cause of these failures.
-- Selenium/Chromium version skew — retested with an image whose bundled grid version
-  exactly matches the Selenium Java client (4.16.1); no change.
-- Compose networking — the failures reproduce with everything on real `localhost`
-  and a real local Chrome, outside containers entirely.
-- The app and the UAA login page — raw WebDriver protocol calls (bypassing
-  FluentLenium/JUnit) show the login page rendering correctly with
-  `input[name=username]` instantly findable. A temporary diagnostic inside the failing
-  test printed `pageSource()` to the JUnit XML report and showed the element present in
-  the DOM moments before that same session's `$(...).fill()` timed out.
+Verified by registering a family of clients differing only in pattern shape and calling
+`/oauth/authorize` post-login for each:
 
-Current best guess: something in the Selenium Java client's window/context handling
-across the cross-origin redirect this flow requires (the app's origin -> UAA's origin),
-not yet isolated from FluentLenium's wrapper layer. The next diagnostic step would be a
-minimal standalone Java class using only `RemoteWebDriver` (no FluentLenium, no JUnit)
-to determine which layer owns the bug.
+| Registered | Requested | Result |
+| --- | --- | --- |
+| `http://authcode:8888/login/oauth2/code/sso` | same | **200 accepted** |
+| `http://authcode:8888/**` | `…/login/oauth2/code/sso` | 400 invalid redirect |
+| `http://authcode:8888/login/**` | `…/login/oauth2/code/sso` | 400 invalid redirect |
+| `http://authcode:8888/*` | `…/foo` | 400 invalid redirect |
+| `http://localhost:8888/**` | `…/login/oauth2/code/sso` | 400 invalid redirect |
+| `http://app.example.com:8888/**` | `…/login/oauth2/code/sso` | 400 invalid redirect |
 
-The Concourse CI flow is a separate environment and is unaffected by the harness itself;
-whether these tests pass there has not been re-checked as part of this work.
+**Why it looked like a Selenium bug.** UAA validates the redirect only *after*
+authentication, so login itself succeeds (`POST /uaa/login.do` → 302) and only the
+following `/oauth/authorize` fails (400). The browser lands on a UAA error page with no
+`h1` and no `.user_info`, and FluentLenium then burns two 30s waits — which reads as a
+~62s "element never appeared" timeout rather than an OAuth error. An earlier round of
+investigation attributed this to Selenium's window handling across the cross-origin
+redirect and ruled out wait timeouts, session-slot contention, Selenium/Chromium version
+skew, and compose networking. Those were all correctly ruled out, and the conclusion that
+the Spring Boot 4.1 upgrade was not responsible was right — a bad redirect registration
+fails identically on both Boot versions. The mechanism was simply misdiagnosed. The tell
+is in the UAA log, not the browser:
+
+```
+grep -a "did not match" docker/artifacts/compose.log
+```
+
+**Two exact URIs are needed per browser-login app**, both already in `uaa/uaa.yml`:
+
+- the `authorization_code` callback — `/login/oauth2/code/<registrationId>`, so
+  `/login/oauth2/code/sso` for `authcode` and `/login/oauth2/code/ssoauthorizationcode`
+  for `authcode-client-credentials`
+- the app root, with and without a trailing slash — `UaaLogoutSuccessHandler` sends the
+  browser to UAA's `/logout.do?client_id=…&redirect=http://<host>:<port>` (path stripped),
+  and UAA validates that `redirect` against the *same* client list. Register only the
+  callback and login passes but `#logout` fails.
+
+The `/**` entries were left in place alongside the exact ones, harmlessly, for older UAA
+versions that do honour them.
+
+`journeys/src/test/resources/uaa-customizations.yml` — the fixture the Concourse flow
+merges into UAA's own config — had the identical defect on `localhost` and got the same
+fix. Note that today's pipeline pins UAA to `branch: master`, so it was very likely
+affected too; that has not been re-verified here.
 
 ## CI
 
-The existing Concourse pipeline (`ci/pipeline.yml`, `ci/tasks/journeys/task.sh`) is
-left untouched for now — this harness's job is a fast local verification loop.
-A future option is to replace that pipeline's bare-metal orchestration with this
-same compose setup (in a Concourse task image with podman/docker available, or a
-GitHub Actions job). Separately: today's pipeline pins UAA to `branch: master`
+`.github/workflows/ci.yml` runs both test layers on pushes and pull requests
+targeting `spring-boot-4.1`, and on manual dispatch:
+
+- **`unit-tests`** — `./gradlew build` on JDK 17, covering the four sample app
+  modules in the root `settings.gradle`. `journeys` is excluded from that build on
+  purpose (it needs Selenium and a browser), so it runs in the job below instead.
+- **`e2e-tests`** — brings this compose harness up on the runner, then runs all 12
+  journeys against it in two separately-reported steps: the `client_credentials`
+  journeys, then the browser-login ones. Both gate the job. Both steps' JUnit reports
+  and the container logs are uploaded as the `e2e-artifacts` bundle.
+
+The split is purely for signal granularity — a failure in the first step points at
+token/resource handling, one in the second at the browser-driven OIDC login.
+
+Docker Hub pulls from GitHub-hosted runners are anonymous and therefore rate-limited;
+if the UAA/Selenium image pulls start failing with 429s, add a `docker/login-action`
+step with a Docker Hub token.
+
+The Concourse pipeline (`ci/pipeline.yml`, `ci/tasks/journeys/task.sh`) is left
+untouched — it orchestrates the same journeys suite bare-metal, independently of this
+harness. Separately: today's pipeline pins UAA to `branch: master`
 (bleeding-edge) — the same root cause that produced the Java 25 dual-JDK conflict
 this harness avoids by pinning `v78.16.0`. Whenever the pipeline is revisited, it
 should be repointed at a `v78.*` tag rather than `master`/`develop`.

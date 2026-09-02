@@ -2,6 +2,30 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+usage() {
+  cat >&2 <<'EOF'
+usage: run-e2e-tests.sh [command] [args...]
+
+With no command, runs the full local cycle: up, test, logs, down.
+
+Commands (for callers that need the stack to outlive a single test run, e.g. CI
+running several filtered test passes and reporting them as separate steps):
+
+  up                  build and start uaa + the four sample apps + selenium
+  test [gradle args]  run the journeys suite against the running stack; extra
+                      args are appended to `gradle test` (e.g. --tests filters).
+                      Set RESULTS_NAME to name this run's artifacts subdirectory.
+  logs                dump compose logs to $ARTIFACTS_DIR/compose.log
+  down                tear the stack down
+
+Environment:
+  ARTIFACTS_DIR   where logs and journeys reports are written (default ./artifacts)
+  RESULTS_NAME    artifacts subdirectory for a `test` run's reports (default journeys)
+  SELENIUM_IMAGE  override the pinned browser image
+EOF
+  exit 2
+}
+
 if command -v podman >/dev/null 2>&1 && podman compose version >/dev/null 2>&1; then
   COMPOSE=(podman compose)
 elif command -v podman-compose >/dev/null 2>&1; then
@@ -30,18 +54,72 @@ esac
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-./artifacts}"
 mkdir -p "$ARTIFACTS_DIR"
 
-cleanup() {
-  local status=$?
+stack_up() {
+  echo ">>> Building and starting uaa + sample apps + selenium"
+  "${COMPOSE[@]}" up -d --build uaa resource-server authcode client-credentials authcode-client-credentials selenium
+}
+
+# Runs the journeys suite in a throwaway container against the already-running stack.
+# The journeys module's whole build directory is bind-mounted out so the JUnit XML and
+# HTML reports survive the container being removed (--rm) and can be uploaded by CI.
+run_tests() {
+  # A bind mount needs an absolute source path, so resolve a relative ARTIFACTS_DIR
+  # against this script's directory while leaving an absolute one alone.
+  local results_dir
+  case "$ARTIFACTS_DIR" in
+    /*) results_dir="$ARTIFACTS_DIR/${RESULTS_NAME:-journeys}" ;;
+    *)  results_dir="$(pwd)/${ARTIFACTS_DIR#./}/${RESULTS_NAME:-journeys}" ;;
+  esac
+  mkdir -p "$results_dir"
+
+  # Don't ask compose for a TTY when there isn't one to hand out (CI), which it
+  # otherwise tries to allocate and fails on. Seeded with --rm rather than left
+  # empty so expanding it stays safe under `set -u` on bash 3.2 (macOS).
+  local run_flags=(--rm)
+  [ -t 1 ] || run_flags+=(-T)
+
+  echo ">>> Running journeys test suite${*:+ ($*)}"
+  "${COMPOSE[@]}" --profile test run "${run_flags[@]}" \
+    -v "$results_dir:/workspace/journeys/build" \
+    journeys-runner gradle --no-daemon test "$@"
+}
+
+dump_logs() {
   echo ">>> Dumping compose logs to $ARTIFACTS_DIR/compose.log"
   "${COMPOSE[@]}" logs --no-color > "$ARTIFACTS_DIR/compose.log" 2>&1 || true
+}
+
+stack_down() {
   echo ">>> Tearing down"
   "${COMPOSE[@]}" down -v --remove-orphans || true
-  exit $status
 }
-trap cleanup EXIT
 
-echo ">>> Building and starting uaa + sample apps + selenium"
-"${COMPOSE[@]}" up -d --build uaa resource-server authcode client-credentials authcode-client-credentials selenium
-
-echo ">>> Running journeys test suite"
-"${COMPOSE[@]}" --profile test run --rm journeys-runner
+case "${1:-}" in
+  up)
+    stack_up
+    ;;
+  test)
+    shift
+    run_tests "$@"
+    ;;
+  logs)
+    dump_logs
+    ;;
+  down)
+    stack_down
+    ;;
+  "")
+    cleanup() {
+      local status=$?
+      dump_logs
+      stack_down
+      exit $status
+    }
+    trap cleanup EXIT
+    stack_up
+    run_tests
+    ;;
+  *)
+    usage
+    ;;
+esac

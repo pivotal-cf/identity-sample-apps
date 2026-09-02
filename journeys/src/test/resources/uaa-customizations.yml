@@ -6,7 +6,13 @@ oauth:
        scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
        authorized-grant-types: authorization_code
        authorities: uaa.resource
-       redirect-uri: http://localhost:8888/**,http://localhost:8890/**
+       # The exact URIs are required on UAA versions that resolve redirect_uri with
+       # NormalizedRedirectResolver (v78.16.0 verified), which matches literally, so the
+       # `/**` patterns match nothing. The wildcards are retained for older UAA versions
+       # that do honor them. Per app: the authorization_code callback, plus the app root,
+       # which UaaLogoutSuccessHandler passes as /logout.do?redirect=... for UAA to validate
+       # against this same list.
+       redirect-uri: http://localhost:8888/**,http://localhost:8890/**,http://localhost:8888/login/oauth2/code/sso,http://localhost:8888,http://localhost:8888/
     sample-client-client-credentials:
       name: sample-client-client-credentials
       secret: sample-client-client-credentials-secret
@@ -19,7 +25,9 @@ oauth:
       authorized-grant-types: client_credentials,authorization_code
       scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
       authorities: uaa.resource, todo.read, todo.write
-      redirect-uri: http://localhost:8887/**,http://localhost:8890/**
+      # See the note on sample-client-authcode above. This app registers its
+      # authorization_code flow under the id `ssoauthorizationcode`, hence that callback path.
+      redirect-uri: http://localhost:8887/**,http://localhost:8890/**,http://localhost:8890/login/oauth2/code/ssoauthorizationcode,http://localhost:8890,http://localhost:8890/
 
 scim:
   users:

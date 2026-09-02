@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [spring-boot-4.1]
+  pull_request:
+    branches: [spring-boot-4.1]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The journeys suite is a plain JUnit 4 project; these are the fully-qualified
+  # names the --tests filters below select on.
+  JOURNEYS_PKG: io.pivotal.cf.identity.samples.journeys
+
+jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Builds and tests the four sample app modules in the root settings.gradle.
+      # `journeys` is deliberately excluded from that build (it needs Selenium and
+      # a browser) and runs in the e2e job instead.
+      - name: Build and test sample apps
+        run: ./gradlew build --console=plain
+
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-reports
+          path: |
+            */build/reports/tests/test
+            */build/test-results/test
+          if-no-files-found: warn
+
+  e2e-tests:
+    name: End-to-end journeys
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # Brings up a real UAA plus all four sample apps and a Selenium container,
+      # via the same compose harness used locally (docker/README.md). Started once
+      # here and reused by both test steps below, so the two report separately
+      # without paying for a second stack build.
+      # Retried because this step builds the app images, which downloads their
+      # dependencies from Maven Central -- observed returning 429 Too Many Requests
+      # under a shared egress IP. Compose picks up where a partial build left off.
+      - name: Start UAA, sample apps and Selenium
+        run: |
+          for attempt in 1 2 3; do
+            if ./docker/run-e2e-tests.sh up; then
+              exit 0
+            fi
+            echo "::warning::Stack build/start attempt $attempt failed; retrying in 30s"
+            sleep 30
+          done
+          echo "::error::Stack failed to start after 3 attempts"
+          exit 1
+
+      # Split into two gating steps purely for signal granularity: a failure here
+      # points at token/resource handling, whereas one in the next step points at the
+      # browser-driven OIDC login. Both must pass.
+      - name: 'Journeys: client credentials'
+        env:
+          RESULTS_NAME: client-credentials
+        run: |
+          ./docker/run-e2e-tests.sh test \
+            --tests "$JOURNEYS_PKG.ClientCredentialsTest" \
+            --tests "$JOURNEYS_PKG.MutiGrantAuththorizationCodeClientCredentialsTest.step01_*" \
+            --tests "$JOURNEYS_PKG.MutiGrantAuththorizationCodeClientCredentialsTest.step02_*"
+
+      # The full browser-driven authorization_code OIDC login, end to end against a real
+      # UAA. These were failing until the redirect-uri registrations were fixed -- see
+      # "The redirect_uri wildcard trap" in docker/README.md.
+      - name: 'Journeys: browser login'
+        env:
+          RESULTS_NAME: browser-login
+        run: |
+          ./docker/run-e2e-tests.sh test \
+            --tests "$JOURNEYS_PKG.AuthorizationCodeTest" \
+            --tests "$JOURNEYS_PKG.MutiGrantAuththorizationCodeClientCredentialsTest.step03_*" \
+            --tests "$JOURNEYS_PKG.MutiGrantAuththorizationCodeClientCredentialsTest.step04_*" \
+            --tests "$JOURNEYS_PKG.MutiGrantAuththorizationCodeClientCredentialsTest.step05_*" \
+            --tests "$JOURNEYS_PKG.MutiGrantAuththorizationCodeClientCredentialsTest.step06_*"
+
+      - name: Dump container logs
+        if: always()
+        run: ./docker/run-e2e-tests.sh logs
+
+      - name: Upload journeys reports and container logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: |
+            docker/artifacts/compose.log
+            docker/artifacts/*/test-results
+            docker/artifacts/*/reports
+          if-no-files-found: warn
+
+      - name: Tear down
+        if: always()
+        run: ./docker/run-e2e-tests.sh down
