@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -21,10 +21,10 @@ public class UaaLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        UriComponents url = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString())
+        UriComponents url = UriComponentsBuilder.fromUriString(request.getRequestURL().toString())
                 .replacePath("")
                 .build();
-        UriComponents redirectUrl = UriComponentsBuilder.fromHttpUrl(ssoServiceUrl)
+        UriComponents redirectUrl = UriComponentsBuilder.fromUriString(ssoServiceUrl)
                 .path("/logout.do")
                 .queryParam("client_id", clientId)
                 .queryParam("redirect", url.toString())

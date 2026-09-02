@@ -1,21 +1,28 @@
 apply plugin: 'java'
 
+sourceCompatibility = '17'
+
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testCompile 'org.fluentlenium:fluentlenium-junit:3.5.0'
-    testCompile 'org.fluentlenium:fluentlenium-assertj:3.5.0'
-    testCompile 'junit:junit:4.13.1'
-    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.9.1'
-    testCompile 'com.fasterxml.jackson.core:jackson-core:2.11.3'
-    testCompile 'com.fasterxml.jackson.core:jackson-annotations:2.11.2'
-    testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+ext {
+    // 4.16.1 is the newest Selenium 4 that still includes EventFiringWebDriver
+    // (required by FluentLenium 5.0.4) and ships with Selenium Manager for
+    // automatic ChromeDriver resolution.
+    seleniumVersion = '4.16.1'
 }
 
-tasks.withType(Test) {
-    systemProperty "fluentlenium.capabilities", "{chromeOptions: {args:[--no-sandbox, --headless, --disable-gpu]}}"
+dependencies {
+    testImplementation 'org.fluentlenium:fluentlenium-junit:5.0.4'
+    testImplementation 'org.fluentlenium:fluentlenium-assertj:5.0.4'
+
+    testImplementation 'junit:junit:4.13.2'
+
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
 }
 
 test {

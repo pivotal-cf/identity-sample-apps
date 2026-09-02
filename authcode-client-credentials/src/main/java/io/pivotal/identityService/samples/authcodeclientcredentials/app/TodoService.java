@@ -33,7 +33,7 @@ public class TodoService {
                 .post()
                 .uri("/todos")
                 .attributes(oauth2AuthorizedClient(authorizedClient))
-                .body(BodyInserters.fromObject(todo))
+                .body(BodyInserters.fromValue(todo))
                 .retrieve()
                 .bodyToMono(Todo.class)
                 .block();

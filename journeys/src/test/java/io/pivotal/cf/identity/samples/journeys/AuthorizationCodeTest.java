@@ -1,16 +1,18 @@
 package io.pivotal.cf.identity.samples.journeys;
 
-import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;
 import static org.fluentlenium.core.filter.FilterConstructor.containingText;
 
 
-@Wait
-public class AuthorizationCodeTest extends FluentTest {
-    public static final String AUTHCODE_CLIENT_BASE_URL = "http://localhost:8888";
+@Wait(timeout = 30, timeUnit = TimeUnit.SECONDS)
+public class AuthorizationCodeTest extends HeadlessChromeTest {
+    public static final String AUTHCODE_CLIENT_BASE_URL =
+            System.getProperty("authcode.base.url", "http://localhost:8888");
 
     @Test
     public void displaysTokensToAllUsers() {

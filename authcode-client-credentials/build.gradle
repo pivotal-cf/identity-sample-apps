@@ -1,19 +1,30 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'org.springframework.boot' version '4.1.1'
 	id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
 
 group = 'io.pivotal.identityService'
-sourceCompatibility = '1.8'
+sourceCompatibility = '17'
 
 ext {
-	springVersion = '2.3.4.RELEASE'
-	springSecurityVersion = '5.3.4.RELEASE'
-	cfEnvSsoVersion = '2.2.2.RELEASE'
+	springVersion = '4.1.1'
+	springSecurityVersion = '7.1.1'
+	cfEnvSsoVersion = '4.0.1'
 	cfCertificateTrusterVersion = '1.0.1.RELEASE'
 	useCfCertificateTruster = false // set this property to true when cert trusting is required
+}
+
+// Boot 4 switches the default JSON mapper to Jackson 3 (tools.jackson). These apps
+// inject the classic com.fasterxml ObjectMapper directly and render pretty-printed
+// claims with it, so Jackson 3 is excluded outright and spring-boot-jackson2 supplies
+// the Jackson 2 ObjectMapper instead. Excluding at configuration level rather than per
+// dependency because Jackson 3 arrives via several paths (starter-web, starter-webflux,
+// and java-cfenv-boot).
+configurations.configureEach {
+	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-jackson'
+	exclude group: 'org.springframework.boot', module: 'spring-boot-jackson'
 }
 
 repositories {
@@ -22,8 +33,12 @@ repositories {
 
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
+	implementation "org.springframework.boot:spring-boot-jackson2:$springVersion"
 	implementation "org.springframework.boot:spring-boot-starter-thymeleaf:$springVersion"
 	implementation "org.springframework.boot:spring-boot-starter-webflux:$springVersion"
+	// Boot 4 moved OAuth2 auto-configuration out of spring-boot-autoconfigure into
+	// dedicated modules, which the raw spring-security-oauth2-* artifacts don't pull in.
+	implementation "org.springframework.boot:spring-boot-security-oauth2-client:$springVersion"
 	implementation "org.springframework.security:spring-security-oauth2-client:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion"
 	implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
@@ -31,4 +46,13 @@ dependencies {
 	if (useCfCertificateTruster) {
 		implementation "io.pivotal.spring.cloud:cloudfoundry-certificate-truster:$cfCertificateTrusterVersion"
 	}
+
+	testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
+	// Boot 4 moved @AutoConfigureMockMvc/@WebMvcTest out of spring-boot-test-autoconfigure
+	testImplementation "org.springframework.boot:spring-boot-webmvc-test:$springVersion"
+	testImplementation "org.springframework.security:spring-security-test:$springSecurityVersion"
+}
+
+test {
+	useJUnitPlatform()
 }

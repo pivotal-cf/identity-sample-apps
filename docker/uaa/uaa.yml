@@ -1,0 +1,177 @@
+# Harness-owned UAA config override for the docker/podman-compose E2E environment.
+#
+# The oauth.clients / scim.users / jwt.token sections below are copied from
+# ../../journeys/src/test/resources/uaa-customizations.yml (the canonical source of
+# client/user/JWT-key definitions used by both the Concourse CI flow and this harness),
+# with only the OAuth client redirect-uri hosts widened from localhost to compose
+# service names. Keep the two files in sync if clients/users/scopes ever change.
+#
+# The issuer/login.saml sections below are specific to this containerized harness:
+#  - issuer.uri uses the compose service name "uaa" instead of localhost, since
+#    resource-server validates JWTs by calling UAA's OIDC discovery/JWKS endpoints
+#    over the compose network, not via a browser-facing localhost URL.
+#  - login.saml.keys provides a throwaway self-signed SAML SP signing key. UAA
+#    v78.16.0 eagerly builds a self-referential SAML "relying party registration"
+#    at startup, and its default (uncustomized) metadata generation fails hard with
+#    "Metadata response is missing verification certificates" unless a SAML SP key is
+#    configured. This project's sample apps only use OAuth2 (authorization_code /
+#    client_credentials) and never touch SAML, so this key exists purely to let UAA
+#    boot; it has no bearing on the sample apps' endpoint behavior.
+issuer:
+  uri: http://uaa:8080/uaa
+login:
+  saml:
+    activeKeyId: harness-key-1
+    keys:
+      harness-key-1:
+        key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          MIIEpQIBAAKCAQEA1sLh6SiM2F1uEbD2yugII9xqFT4LYLhCziI+kBxoU9d5zMfw
+          sDB3zcOKGPhpkO9ySGtjbTqw3MSG3NYyo6c+R46jY93gB3JnYS50tSrh68gGduUR
+          ZDivd1UIdj3Gs5W/WikE5gEs03sny/nF1a9WVWwTCe6n+u9bTYrFdILB4XLDglAT
+          Ba7smEwTqnEGVBkY1z6dOFzZ5yfVtcJToUbI+mwGgx8pwIy1NXn8b+rqDtm25Nbb
+          lU4XRUSQMANlQoWaKuW/ayZZXDVvnetM7P+VT+7yObO21bt6B0hUKZ80daRRzIc8
+          2MnWHrKdDFdbTriBMFNvANlQrKukFUj1fEL29wIDAQABAoIBADk8nk3wPz1pBS1U
+          3ylr1sOL+n/n1ct0wGVEzizFTW7O9kjEHtsuR7fAvhzyk9wLXQd9C3YwlrN380OH
+          GN7x81DJ7LTwjMUfUfseEP+5ypV27XYhjdWKoAUrVgKBa2QwbFvAo+wS8xn38D7W
+          NkpBnT5N+/MBNqbTxR8w9XgcY0TMvo5/C8Nvr/AUcFTlQJM9V9olEjQO1hM7q5L8
+          qjgRtRhM4S06oqsJg0HCuplD7L/Eee740GGOzpfUYb+W996P2PEpcoeDve730HL1
+          xfw8qMPiFXdZHIBoXBRRPkb7kqxlAq/S/66XXEVZGLl4FCfhjQRpSIAjIlclZr10
+          qx9WyfUCgYEA+8ja+65axAKJ42pHi0FEpCWVijGPgVYqKbrjSP/1UA0r1Yli7pb8
+          VrEmDTHCmaWj2NhRLQ3h65cnfMAop0RZm6fM3bRxT0A+HaAkTL/2fzwTzzLh7XMY
+          RMIFaqXCGrSZp6cujVwHmmi5FpG4R/C8MmQqQ6w9tnXrSmbDdk8websCgYEA2ltY
+          fgaWCruccQ6uFkewsxwCk8ac46KAgcu/JyumCej2zG/RtF7B7SEUqffkrG4Hdif6
+          ToPqtrfeMMXIeShV9qBvHlWFvkmUytTJbVpdx4+2zESJk142mGfHxArHttvj0Ohj
+          BLE8dPbCSm4Iw0TtUqj7Am6uE9DY/WI6TL/0dfUCgYEAm5OVc/RdE0Z6SzINeQdg
+          UYkDqLtM7978+IIJFL9LpiYtUqmsnr5et3aIi5iWpPfLkR7AsfUlBryEYrodpJVA
+          RUTe+pMXfJ+2gfnE1EO9HQtTNjE7lswKT9oPHMHFeVjkpMpRonkeHZPd4gsycglX
+          UE/CKcSQ8WBVfciXuE/gJScCgYEAoK7loN/x2/YRenUGEKky06sCDoLyguTbUiiA
+          AzAwoExKCUkj9WphpMFaNnWQVn8liIKExPB4cXs+y39QNjBDihinjJf8snntP5F0
+          pL8CEc+lAg5Rexuya1a7f307WEnaDKpl61cNmTjY4vK0ChYX2mM1S6Xs/fILK/Lz
+          2fTLzV0CgYEA0xXsUf/3NA3OBdPSun4FAPgmZ+Bb5kjUOkH6Pxcy7Thc1rhauum4
+          O80y4AG1KaaIpRoYnMs+h8Ll3xEvonoOzeQ39LAOLLLxR30xB6qeMA6OYKKPkn0M
+          Y7C9leip/IZ6NZSRiaotUhQNShDrhXgwzCJeZxuCEbUZnheHi9wK+3w=
+          -----END RSA PRIVATE KEY-----
+        passphrase: ''
+        certificate: |
+          -----BEGIN CERTIFICATE-----
+          MIIDFzCCAf+gAwIBAgIUG1RkzeyYwMWYdqPORDtz5qPug74wDQYJKoZIhvcNAQEL
+          BQAwGzEZMBcGA1UEAwwQdWFhLWhhcm5lc3Mtc2FtbDAeFw0yNjA5MDExODE5NTBa
+          Fw0zNjA4MjkxODE5NTBaMBsxGTAXBgNVBAMMEHVhYS1oYXJuZXNzLXNhbWwwggEi
+          MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDWwuHpKIzYXW4RsPbK6Agj3GoV
+          PgtguELOIj6QHGhT13nMx/CwMHfNw4oY+GmQ73JIa2NtOrDcxIbc1jKjpz5HjqNj
+          3eAHcmdhLnS1KuHryAZ25RFkOK93VQh2Pcazlb9aKQTmASzTeyfL+cXVr1ZVbBMJ
+          7qf671tNisV0gsHhcsOCUBMFruyYTBOqcQZUGRjXPp04XNnnJ9W1wlOhRsj6bAaD
+          HynAjLU1efxv6uoO2bbk1tuVThdFRJAwA2VChZoq5b9rJllcNW+d60zs/5VP7vI5
+          s7bVu3oHSFQpnzR1pFHMhzzYydYesp0MV1tOuIEwU28A2VCsq6QVSPV8Qvb3AgMB
+          AAGjUzBRMB0GA1UdDgQWBBRf7zR+vWq/EKz1eJdvRRGwVQLF9DAfBgNVHSMEGDAW
+          gBRf7zR+vWq/EKz1eJdvRRGwVQLF9DAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3
+          DQEBCwUAA4IBAQDVp4SGB19RJTs31ko1mnO4znIVvdgkmXw8/KidKoAKik5+CKm4
+          BrjQxLaD1/lOvZ6GV2d+pIVNotfrMYTKjpD2uA6gYse/yz/EAdzBbbAj6COwa2iy
+          z+XVj/QmJPlEpW5u/LK13OF849Gbbz7dd48xoJ67mlBg85/DkSnK8bBl59lpoP/a
+          NujWmYxdPHca86H3mn4NstI0DUxGDQOmm9Qipk+5ru/Kg2lVPeIbIaJAqK3JtaSP
+          OLkMV41mo1pC0r/h191LGVfBRNfAYlnMQJLjr8QGeAAuRE/VwArFzS66W1IRMuNW
+          D7Km4/GKEla8mWiE/kMPyCJfvpQkFvv0sCY+
+          -----END CERTIFICATE-----
+
+oauth:
+  clients:
+    sample-client-authcode:
+       name: sample-client-authcode
+       secret: sample-client-authcode-secret
+       scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
+       authorized-grant-types: authorization_code
+       authorities: uaa.resource
+       redirect-uri: http://authcode:8888/**,http://authcode-client-credentials:8890/**
+    sample-client-client-credentials:
+      name: sample-client-client-credentials
+      secret: sample-client-client-credentials-secret
+      authorized-grant-types: client_credentials
+      authorities: uaa.resource, todo.read, todo.write
+      redirect-uri: http://client-credentials:8887/**,http://authcode-client-credentials:8890/**
+    sample-client-authcode-client-credentials:
+      name: sample-client-authcode-client-credentials
+      secret: sample-client-authcode-client-credentials-secret
+      authorized-grant-types: client_credentials,authorization_code
+      scope: openid,email,profile,roles,user_attributes,todo.read,todo.write
+      authorities: uaa.resource, todo.read, todo.write
+      redirect-uri: http://client-credentials:8887/**,http://authcode-client-credentials:8890/**
+
+scim:
+  users:
+    - basic-user|example-password|basic-user@example.com|FirstName|LastName|openid,email,profile,roles,user_attributes
+    - read-user|example-password|abc-user@example.com|FirstName|LastName|openid,email,profile,roles,user_attributes,todo.read
+    - read-write-user|example-password|xyz-user@example.com|FirstName|LastName|openid,email,profile,roles,user_attributes,todo.read,todo.write
+
+jwt:
+  token:
+    verification-key: |
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0m59l2u9iDnMbrXHfqkO
+      rn2dVQ3vfBJqcDuFUK03d+1PZGbVlNCqnkpIJ8syFppW8ljnWweP7+LiWpRoz0I7
+      fYb3d8TjhV86Y997Fl4DBrxgM6KTJOuE/uxnoDhZQ14LgOU2ckXjOzOdTsnGMKQB
+      LCl0vpcXBtFLMaSbpv1ozi8h7DJyVZ6EnFQZUWGdgTMhDrmqevfx95U/16c5WBDO
+      kqwIn7Glry9n9Suxygbf8g5AzpWcusZgDLIIZ7JTUldBb8qU2a0Dl4mvLZOn4wPo
+      jfj9Cw2QICsc5+Pwf21fP+hzf+1WSRHbnYv8uanRO0gZ8ekGaghM/2H6gqJbo2nI
+      JwIDAQAB
+      -----END PUBLIC KEY-----
+    signing-key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEA0m59l2u9iDnMbrXHfqkOrn2dVQ3vfBJqcDuFUK03d+1PZGbV
+      lNCqnkpIJ8syFppW8ljnWweP7+LiWpRoz0I7fYb3d8TjhV86Y997Fl4DBrxgM6KT
+      JOuE/uxnoDhZQ14LgOU2ckXjOzOdTsnGMKQBLCl0vpcXBtFLMaSbpv1ozi8h7DJy
+      VZ6EnFQZUWGdgTMhDrmqevfx95U/16c5WBDOkqwIn7Glry9n9Suxygbf8g5AzpWc
+      usZgDLIIZ7JTUldBb8qU2a0Dl4mvLZOn4wPojfj9Cw2QICsc5+Pwf21fP+hzf+1W
+      SRHbnYv8uanRO0gZ8ekGaghM/2H6gqJbo2nIJwIDAQABAoIBAHPV9rSfzllq16op
+      zoNetIJBC5aCcU4vJQBbA2wBrgMKUyXFpdSheQphgY7GP/BJTYtifRiS9RzsHAYY
+      pAlTQEQ9Q4RekZAdd5r6rlsFrUzL7Xj/CVjNfQyHPhPocNqwrkxp4KrO5eL06qcw
+      UzT7UtnoiCdSLI7IL0hIgJZP8J1uPNdXH+kkDEHE9xzU1q0vsi8nBLlim+ioYfEa
+      Q/Q/ovMNviLKVs+ZUz+wayglDbCzsevuU+dh3Gmfc98DJw6n6iClpd4fDPqvhxUO
+      BDeQT1mFeHxexDse/kH9nygxT6E4wlU1sw0TQANcT6sHReyHT1TlwnWlCQzoR3l2
+      RmkzUsECgYEA8W/VIkfyYdUd5ri+yJ3iLdYF2tDvkiuzVmJeA5AK2KO1fNc7cSPK
+      /sShHruc0WWZKWiR8Tp3d1XwA2rHMFHwC78RsTds+NpROs3Ya5sWd5mvmpEBbL+z
+      cl3AU9NLHVvsZjogmgI9HIMTTl4ld7GDsFMt0qlCDztqG6W/iguQCx8CgYEA3x/j
+      UkP45/PaFWd5c1DkWvmfmi9UxrIM7KeyBtDExGIkffwBMWFMCWm9DODw14bpnqAA
+      jH5AhQCzVYaXIdp12b+1+eOOckYHwzjWOFpJ3nLgNK3wi067jVp0N0UfgV5nfYw/
+      +YoHfYRCGsM91fowh7wLcyPPwmSAbQAKwbOZKfkCgYEAnccDdZ+m2iA3pitdIiVr
+      RaDzuoeHx/IfBHjMD2/2ZpS1aZwOEGXfppZA5KCeXokSimj31rjqkWXrr4/8E6u4
+      PzTiDvm1kPq60r7qi4eSKx6YD15rm/G7ByYVJbKTB+CmoDekToDgBt3xo+kKeyna
+      cUQqUdyieunM8bxja4ca3ukCgYAfrDAhomJ30qa3eRvFYcs4msysH2HiXq30/g0I
+      aKQ12FSjyZ0FvHEFuQvMAzZM8erByKarStSvzJyoXFWhyZgHE+6qDUJQOF6ruKq4
+      DyEDQb1P3Q0TSVbYRunOWrKRM6xvJvSB4LUVfSvBDsv9TumKqwfZDVFVn9yXHHVq
+      b6sjSQKBgDkcyYkAjpOHoG3XKMw06OE4OKpP9N6qU8uZOuA8ZF9ZyR7vFf4bCsKv
+      QH+xY/4h8tgL+eASz5QWhj8DItm8wYGI5lKJr8f36jk0JLPUXODyDAeN6ekXY9LI
+      fudkijw0dnh28LJqbkFF5wLNtATzyCfzjp+czrPMn9uqLNKt/iVD
+      -----END RSA PRIVATE KEY-----
+    policy:
+      activeKeyId: key-id-1
+      keys:
+        key-id-1:
+          signingKey: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEowIBAAKCAQEA0m59l2u9iDnMbrXHfqkOrn2dVQ3vfBJqcDuFUK03d+1PZGbV
+            lNCqnkpIJ8syFppW8ljnWweP7+LiWpRoz0I7fYb3d8TjhV86Y997Fl4DBrxgM6KT
+            JOuE/uxnoDhZQ14LgOU2ckXjOzOdTsnGMKQBLCl0vpcXBtFLMaSbpv1ozi8h7DJy
+            VZ6EnFQZUWGdgTMhDrmqevfx95U/16c5WBDOkqwIn7Glry9n9Suxygbf8g5AzpWc
+            usZgDLIIZ7JTUldBb8qU2a0Dl4mvLZOn4wPojfj9Cw2QICsc5+Pwf21fP+hzf+1W
+            SRHbnYv8uanRO0gZ8ekGaghM/2H6gqJbo2nIJwIDAQABAoIBAHPV9rSfzllq16op
+            zoNetIJBC5aCcU4vJQBbA2wBrgMKUyXFpdSheQphgY7GP/BJTYtifRiS9RzsHAYY
+            pAlTQEQ9Q4RekZAdd5r6rlsFrUzL7Xj/CVjNfQyHPhPocNqwrkxp4KrO5eL06qcw
+            UzT7UtnoiCdSLI7IL0hIgJZP8J1uPNdXH+kkDEHE9xzU1q0vsi8nBLlim+ioYfEa
+            Q/Q/ovMNviLKVs+ZUz+wayglDbCzsevuU+dh3Gmfc98DJw6n6iClpd4fDPqvhxUO
+            BDeQT1mFeHxexDse/kH9nygxT6E4wlU1sw0TQANcT6sHReyHT1TlwnWlCQzoR3l2
+            RmkzUsECgYEA8W/VIkfyYdUd5ri+yJ3iLdYF2tDvkiuzVmJeA5AK2KO1fNc7cSPK
+            /sShHruc0WWZKWiR8Tp3d1XwA2rHMFHwC78RsTds+NpROs3Ya5sWd5mvmpEBbL+z
+            cl3AU9NLHVvsZjogmgI9HIMTTl4ld7GDsFMt0qlCDztqG6W/iguQCx8CgYEA3x/j
+            UkP45/PaFWd5c1DkWvmfmi9UxrIM7KeyBtDExGIkffwBMWFMCWm9DODw14bpnqAA
+            jH5AhQCzVYaXIdp12b+1+eOOckYHwzjWOFpJ3nLgNK3wi067jVp0N0UfgV5nfYw/
+            +YoHfYRCGsM91fowh7wLcyPPwmSAbQAKwbOZKfkCgYEAnccDdZ+m2iA3pitdIiVr
+            RaDzuoeHx/IfBHjMD2/2ZpS1aZwOEGXfppZA5KCeXokSimj31rjqkWXrr4/8E6u4
+            PzTiDvm1kPq60r7qi4eSKx6YD15rm/G7ByYVJbKTB+CmoDekToDgBt3xo+kKeyna
+            cUQqUdyieunM8bxja4ca3ukCgYAfrDAhomJ30qa3eRvFYcs4msysH2HiXq30/g0I
+            aKQ12FSjyZ0FvHEFuQvMAzZM8erByKarStSvzJyoXFWhyZgHE+6qDUJQOF6ruKq4
+            DyEDQb1P3Q0TSVbYRunOWrKRM6xvJvSB4LUVfSvBDsv9TumKqwfZDVFVn9yXHHVq
+            b6sjSQKBgDkcyYkAjpOHoG3XKMw06OE4OKpP9N6qU8uZOuA8ZF9ZyR7vFf4bCsKv
+            QH+xY/4h8tgL+eASz5QWhj8DItm8wYGI5lKJr8f36jk0JLPUXODyDAeN6ekXY9LI
+            fudkijw0dnh28LJqbkFF5wLNtATzyCfzjp+czrPMn9uqLNKt/iVD
+            -----END RSA PRIVATE KEY-----

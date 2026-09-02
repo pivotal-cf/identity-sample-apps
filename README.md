@@ -1,41 +1,48 @@
-# Pivotal Single Sign-On Service Sample Applications
+# Tanzu Platform Single Sign-On Service Sample Applications
 
-This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by the Pivotal Single Sign-On Service. The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Pivotal Single Sign-On Service Dashboard. For more information about how to determine SSO Application Type, please read [PCF SSO Documentation](https://docs.pivotal.io/p-identity/determine-type.html).
+This repo holds separate sample applications for each one of the four OAuth 2.0 grant types supported by [Tanzu Platform Single Sign-On](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/index.html) (SSO tile 1.16.x). The grant type specific environment variables are configured to their relevant values in the manifests of sample application. Each grant type maps to an Application Type as seen in the Single Sign-On Dashboard. For more information about how to determine SSO Application Type, see [Determining Single Sign-On App Type](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/determine-type.html).
 
-Application Type  | Grant Type | Pivotal SSO Version | Spring Cloud SSO Starter library version
+Application Type  | Grant Type | Tanzu Platform SSO tile | Spring Cloud SSO Starter library version
 ------------- | -------------- | --------------------- | ---------------------
-[Web App](/authcode)  | authorization_code | any | 1.1.2.RELEASE
-[Service-to-Service App](/client-credentials) | client_credentials | any | 1.1.2.RELEASE
-[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | v1.10+ | 1.1.2.RELEASE
+[Web App](/authcode)  | authorization_code | any | 4.0.1
+[Service-to-Service App](/client-credentials) | client_credentials | any | 4.0.1
+[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 4.0.1
 [Resource Server App](/resource-server) | n/a | any | n/a
 
-The latest version of this repository supports the following dependencies:
+Sample apps are built with Java 17 and the following dependencies (see each module’s `build.gradle`):
 
 Dependency | Version
-------------- | ---------- 
-[Spring Boot](https://github.com/spring-projects/spring-boot/tree/2.3.x) | 2.3.4+
-[Spring Security](https://github.com/spring-projects/spring-security/tree/5.3.x) | 5.3.4+ 
-[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) | 1.1.2.RELEASE
+------------- | ----------
+Java | 17
+Gradle | 8.14.4
+[Spring Boot](https://github.com/spring-projects/spring-boot/tree/4.1.x) | 4.1.1
+[Spring Security](https://github.com/spring-projects/spring-security/tree/7.1.x) | 7.1.1
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 4.0.1
+Optional: [`cloudfoundry-certificate-truster`](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) | 1.0.1.RELEASE
 
-The sample apps using Spring Boot 1.5 and Spring Security 2 is located on the [spring-boot-1.5 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5).
+Previous versions of these sample apps are available on other branches:
 
-The sample apps using Spring Boot 2.1 and Spring Security 5.1 is located on the [spring-boot-2.1 branch](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.1).
-
-The sample applications for the corresponding grant types are located in subdirectories of this project:  
+Branch | Spring Boot | Spring Security
+------------- | ---------- | ----------
+[spring-boot-3.5](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-3.5) | 3.5.x | 6.5.x
+[spring-boot-2.7](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.7) | 2.7.x | 5.7.x
+[spring-boot-2.3](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.3) | 2.3.x | 5.3.x
+[spring-boot-2.1](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-2.1) | 2.1.x | 5.1.x
+[spring-boot-1.5](https://github.com/pivotal-cf/identity-sample-apps/tree/spring-boot-1.5) | 1.5.x | 2.x
 
 ## Prerequisites
 
-1. Login as a Space Developer into the required Org and Space on your PCF Foundation
+1. Login as a Space Developer into the required Org and Space on your Tanzu Platform Foundation
 
        cf login -a api.<your-domain>
         
-1. Ensure that an SSO (p-identity) [Service Plan](https://docs.pivotal.io/p-identity/manage-service-plans.html) exists for your Org. Record the name of the plan you wish to select to be used as the `<plan_tier>` value for the next step.
+1. Ensure that an SSO (`p-identity`) [Service Plan](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/manage-service-plans.html) exists for your Org. Record the name of the plan you wish to select to be used as the `<plan_tier>` value for the next step.
 
        cf marketplace | grep p-identity
 
-1. Create a [Service Instance](https://docs.pivotal.io/p-identity/manage-service-instances.html) named 'p-identity-instance' from the 'p-identity' service using an available Service Plan
+1. Create a [Service Instance](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/manage-service-instances.html) named 'my-identity-instance' from the 'p-identity' service using an available Service Plan
 
-       cf create-service p-identity <plan_tier> p-identity-instance
+       cf create-service p-identity <plan_tier> my-identity-instance
 
 ## <a name="quick-start">Quick Start</a>
 
@@ -79,7 +86,7 @@ You can deploy the authcode and resource server sample applications using applic
 
      Contact your cloud administrator to determine whether your Service Plan is has configured the "Internal User Store" as an Identity Provider or an external Identity Provider (like LDAP).
 
-     - If your SSO Service plans is configured with the 'Internal User Store' option, you can use the instruction in [Manage Users in an Internal User Store](https://docs.pivotal.io/p-identity/manage-users.html) documentation to create a user to `todo.read` and `todo.write` scopes.
+     - If your SSO Service plans is configured with the 'Internal User Store' option, you can use the instructions under [Add Internal Users](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/configure-internal-us.html#add-internal-users) and [Managing Users](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/manage-users.html) to create a user with `todo.read` and `todo.write` scopes.
 
      - If your plan is configured with an alternative Identity Provider (like LDAP), your administrator will need to provide you credentials with memberships to the `todo.read` and `todo.write` scopes.
 
@@ -89,22 +96,22 @@ You can deploy the authcode and resource server sample applications using applic
 
 ### Implicit Grant Type:
 
-The Implicit Grant Type is supported by Spring Security 5, but has generally fallen out of favor as an architectural pattern for SPAs. It has been determined that we will not provide Sample Apps to demonstrate this grant type moving forward. The current recommendation for SPAs is to use the Authorization Code Flow in conjuntion with the [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) to protect the Authorization Code in the client's browser. For more information, please see the Okta developers blog article: [Is The OAuth Implict Flow Dead](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead#the-oauth-authorization-code-flow-is-better).
+The Implicit Grant Type has generally fallen out of favor as an architectural pattern for SPAs. It has been determined that we will not provide Sample Apps to demonstrate this grant type moving forward. The current recommendation for SPAs is to use the Authorization Code Flow in conjunction with the [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) to protect the Authorization Code in the client's browser. For more information, please see the Okta developers blog article: [Is The OAuth Implicit Flow Dead](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead#the-oauth-authorization-code-flow-is-better).
 
 ### Resource Owner Password Credentials (i.e. Password) Type:
 
-The Resource Owner Password Credentials grant type is no longer supported by Spring Security 5 (see the Grant Type [Support Matrix](projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support)). The Password grant type is more commonly used with programs, like CLIs, that are unlikley to be dependendant on Spring or other Web based software libraries. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2). 
+The Resource Owner Password Credentials grant type is not supported by Spring Security 6 (see the Grant Type [Support Matrix](https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix#client-support)). The Password grant type is more commonly used with programs, like CLIs, that are unlikely to be dependent on Spring or other web-based software libraries. For more information, see the [OAuth 2 Password Grant specification](https://tools.ietf.org/html/rfc6749#section-4.3.2).
 
-If your use cases require the Password grant type for a Spring application, you will need to implement the access token request on your own. However, if your Java based CF application is bound to an SSO service instance and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the table of [Spring Security 5 Java properties](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications) built from VCAP_SERVICES to help craft your request. 
+If your use cases require the Password grant type for a Spring application, you will need to implement the access token request on your own. However, if your Java based CF application is bound to an SSO service instance and using the [Spring Boot SSO Starter Library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso), you may find it useful to reference the table of [Spring Security Java properties](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso#spring-applications) built from VCAP_SERVICES to help craft your request.
 
-# Bootstrap Application Client Configurations for the Pivotal Single Sign-On Service Instance
+# Bootstrap Application Client Configurations for the Tanzu Platform Single Sign-On Service Instance
 Beginning in SSO 1.4.0, you can set environment variables in your application's manifest to bootstrap client configurations for your applications automatically when binding or rebinding your application to the service instance. These values will be automatically populated to the client configurations for your application through CF environment variables.
 
 **NOTE:** These configurations are only applied at the initial service binding time. Subsequent `cf push` of the application will **NOT** update the configurations. You will either need to manually update the configurations via the SSO dashboard or unbind and rebind the service instance.
 
 When you specify your own scopes and authorities, consider including openid for scopes on auth code, implicit, and password grant type applications, and uaa.resource for client credentials grant type applications, as these will not be provided if they are not specified.
 
-The table in [SSO Documentation - Configure SSO Properties with Environment Variables](https://docs.pivotal.io/p-identity/configure-apps/index.html#configure) provides a description and the default values. Further details and examples are provided in the sample application manifests.
+The table in [Configure Single Sign-On Properties with the App Manifest](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/single-sign-on/1-16/sso/config-apps.html#configure-sso-properties-with-the-app-manifest) provides a description and the default values. Further details and examples are provided in the sample application manifests.
 
 To remove any variables set through bootstrapping, you must use `cf unset-env <APP_NAME> <PROPERTY_NAME>` and rebind the application.
 

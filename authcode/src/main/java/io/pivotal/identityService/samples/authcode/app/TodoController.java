@@ -21,7 +21,7 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    @GetMapping("/todos")
+    @GetMapping({"/todos", "/todos/"})
     public String todo(Model model) {
         if (resourceServerUrl.equals("https://resource-server-sample.<your-domain>.com")) {
             model.addAttribute("header", "Warning: You need to configure the Resource Server sample application");
@@ -40,7 +40,7 @@ public class TodoController {
         return "todos";
     }
 
-    @PostMapping("/todos")
+    @PostMapping({"/todos", "/todos/"})
     public String create(@ModelAttribute TodoRequest body) {
         try {
             todoService.create(body);
@@ -50,7 +50,7 @@ public class TodoController {
         }
     }
 
-    @DeleteMapping("/todos/{id}")
+    @DeleteMapping({"/todos/{id}", "/todos/{id}/"})
     public String delete(@PathVariable String id) {
         try {
             todoService.delete(id);

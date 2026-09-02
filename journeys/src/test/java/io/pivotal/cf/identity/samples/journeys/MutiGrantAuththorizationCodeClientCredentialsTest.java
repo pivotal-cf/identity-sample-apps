@@ -2,25 +2,25 @@ package io.pivotal.cf.identity.samples.journeys;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.fluentlenium.adapter.junit.FluentTest;
 import org.fluentlenium.core.hook.wait.Wait;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;
 import static org.fluentlenium.core.filter.FilterConstructor.containingText;
 
 
-@Wait
+@Wait(timeout = 30, timeUnit = TimeUnit.SECONDS)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTest {
-    private static final String MULTI_GRANT_BASE_URL = "http://localhost:8890";
+public class MutiGrantAuththorizationCodeClientCredentialsTest extends HeadlessChromeTest {
+    private static final String MULTI_GRANT_BASE_URL =
+            System.getProperty("multigrant.base.url", "http://localhost:8890");
     private static final TypeReference<Map<String, Object>> TYPE_REF = new TypeReference<Map<String, Object>>() {};
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -55,6 +55,7 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void step03_displaysAuthcodeTokenAndClientCredentialsTokenToAllLoggedInUsers() throws IOException {
         goTo(MULTI_GRANT_BASE_URL + "/info");
 
@@ -66,10 +67,10 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
             $("#authorize").click();
         }
 
-        HashMap<String, Object> userInfo = objectMapper.readValue(el(".authcode .user_info").text(), TYPE_REF);
+        Map<String, Object> userInfo = objectMapper.readValue(el(".authcode .user_info").text(), TYPE_REF);
         assertThat(userInfo.get("name")).isEqualTo("FirstName LastName");
 
-        HashMap<String, Object> authcodeAccessToken = objectMapper.readValue(el(".authcode .access_token").text(), TYPE_REF);
+        Map<String, Object> authcodeAccessToken = objectMapper.readValue(el(".authcode .access_token").text(), TYPE_REF);
         assertThat(authcodeAccessToken.get("email")).isEqualTo("basic-user@example.com");
         assertThat(authcodeAccessToken.get("user_name")).isEqualTo("basic-user");
         assertThat(authcodeAccessToken.get("cid")).isEqualTo("sample-client-authcode-client-credentials");
@@ -77,10 +78,10 @@ public class MutiGrantAuththorizationCodeClientCredentialsTest extends FluentTes
         assertThat(authcodeAccessToken.get("grant_type")).isEqualTo("authorization_code");
         assertThat((List<String>)authcodeAccessToken.get("aud")).contains("sample-client-authcode-client-credentials", "openid");
 
-        HashMap<String, Object> idToken = objectMapper.readValue(el(".authcode .id_token").text(), TYPE_REF);
+        Map<String, Object> idToken = objectMapper.readValue(el(".authcode .id_token").text(), TYPE_REF);
         assertThat((List<String>)idToken.get("scope")).contains("openid");
 
-        HashMap<String, Object> clientCredentialsAccessToken = objectMapper.readValue(el(".clientcreds .access_token").text(), TYPE_REF);
+        Map<String, Object> clientCredentialsAccessToken = objectMapper.readValue(el(".clientcreds .access_token").text(), TYPE_REF);
         assertThat(clientCredentialsAccessToken.get("client_id")).isEqualTo("sample-client-authcode-client-credentials");
         assertThat(clientCredentialsAccessToken.get("cid")).isEqualTo("sample-client-authcode-client-credentials");
         assertThat((List<String>)clientCredentialsAccessToken.get("scope")).contains("todo.read", "todo.write", "uaa.resource");

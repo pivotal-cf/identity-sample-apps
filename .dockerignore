@@ -1,0 +1,7 @@
+.git
+**/build
+**/.gradle
+**/.idea
+**/*.iml
+**/.DS_Store
+docker/**/target

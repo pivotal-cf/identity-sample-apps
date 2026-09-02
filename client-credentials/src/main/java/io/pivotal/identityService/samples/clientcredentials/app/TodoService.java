@@ -28,7 +28,7 @@ public class TodoService {
         return this.webClient
                 .post()
                 .uri("/todos")
-                .body(BodyInserters.fromObject(todo))
+                .body(BodyInserters.fromValue(todo))
                 .retrieve()
                 .bodyToMono(Todo.class)
                 .block();

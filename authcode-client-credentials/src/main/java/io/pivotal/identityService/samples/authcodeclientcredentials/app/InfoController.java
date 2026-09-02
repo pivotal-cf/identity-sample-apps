@@ -2,7 +2,7 @@ package io.pivotal.identityService.samples.authcodeclientcredentials.app;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.codec.binary.Base64;
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -29,7 +29,7 @@ public class InfoController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/info")
+    @GetMapping({"/info", "/info/"})
     public String info(
             Model model,
             OAuth2AuthenticationToken authentication,
@@ -70,7 +70,7 @@ public class InfoController {
 
     private Map<String, ?> parseToken(String base64Token) throws IOException {
         String token = base64Token.split("\\.")[1];
-        return objectMapper.readValue(Base64.decodeBase64(token), new TypeReference<Map<String, ?>>() {
+        return objectMapper.readValue(Base64.getUrlDecoder().decode(token), new TypeReference<Map<String, ?>>() {
         });
     }
 

@@ -3,10 +3,13 @@ applications:
  - name: authcode-client-credentials-sample
    memory: 1G
    instances: 1
+   buildpack: java_buildpack_offline
    path: build/libs/authcode-client-credentials.jar
    services:
-   - p-identity-instance # Make sure you have created an sso service instance with this name. Your app will be bound to this service instance you list here when it is pushed.
+   - my-identity-instance # Make sure you have created an sso service instance with this name. Your app will be bound to this service instance you list here when it is pushed.
    env:
+     # Specify JRE version for Tanzu Platform Java Buildpack
+     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
      # *** BEGIN: env vars for the application ***
 
      # The location of the deployed resource server sample application
