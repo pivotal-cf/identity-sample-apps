@@ -22,16 +22,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
 
+      # Deliberately v5, not the latest v6: v6 extracts the dependency caching this step
+      # exists for into `gradle-actions-caching`, a proprietary component whose use means
+      # accepting https://gradle.com/legal/terms-of-use/. v5 is the last MIT-licensed
+      # release and already runs on node24, so it clears the node20 deprecation without
+      # pulling commercial terms into this repo. Don't bump to v6 without deciding that
+      # licensing question first.
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # Builds and tests the four sample app modules in the root settings.gradle.
       # `journeys` is deliberately excluded from that build (it needs Selenium and
@@ -41,7 +47,7 @@ jobs:
 
       - name: Upload unit test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-reports
           path: |
@@ -58,7 +64,7 @@ jobs:
       # pin to the runner's first-class Docker.
       COMPOSE_PROVIDER: docker
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Environment diagnostics
         run: |
@@ -125,7 +131,7 @@ jobs:
 
       - name: Upload journeys reports and container logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-artifacts
           path: |
