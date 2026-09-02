@@ -3,49 +3,43 @@ package io.pivotal.identityService.samples.authcodeclientcredentials.app;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
-import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient;
-
 @Component
 public class TodoService {
-    private WebClient webClient;
+    private final RestClient restClient;
 
-    public TodoService(WebClient webClient) {
-        this.webClient = webClient;
+    public TodoService(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public List<Todo> getAll(OAuth2AuthorizedClient authorizedClient) {
-        return this.webClient
+        return this.restClient
                 .get()
                 .uri("/todos")
-                .attributes(oauth2AuthorizedClient(authorizedClient))
+                .headers(headers -> headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue()))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<Todo>>() {})
-                .block();
+                .body(new ParameterizedTypeReference<List<Todo>>() {});
     }
 
     public Todo create(TodoRequest todo, OAuth2AuthorizedClient authorizedClient) {
-        return this.webClient
+        return this.restClient
                 .post()
                 .uri("/todos")
-                .attributes(oauth2AuthorizedClient(authorizedClient))
-                .body(BodyInserters.fromValue(todo))
+                .headers(headers -> headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue()))
+                .body(todo)
                 .retrieve()
-                .bodyToMono(Todo.class)
-                .block();
+                .body(Todo.class);
     }
 
     public void delete(String id, OAuth2AuthorizedClient authorizedClient) {
-        this.webClient
+        this.restClient
                 .delete()
                 .uri("/todos/" + id)
-                .attributes(oauth2AuthorizedClient(authorizedClient))
+                .headers(headers -> headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue()))
                 .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+                .toBodilessEntity();
     }
 }

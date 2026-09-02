@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2Aut
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class UserTodoController {
 
         try {
             model.addAttribute("todoList", todoService.getAll(authorizedClient));
-        } catch (WebClientResponseException error) {
+        } catch (RestClientResponseException error) {
             model.addAttribute("error", error);
             model.addAttribute("todoList", new ArrayList<Todo>());
         }
@@ -48,7 +48,7 @@ public class UserTodoController {
         try {
             todoService.create(body, authorizedClient);
             return "redirect:/user/todos";
-        } catch (WebClientResponseException e) {
+        } catch (RestClientResponseException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
         }
     }
@@ -58,7 +58,7 @@ public class UserTodoController {
         try {
             todoService.delete(id, authorizedClient);
             return "redirect:/user/todos";
-        } catch (WebClientResponseException e) {
+        } catch (RestClientResponseException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
         }
     }

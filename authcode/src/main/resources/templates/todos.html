@@ -15,7 +15,7 @@
 
 <div th:if="${error}">
   <h1 th:text="${error.getStatusCode()}"></h1>
-  <p th:text="${error.getHeaders().toString()}"></p>
+  <p th:text="${error.getResponseHeaders().toString()}"></p>
 </div>
 
 <table border="1" th:if="${todoList.size() > 0}">
