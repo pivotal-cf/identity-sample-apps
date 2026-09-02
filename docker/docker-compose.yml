@@ -104,5 +104,13 @@ services:
         -Dclientcredentials.base.url=http://client-credentials:8887
         -Dmultigrant.base.url=http://authcode-client-credentials:8890
         -Dselenium.remote.url=http://selenium:4444
+    # Each `compose run` of this service is a throwaway container, so without a shared
+    # cache every invocation re-downloads the suite's dependencies -- doubling the work
+    # and the exposure to Maven Central rate-limiting when CI runs two filtered passes.
+    volumes:
+      - journeys-gradle-cache:/home/gradle/.gradle
     profiles:
       - test
+
+volumes:
+  journeys-gradle-cache:
