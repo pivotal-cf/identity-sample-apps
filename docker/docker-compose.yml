@@ -78,7 +78,9 @@ services:
       - "8890:8890"
 
   selenium:
-    image: ${SELENIUM_IMAGE:-selenium/standalone-chrome:4.16.1}
+    # run-e2e-tests.sh always sets SELENIUM_IMAGE (per-architecture); this fallback is
+    # only for invoking compose directly, and is date-pinned to match.
+    image: ${SELENIUM_IMAGE:-selenium/standalone-chrome:4.16.1-20231219}
     shm_size: 2g
     environment:
       SE_NODE_MAX_SESSIONS: 2

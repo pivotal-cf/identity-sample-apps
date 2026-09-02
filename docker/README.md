@@ -88,9 +88,12 @@ reports survive the container being removed. To run a subset, pass Gradle's
   `RemoteWebDriver` from the `journeys-runner` container (see
   `HeadlessChromeTest.java`'s `selenium.remote.url` support). Concourse's existing
   bare-metal flow is untouched — it never sets that property, so it keeps using a
-  local `ChromeDriver` exactly as before. Pinned to the `120.0-chromedriver-120.0-
-  grid-4.16.1-*` tag (matching the `journeys` module's Selenium Java client version,
-  4.16.1) rather than `:latest`.
+  local `ChromeDriver` exactly as before. Both images are pinned to grid `4.16.1`,
+  matching the `journeys` module's Selenium Java client version, rather than `:latest`
+  — `selenium/standalone-chrome:4.16.1-20231219` and
+  `seleniarm/standalone-chromium:4.16.1-20231230`. The dates differ because the two
+  repositories publish independently; don't copy a date (or a tag shape) from one to the
+  other, or the architecture you don't develop on will fail to pull.
 - **Selenium session slots**: `SE_NODE_MAX_SESSIONS=2` (with
   `SE_NODE_OVERRIDE_MAX_SESSIONS=true`) so a standalone node isn't limited to a
   single concurrent session by default, which caused later tests to hang
