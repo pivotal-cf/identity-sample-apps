@@ -58,12 +58,19 @@ echo ">>> compose provider: ${COMPOSE[*]} ($("${COMPOSE[@]}" version 2>&1 | head
 # Pinned to match the journeys module's Selenium Java client version (4.16.1) exactly --
 # newer browser/grid images paired with this older client can cause findElement calls to
 # hang/fail after cross-origin navigation (observed with :latest during harness development).
+#
+# Both use the `<grid-version>-<date>` tag form. Do NOT copy a date suffix from one repo to
+# the other: the two publish on independent dates (hence 20231219 vs 20231230), and
+# seleniarm additionally offers a longer `<chrome>-chromedriver-<v>-grid-<v>-<date>` form
+# that selenium/standalone-chrome does not -- borrowing that shape for the x86 image
+# produced a `manifest unknown` pull failure that only showed up on CI, since developers
+# on Apple Silicon never take this branch.
 case "$(uname -m)" in
   arm64|aarch64)
-    export SELENIUM_IMAGE="${SELENIUM_IMAGE:-seleniarm/standalone-chromium:120.0-chromedriver-120.0-grid-4.16.1-20231230}"
+    export SELENIUM_IMAGE="${SELENIUM_IMAGE:-seleniarm/standalone-chromium:4.16.1-20231230}"
     ;;
   *)
-    export SELENIUM_IMAGE="${SELENIUM_IMAGE:-selenium/standalone-chrome:120.0-chromedriver-120.0-grid-4.16.1-20231230}"
+    export SELENIUM_IMAGE="${SELENIUM_IMAGE:-selenium/standalone-chrome:4.16.1-20231219}"
     ;;
 esac
 
