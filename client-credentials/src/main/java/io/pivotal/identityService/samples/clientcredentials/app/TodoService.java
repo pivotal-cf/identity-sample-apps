@@ -2,44 +2,40 @@ package io.pivotal.identityService.samples.clientcredentials.app;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
 @Component
 public class TodoService {
-    private WebClient webClient;
+    private final RestClient restClient;
 
-    public TodoService(WebClient webClient) {
-        this.webClient = webClient;
+    public TodoService(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public List<Todo> getAll() {
-        return this.webClient
+        return this.restClient
                 .get()
                 .uri("/todos")
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<Todo>>() {})
-                .block();
+                .body(new ParameterizedTypeReference<List<Todo>>() {});
     }
 
     public Todo create(TodoRequest todo) {
-        return this.webClient
+        return this.restClient
                 .post()
                 .uri("/todos")
-                .body(BodyInserters.fromValue(todo))
+                .body(todo)
                 .retrieve()
-                .bodyToMono(Todo.class)
-                .block();
+                .body(Todo.class);
     }
 
     public void delete(String id) {
-        this.webClient
+        this.restClient
                 .delete()
                 .uri("/todos/" + id)
                 .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+                .toBodilessEntity();
     }
 }

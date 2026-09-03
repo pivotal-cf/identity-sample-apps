@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class ClientTodoController {
 
         try {
             model.addAttribute("todoList", todoService.getAll(authorizedClient));
-        } catch (WebClientResponseException error) {
+        } catch (RestClientResponseException error) {
             model.addAttribute("error", error);
             model.addAttribute("todoList", new ArrayList<Todo>());
         }

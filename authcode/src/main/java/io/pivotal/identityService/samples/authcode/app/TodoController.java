@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class TodoController {
 
         try {
             model.addAttribute("todoList", todoService.getAll());
-        } catch (WebClientResponseException error) {
+        } catch (RestClientResponseException error) {
             model.addAttribute("error", error);
             model.addAttribute("todoList", new ArrayList<Todo>());
         }
@@ -45,7 +45,7 @@ public class TodoController {
         try {
             todoService.create(body);
             return "redirect:/todos";
-        } catch (WebClientResponseException e) {
+        } catch (RestClientResponseException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
         }
     }
@@ -55,7 +55,7 @@ public class TodoController {
         try {
             todoService.delete(id);
             return "redirect:/todos";
-        } catch (WebClientResponseException e) {
+        } catch (RestClientResponseException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getStatusText());
         }
     }

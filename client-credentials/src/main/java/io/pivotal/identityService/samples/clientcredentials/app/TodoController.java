@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class TodoController {
 
         try {
             model.addAttribute("todoList", todoService.getAll());
-        } catch (WebClientResponseException error) {
+        } catch (RestClientResponseException error) {
             model.addAttribute("error", error);
             model.addAttribute("todoList", new ArrayList<Todo>());
         }

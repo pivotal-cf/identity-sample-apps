@@ -6,9 +6,10 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ class TodoControllerTest {
     @Test
     void todos_whenResourceServerCallFails_rendersErrorInsteadOfFailingPage() throws Exception {
         when(todoService.getAll()).thenThrow(
-                WebClientResponseException.create(403, "Forbidden", HttpHeaders.EMPTY, new byte[0], null));
+                HttpClientErrorException.create(HttpStatus.FORBIDDEN, "Forbidden", HttpHeaders.EMPTY, new byte[0], null));
 
         mockMvc.perform(get("/todos").with(oidcLogin()))
                 .andExpect(status().isOk())
@@ -89,7 +90,7 @@ class TodoControllerTest {
     @Test
     void createTodo_whenResourceServerCallFails_propagatesSameStatusCode() throws Exception {
         when(todoService.create(any())).thenThrow(
-                WebClientResponseException.create(400, "Bad Request", HttpHeaders.EMPTY, new byte[0], null));
+                HttpClientErrorException.create(HttpStatus.BAD_REQUEST, "Bad Request", HttpHeaders.EMPTY, new byte[0], null));
 
         mockMvc.perform(post("/todos")
                         .with(oidcLogin())
@@ -111,7 +112,7 @@ class TodoControllerTest {
     @Test
     void deleteTodo_whenResourceServerCallFails_propagatesSameStatusCode() throws Exception {
         org.mockito.Mockito.doThrow(
-                WebClientResponseException.create(404, "Not Found", HttpHeaders.EMPTY, new byte[0], null))
+                HttpClientErrorException.create(HttpStatus.NOT_FOUND, "Not Found", HttpHeaders.EMPTY, new byte[0], null))
                 .when(todoService).delete(anyString());
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
