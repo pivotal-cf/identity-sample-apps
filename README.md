@@ -20,6 +20,47 @@ Gradle | 9.8.2
 [Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 4.0.2
 Optional: [`cloudfoundry-certificate-truster`](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) | 1.0.1.RELEASE
 
+## Development checks
+
+**Goal:** keep both the sample applications and their end-to-end journeys passing. Run
+the unit/build checks and the journey suite locally before considering a code change
+complete. CI runs these same two test layers on Java 25.
+
+### Build and unit tests
+
+Install Java 25, then run the root Gradle wrapper. On macOS, `java_home` can select an
+installed Java 25 JDK:
+
+```sh
+export JAVA_HOME="$(/usr/libexec/java_home -v 25)"
+export PATH="$JAVA_HOME/bin:$PATH"
+./gradlew clean build
+```
+
+This builds and tests the four sample app modules. The `journeys` suite is a separate
+project and runs in the end-to-end harness below.
+
+### End-to-end journey tests with Podman
+
+Start a Podman machine with at least 8 GB of memory and install the `podman compose`
+extension plus its `docker-compose` provider. Then run the full local cycle:
+
+```sh
+COMPOSE_PROVIDER=podman ./docker/run-e2e-tests.sh
+```
+
+The script builds the sample app containers, starts UAA and Selenium, runs all journey
+tests, saves reports and container logs under `docker/artifacts/`, and tears down the
+containers. If port 8080 is already in use on the host, choose a free port for UAA:
+
+```sh
+COMPOSE_PROVIDER=podman UAA_HOST_PORT=18080 ./docker/run-e2e-tests.sh
+```
+
+The browser tests build and run in the Java 25 journeys container. For filtered runs,
+stack lifecycle commands, troubleshooting, and report details, see
+[`docker/README.md`](docker/README.md).
+
 Previous versions of these sample apps are available on other branches:
 
 Branch | Spring Boot | Spring Security
