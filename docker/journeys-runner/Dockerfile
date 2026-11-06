@@ -1,4 +1,4 @@
-FROM gradle:8.14.4-jdk17
+FROM gradle:9.8.2-jdk25
 
 WORKDIR /workspace
 COPY . .

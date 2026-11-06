@@ -24,11 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up JDK 17
+      - name: Set up JDK 25
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '25'
 
       # Deliberately v5, not the latest v6: v6 extracts the dependency caching this step
       # exists for into `gradle-actions-caching`, a proprietary component whose use means
@@ -39,7 +39,7 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      # Builds and tests the four sample app modules in the root settings.gradle.
+      # Builds and tests the four sample app modules in the root settings.gradle on JDK 25.
       # `journeys` is deliberately excluded from that build (it needs Selenium and
       # a browser) and runs in the e2e job instead.
       - name: Build and test sample apps

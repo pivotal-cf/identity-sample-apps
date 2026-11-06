@@ -8,6 +8,8 @@ Selenium suite — locally, without needing Concourse.
 
 - podman (with the compose extension: `podman compose`, backed by a `docker-compose`
   binary on PATH) or Docker Desktop, with a running machine/daemon.
+- If host port 8080 is already in use, set `UAA_HOST_PORT` to an available port;
+  the compose services continue to reach UAA over their internal network.
 - On macOS, initialize a podman machine with enough memory for a JVM-based UAA
   server plus four Spring Boot apps and a browser, e.g.:
 
@@ -52,10 +54,10 @@ reports survive the container being removed. To run a subset, pass Gradle's
 
 ## Notable design decisions
 
-- **UAA image**: `docker.io/cfidentity/uaa:v78.16.0`, the last UAA release before
-  it moved to Java 25 / Spring Boot 4.1 internally (`v79.0.0`). Pinning an older,
-  stable UAA avoids a dual-JDK conflict entirely — UAA runs in its own container
-  off a pre-built image, independent of whatever JDK the sample apps target.
+- **UAA image**: `docker.io/cfidentity/uaa:v78.16.0`. This harness pins the UAA
+  version whose OAuth redirect behavior and SAML startup configuration have been
+  verified with the fixtures below. UAA runs in its own container; the sample app
+  build and runtime containers use Java 25.
   `platform: linux/amd64` is set because this image has no arm64 variant; on Apple
   Silicon it runs under emulation (functionally correct, just slower to start).
 - **UAA config**: `uaa/uaa.yml` is bind-mounted into the container and picked up
@@ -83,17 +85,14 @@ reports survive the container being removed. To run a subset, pass Gradle's
 - **Networking**: every service talks to every other service by its compose
   service name, never `localhost` — required because `resource-server` validates
   JWTs by making a real server-side call to UAA's OIDC discovery/JWKS endpoints.
-- **Selenium**: the compose network runs a `selenium/standalone-chrome` (x86_64)
-  or `seleniarm/standalone-chromium` (arm64) container, driven via
+- **Selenium**: the compose network runs the architecture-specific Selenium 4.16.1
+  container, driven via
   `RemoteWebDriver` from the `journeys-runner` container (see
   `HeadlessChromeTest.java`'s `selenium.remote.url` support). Concourse's existing
   bare-metal flow is untouched — it never sets that property, so it keeps using a
-  local `ChromeDriver` exactly as before. Both images are pinned to grid `4.16.1`,
-  matching the `journeys` module's Selenium Java client version, rather than `:latest`
-  — `selenium/standalone-chrome:4.16.1-20231219` and
-  `seleniarm/standalone-chromium:4.16.1-20231230`. The dates differ because the two
-  repositories publish independently; don't copy a date (or a tag shape) from one to the
-  other, or the architecture you don't develop on will fail to pull.
+  local `ChromeDriver` exactly as before. The Selenium 4.16.1 grid image matches the
+  `journeys` module's Selenium Java client version. Intel and Apple Silicon use their
+  respective image repositories and published date tags.
 - **Selenium session slots**: `SE_NODE_MAX_SESSIONS=2` (with
   `SE_NODE_OVERRIDE_MAX_SESSIONS=true`) so a standalone node isn't limited to a
   single concurrent session by default, which caused later tests to hang
@@ -193,7 +192,7 @@ affected too; that has not been re-verified here.
 `.github/workflows/ci.yml` runs both test layers on pushes and pull requests
 targeting `spring-boot-4.1`, and on manual dispatch:
 
-- **`unit-tests`** — `./gradlew build` on JDK 17, covering the four sample app
+- **`unit-tests`** — `./gradlew build` on JDK 25, covering the four sample app
   modules in the root `settings.gradle`. `journeys` is excluded from that build on
   purpose (it needs Selenium and a browser), so it runs in the job below instead.
 - **`e2e-tests`** — brings this compose harness up on the runner, then runs all 12
@@ -210,7 +209,5 @@ step with a Docker Hub token.
 
 The Concourse pipeline (`ci/pipeline.yml`, `ci/tasks/journeys/task.sh`) is left
 untouched — it orchestrates the same journeys suite bare-metal, independently of this
-harness. Separately: today's pipeline pins UAA to `branch: master`
-(bleeding-edge) — the same root cause that produced the Java 25 dual-JDK conflict
-this harness avoids by pinning `v78.16.0`. Whenever the pipeline is revisited, it
-should be repointed at a `v78.*` tag rather than `master`/`develop`.
+harness. It currently pins UAA to `branch: master`; that branch should be replaced
+with a verified tag when the pipeline is next updated.

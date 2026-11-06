@@ -4,20 +4,20 @@ This repo holds separate sample applications for each one of the four OAuth 2.0 
 
 Application Type  | Grant Type | Tanzu Platform SSO tile | Spring Cloud SSO Starter library version
 ------------- | -------------- | --------------------- | ---------------------
-[Web App](/authcode)  | authorization_code | any | 4.0.1
-[Service-to-Service App](/client-credentials) | client_credentials | any | 4.0.1
-[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 4.0.1
+[Web App](/authcode)  | authorization_code | any | 4.0.2
+[Service-to-Service App](/client-credentials) | client_credentials | any | 4.0.2
+[Web & Service-to-Service App](/authcode-client-credentials) | authorization_code, client_credentials | 1.10+ | 4.0.2
 [Resource Server App](/resource-server) | n/a | any | n/a
 
-Sample apps are built with Java 17 and the following dependencies (see each module’s `build.gradle`):
+Sample apps target Java 17 and use the following dependencies (see each module’s `build.gradle`):
 
 Dependency | Version
 ------------- | ----------
-Java | 17
-Gradle | 8.14.4
-[Spring Boot](https://github.com/spring-projects/spring-boot/tree/4.1.x) | 4.1.1
-[Spring Security](https://github.com/spring-projects/spring-security/tree/7.1.x) | 7.1.1
-[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 4.0.1
+Java | 17 (build and tests also run on Java 25)
+Gradle | 9.8.2
+[Spring Boot](https://github.com/spring-projects/spring-boot/tree/4.1.x) | 4.1.2
+[Spring Security](https://github.com/spring-projects/spring-security/tree/7.1.x) | 7.1.2
+[Spring Cloud SSO Starter library](https://github.com/pivotal-cf/java-cfenv/tree/master/java-cfenv-boot-pivotal-sso) (`java-cfenv-boot-pivotal-sso`) | 4.0.2
 Optional: [`cloudfoundry-certificate-truster`](https://github.com/pivotal-cf/cloudfoundry-certificate-truster) | 1.0.1.RELEASE
 
 Previous versions of these sample apps are available on other branches:
