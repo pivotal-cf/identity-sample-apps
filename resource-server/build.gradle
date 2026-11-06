@@ -1,16 +1,19 @@
 plugins {
-	id 'org.springframework.boot' version '4.1.1'
+	id 'org.springframework.boot' version '4.1.2'
 	id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
 
 group = 'io.pivotal.identityService'
-sourceCompatibility = '17'
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
 ext {
-	springVersion = '4.1.1'
-	springSecurityVersion = '7.1.1'
+	springVersion = '4.1.2'
+	springSecurityVersion = '7.1.2'
 }
 
 // Boot 4 switches the default JSON mapper to Jackson 3 (tools.jackson). These apps

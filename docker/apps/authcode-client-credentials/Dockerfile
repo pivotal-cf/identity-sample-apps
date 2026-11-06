@@ -1,9 +1,9 @@
-FROM gradle:8.14.4-jdk17 AS build
+FROM gradle:9.8.2-jdk25 AS build
 WORKDIR /workspace
 COPY . .
 RUN gradle -p authcode-client-credentials --no-daemon clean bootJar
 
-FROM eclipse-temurin:17-jre AS runtime
+FROM eclipse-temurin:25-jre AS runtime
 RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=build /workspace/authcode-client-credentials/build/libs/authcode-client-credentials.jar /app/app.jar
